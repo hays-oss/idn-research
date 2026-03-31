@@ -11,11 +11,12 @@ import {
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import CategorySection from "@/components/CategorySection";
+import DirectorySection from "@/components/DirectorySection";
 import InfluencerCard from "@/components/InfluencerCard";
 import SubmitResourceForm from "@/components/SubmitResourceForm";
 
 export default function Home() {
-  const [categories, setCategories] = useState<ResourceCategory[]>([]);
+  const [allCategories, setAllCategories] = useState<ResourceCategory[]>([]);
   const [resources, setResources] = useState<Resource[]>([]);
   const [influencers, setInfluencers] = useState<LinkedInInfluencer[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,6 +24,16 @@ export default function Home() {
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Split categories by type
+  const resourceCategories = useMemo(
+    () => allCategories.filter((c) => (c.category_type || "resource") === "resource"),
+    [allCategories]
+  );
+  const directoryCategories = useMemo(
+    () => allCategories.filter((c) => c.category_type === "directory"),
+    [allCategories]
+  );
 
   // Fetch all data on mount
   useEffect(() => {
@@ -45,7 +56,7 @@ export default function Home() {
           .order("display_order"),
       ]);
 
-      if (catRes.data) setCategories(catRes.data);
+      if (catRes.data) setAllCategories(catRes.data);
       if (resRes.data) setResources(resRes.data);
       if (infRes.data) setInfluencers(infRes.data);
       setLoading(false);
@@ -55,7 +66,7 @@ export default function Home() {
 
   // Intersection observer for active category
   useEffect(() => {
-    if (categories.length === 0) return;
+    if (allCategories.length === 0) return;
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -67,17 +78,19 @@ export default function Home() {
       { rootMargin: "-80px 0px -70% 0px", threshold: 0 }
     );
 
-    categories.forEach((cat) => {
+    allCategories.forEach((cat) => {
       const el = document.getElementById(cat.slug);
       if (el) observer.observe(el);
     });
     const infEl = document.getElementById("linkedin-influencers");
     if (infEl) observer.observe(infEl);
+    const dirEl = document.getElementById("company-directory");
+    if (dirEl) observer.observe(dirEl);
 
     return () => observer.disconnect();
-  }, [categories, loading]);
+  }, [allCategories, loading]);
 
-  // Handle tag click — toggle tag filter
+  // Handle tag click
   const handleTagClick = useCallback((tag: string) => {
     setActiveTag((prev) => (prev === tag ? null : tag));
   }, []);
@@ -85,26 +98,24 @@ export default function Home() {
   // Resource counts per category (unfiltered)
   const resourceCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    for (const cat of categories) {
+    for (const cat of allCategories) {
       counts[cat.id] = resources.filter(
         (r) => r.category_id === cat.id
       ).length;
     }
     return counts;
-  }, [categories, resources]);
+  }, [allCategories, resources]);
 
-  // Build categories with resources, applying search + tag filter
-  const filteredCategories = useMemo<CategoryWithResources[]>(() => {
+  // Build resource categories with resources, applying search + tag filter
+  const filteredResourceCategories = useMemo<CategoryWithResources[]>(() => {
     const q = searchQuery.toLowerCase().trim();
-    return categories
+    return resourceCategories
       .map((cat) => ({
         ...cat,
         resources: resources
           .filter((r) => {
             if (r.category_id !== cat.id) return false;
-            // Tag filter
             if (activeTag && !(r.tags ?? []).includes(activeTag)) return false;
-            // Search filter
             if (!q) return true;
             return (
               r.name.toLowerCase().includes(q) ||
@@ -116,12 +127,34 @@ export default function Home() {
           .sort((a, b) => a.name.localeCompare(b.name)),
       }))
       .filter((cat) => cat.resources.length > 0);
-  }, [categories, resources, searchQuery, activeTag]);
+  }, [resourceCategories, resources, searchQuery, activeTag]);
+
+  // Build directory categories with resources
+  const filteredDirectoryCategories = useMemo<CategoryWithResources[]>(() => {
+    const q = searchQuery.toLowerCase().trim();
+    return directoryCategories
+      .map((cat) => ({
+        ...cat,
+        resources: resources
+          .filter((r) => {
+            if (r.category_id !== cat.id) return false;
+            if (activeTag && !(r.tags ?? []).includes(activeTag)) return false;
+            if (!q) return true;
+            return (
+              r.name.toLowerCase().includes(q) ||
+              (r.description && r.description.toLowerCase().includes(q)) ||
+              r.tags.some((t) => t.toLowerCase().includes(q)) ||
+              cat.name.toLowerCase().includes(q)
+            );
+          })
+          .sort((a, b) => a.name.localeCompare(b.name)),
+      }))
+      .filter((cat) => cat.resources.length > 0);
+  }, [directoryCategories, resources, searchQuery, activeTag]);
 
   // Filter and sort influencers
   const filteredInfluencers = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
-    // Influencers don't have tags, so hide them when tag filter is active
     if (activeTag) return [];
     const filtered = q
       ? influencers.filter(
@@ -144,7 +177,8 @@ export default function Home() {
 
   // Count filtered results for tag bar
   const tagFilteredCount = activeTag
-    ? filteredCategories.reduce((sum, c) => sum + c.resources.length, 0)
+    ? filteredResourceCategories.reduce((sum, c) => sum + c.resources.length, 0) +
+      filteredDirectoryCategories.reduce((sum, c) => sum + c.resources.length, 0)
     : 0;
 
   if (loading) {
@@ -167,7 +201,8 @@ export default function Home() {
 
       <div className="flex flex-1">
         <Sidebar
-          categories={categories}
+          categories={resourceCategories}
+          directoryCategories={directoryCategories}
           resourceCounts={resourceCounts}
           influencerCount={influencers.length}
           activeSlug={activeSlug}
@@ -175,7 +210,7 @@ export default function Home() {
           onClose={() => setSidebarOpen(false)}
         />
 
-        {/* Main content — offset by sidebar on desktop */}
+        {/* Main content */}
         <main className="flex-1 lg:ml-64 min-w-0">
           <div className="max-w-[1200px] px-4 sm:px-6 lg:px-8 py-8">
             {/* Hero stats */}
@@ -185,9 +220,9 @@ export default function Home() {
                   Healthcare Resource Intelligence
                 </h1>
                 <p className="text-muted max-w-2xl">
-                  {totalResources}+ curated resources across {categories.length}{" "}
-                  categories — companies, meetings, organizations, podcasts,
-                  influencers, and more.
+                  {totalResources}+ curated resources across{" "}
+                  {allCategories.length} categories — companies, meetings,
+                  organizations, podcasts, influencers, and more.
                 </p>
               </div>
             )}
@@ -203,13 +238,24 @@ export default function Home() {
                       onClick={() => setActiveTag(null)}
                       className="hover:text-primary/70 transition-colors"
                     >
-                      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      <svg
+                        className="h-3 w-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
                       </svg>
                     </button>
                   </span>
                   <span className="ml-2 text-muted">
-                    &mdash; {tagFilteredCount} {tagFilteredCount === 1 ? "resource" : "resources"}
+                    &mdash; {tagFilteredCount}{" "}
+                    {tagFilteredCount === 1 ? "resource" : "resources"}
                   </span>
                 </p>
               </div>
@@ -224,18 +270,23 @@ export default function Home() {
                     &ldquo;{searchQuery}&rdquo;
                   </span>{" "}
                   &mdash;{" "}
-                  {filteredCategories.reduce(
+                  {filteredResourceCategories.reduce(
                     (sum, c) => sum + c.resources.length,
                     0
-                  ) + filteredInfluencers.length}{" "}
+                  ) +
+                    filteredDirectoryCategories.reduce(
+                      (sum, c) => sum + c.resources.length,
+                      0
+                    ) +
+                    filteredInfluencers.length}{" "}
                   matches
                 </p>
               </div>
             )}
 
-            {/* Category sections */}
+            {/* Resource category sections */}
             <div className="space-y-10">
-              {filteredCategories.map((cat) => (
+              {filteredResourceCategories.map((cat) => (
                 <CategorySection
                   key={cat.id}
                   category={cat}
@@ -264,24 +315,38 @@ export default function Home() {
                 </section>
               )}
 
-              {/* No results for tag filter */}
-              {activeTag && filteredCategories.length === 0 && (
-                <div className="text-center py-12">
-                  <p className="text-muted">
-                    No resources tagged with &ldquo;{activeTag}&rdquo;
-                  </p>
-                  <button
-                    onClick={() => setActiveTag(null)}
-                    className="mt-2 text-sm text-primary hover:text-primary-light transition-colors"
-                  >
-                    Clear filter
-                  </button>
+              {/* Company Directory */}
+              {filteredDirectoryCategories.length > 0 && (
+                <div className="mt-12 pt-8 border-t border-border">
+                  <DirectorySection
+                    categories={filteredDirectoryCategories}
+                    onTrackClick={trackClick}
+                    onTagClick={handleTagClick}
+                    activeTag={activeTag}
+                  />
                 </div>
               )}
 
+              {/* No results for tag filter */}
+              {activeTag &&
+                filteredResourceCategories.length === 0 &&
+                filteredDirectoryCategories.length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-muted">
+                      No resources tagged with &ldquo;{activeTag}&rdquo;
+                    </p>
+                    <button
+                      onClick={() => setActiveTag(null)}
+                      className="mt-2 text-sm text-primary hover:text-primary-light transition-colors"
+                    >
+                      Clear filter
+                    </button>
+                  </div>
+                )}
+
               {/* Submit form */}
               {!searchQuery && !activeTag && (
-                <SubmitResourceForm categories={categories} />
+                <SubmitResourceForm categories={resourceCategories} />
               )}
             </div>
           </div>

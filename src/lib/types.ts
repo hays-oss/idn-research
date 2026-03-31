@@ -6,6 +6,7 @@ export interface ResourceCategory {
   icon: string | null
   display_order: number
   is_active: boolean
+  category_type: 'resource' | 'directory'
   created_at: string
   updated_at: string
 }

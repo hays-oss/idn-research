@@ -52,8 +52,43 @@ function buildGroups(
   return groups;
 }
 
+function SidebarNavItem({
+  slug,
+  name,
+  count,
+  isActive,
+  onClick,
+}: {
+  slug: string;
+  name: string;
+  count: number;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors ${
+        isActive
+          ? "bg-primary/10 text-primary font-semibold border-l-2 border-primary"
+          : "text-foreground/80 hover:bg-surface hover:text-foreground"
+      }`}
+    >
+      <span className="truncate">{name}</span>
+      <span
+        className={`shrink-0 ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
+          isActive ? "bg-primary/20 text-primary" : "bg-surface text-muted"
+        }`}
+      >
+        {count}
+      </span>
+    </button>
+  );
+}
+
 export default function Sidebar({
   categories,
+  directoryCategories,
   resourceCounts,
   influencerCount,
   activeSlug,
@@ -61,6 +96,7 @@ export default function Sidebar({
   onClose,
 }: {
   categories: ResourceCategory[];
+  directoryCategories: ResourceCategory[];
   resourceCounts: Record<string, number>;
   influencerCount: number;
   activeSlug: string | null;
@@ -68,6 +104,7 @@ export default function Sidebar({
   onClose: () => void;
 }) {
   const [meetingsExpanded, setMeetingsExpanded] = useState(true);
+  const [directoryExpanded, setDirectoryExpanded] = useState(true);
   const groups = buildGroups(categories, resourceCounts);
 
   // Check if any meetings child is active
@@ -106,35 +143,23 @@ export default function Sidebar({
         }`}
       >
         <div className="px-3 py-4">
+          {/* ====== RESOURCES SECTION ====== */}
           <div className="text-[10px] font-semibold uppercase tracking-wider text-muted/60 px-3 mb-2">
-            Categories
+            Resources
           </div>
 
           <nav className="space-y-0.5">
             {groups.map((group) => {
               if (group.type === "single") {
-                const isActive = activeSlug === group.slug;
                 return (
-                  <button
+                  <SidebarNavItem
                     key={group.slug}
+                    slug={group.slug}
+                    name={group.name}
+                    count={group.count}
+                    isActive={activeSlug === group.slug}
                     onClick={() => handleClick(group.slug)}
-                    className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors ${
-                      isActive
-                        ? "bg-primary/10 text-primary font-semibold border-l-2 border-primary"
-                        : "text-foreground/80 hover:bg-surface hover:text-foreground"
-                    }`}
-                  >
-                    <span className="truncate">{group.name}</span>
-                    <span
-                      className={`shrink-0 ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
-                        isActive
-                          ? "bg-primary/20 text-primary"
-                          : "bg-surface text-muted"
-                      }`}
-                    >
-                      {group.count}
-                    </span>
-                  </button>
+                  />
                 );
               }
 
@@ -206,26 +231,63 @@ export default function Sidebar({
             })}
 
             {/* LinkedIn Influencers */}
-            <button
+            <SidebarNavItem
+              slug="linkedin-influencers"
+              name="LinkedIn Influencers"
+              count={influencerCount}
+              isActive={activeSlug === "linkedin-influencers"}
               onClick={() => handleClick("linkedin-influencers")}
-              className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors ${
-                activeSlug === "linkedin-influencers"
-                  ? "bg-primary/10 text-primary font-semibold border-l-2 border-primary"
-                  : "text-foreground/80 hover:bg-surface hover:text-foreground"
-              }`}
-            >
-              <span className="truncate">LinkedIn Influencers</span>
-              <span
-                className={`shrink-0 ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
-                  activeSlug === "linkedin-influencers"
-                    ? "bg-primary/20 text-primary"
-                    : "bg-surface text-muted"
-                }`}
-              >
-                {influencerCount}
-              </span>
-            </button>
+            />
           </nav>
+
+          {/* ====== COMPANY DIRECTORY SECTION ====== */}
+          {directoryCategories.length > 0 && (
+            <>
+              <div className="mt-6 mb-2 flex items-center justify-between px-3">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted/60">
+                  Company Directory
+                </div>
+                <button
+                  onClick={() => setDirectoryExpanded(!directoryExpanded)}
+                  className="text-muted/40 hover:text-muted transition-colors"
+                >
+                  <svg
+                    className={`h-3 w-3 transition-transform ${
+                      directoryExpanded ? "rotate-90" : ""
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {directoryExpanded && (
+                <nav className="space-y-0.5">
+                  {directoryCategories.map((cat) => {
+                    const count = resourceCounts[cat.id] || 0;
+                    return (
+                      <SidebarNavItem
+                        key={cat.slug}
+                        slug={cat.slug}
+                        name={cat.name}
+                        count={count}
+                        isActive={activeSlug === cat.slug}
+                        onClick={() => handleClick(cat.slug)}
+                      />
+                    );
+                  })}
+                </nav>
+              )}
+            </>
+          )}
         </div>
       </aside>
     </>
