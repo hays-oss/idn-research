@@ -20,8 +20,9 @@ import InfluencersAdmin from "./InfluencersAdmin";
 import CompaniesAdmin from "./CompaniesAdmin";
 import TaxonomyAdmin from "./TaxonomyAdmin";
 import ReviewQueueAdmin from "./ReviewQueueAdmin";
+import ImportWizard from "./ImportWizard";
 
-type Tab = "companies" | "taxonomy" | "review" | "resources" | "categories" | "influencers";
+type Tab = "companies" | "taxonomy" | "review" | "import" | "resources" | "categories" | "influencers";
 
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [activeTab, setActiveTab] = useState<Tab>("companies");
@@ -105,6 +106,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     { key: "companies", label: "Companies", count: companies.length, section: "directory" },
     { key: "taxonomy", label: "Taxonomy", count: tags.length, section: "directory" },
     { key: "review", label: "Review Queue", count: openQueueCount, section: "directory" },
+    { key: "import", label: "Import", count: 0, section: "directory" },
     { key: "resources", label: "Resources", count: resources.length, section: "legacy" },
     { key: "categories", label: "Categories", count: categories.length, section: "legacy" },
     { key: "influencers", label: "Influencers", count: influencers.length, section: "legacy" },
@@ -241,6 +243,15 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             queueItems={queueItems}
             subcategories={subcategories}
             domains={domains}
+            onRefresh={fetchData}
+          />
+        )}
+        {activeTab === "import" && (
+          <ImportWizard
+            companies={companies}
+            domains={domains}
+            subcategories={subcategories}
+            tags={tags}
             onRefresh={fetchData}
           />
         )}
