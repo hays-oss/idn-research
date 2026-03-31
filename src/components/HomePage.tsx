@@ -198,27 +198,27 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-auto border-t border-border bg-surface py-8">
+      <footer className="mt-auto bg-header-bg py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/60">
             <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-white text-[10px] font-bold">
+              <div className="flex h-6 w-6 items-center justify-center rounded bg-accent text-header-bg text-[10px] font-bold">
                 IDN
               </div>
               <span>IDN Research &mdash; A project by IHES</span>
             </div>
             <div className="flex gap-6">
-              <a href="/about" className="hover:text-primary transition-colors">
+              <a href="/about" className="hover:text-white transition-colors">
                 About
               </a>
-              <a href="#submit" className="hover:text-primary transition-colors">
+              <a href="#submit" className="hover:text-white transition-colors">
                 Submit Resource
               </a>
               <a
                 href="https://www.ihesllc.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
+                className="hover:text-white transition-colors"
               >
                 IHES
               </a>

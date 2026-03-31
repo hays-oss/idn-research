@@ -20,7 +20,7 @@ export default function CategoryNav({
               className={`whitespace-nowrap rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
                 activeSlug === cat.slug
                   ? "bg-primary text-white"
-                  : "text-muted hover:bg-surface hover:text-foreground"
+                  : "text-primary/70 hover:bg-surface hover:text-primary"
               }`}
             >
               {cat.name}
