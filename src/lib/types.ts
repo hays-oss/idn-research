@@ -24,6 +24,7 @@ export interface Resource {
   last_verified: string | null
   tags: string[]
   click_count: number
+  affiliations: string[]
   created_at: string
   updated_at: string
 }

@@ -11,6 +11,8 @@ interface ResourcesAdminProps {
   onRefresh: () => void;
 }
 
+const ORGS = ["IHES", "CPES", "CSCE", "MUAI"] as const;
+
 interface ResourceForm {
   name: string;
   url: string;
@@ -20,6 +22,7 @@ interface ResourceForm {
   display_order: number;
   is_active: boolean;
   is_featured: boolean;
+  affiliations: string[];
 }
 
 const emptyForm: ResourceForm = {
@@ -31,6 +34,7 @@ const emptyForm: ResourceForm = {
   display_order: 0,
   is_active: true,
   is_featured: false,
+  affiliations: [],
 };
 
 export default function ResourcesAdmin({
@@ -73,6 +77,7 @@ export default function ResourcesAdmin({
       display_order: resource.display_order,
       is_active: resource.is_active,
       is_featured: resource.is_featured,
+      affiliations: resource.affiliations ?? [],
     });
     setModalOpen(true);
   }
@@ -93,6 +98,7 @@ export default function ResourcesAdmin({
       display_order: form.display_order,
       is_active: form.is_active,
       is_featured: form.is_featured,
+      affiliations: form.affiliations,
     };
 
     if (editingId) {
@@ -334,6 +340,28 @@ export default function ResourcesAdmin({
             Featured
           </label>
         </div>
+
+        {/* Affiliations */}
+        <FormField label="Organization Affiliations">
+          <div className="flex flex-wrap gap-3">
+            {ORGS.map((org) => (
+              <label key={org} className="flex items-center gap-2 text-sm text-[var(--foreground)]">
+                <input
+                  type="checkbox"
+                  checked={form.affiliations.includes(org)}
+                  onChange={(e) => {
+                    const next = e.target.checked
+                      ? [...form.affiliations, org]
+                      : form.affiliations.filter((a) => a !== org);
+                    setForm({ ...form, affiliations: next });
+                  }}
+                  className="rounded border-[var(--border)] text-[var(--primary)] focus:ring-[var(--primary)]"
+                />
+                <span className="font-semibold">{org}</span>
+              </label>
+            ))}
+          </div>
+        </FormField>
       </EditModal>
     </div>
   );

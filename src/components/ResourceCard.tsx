@@ -2,6 +2,14 @@
 
 import { Resource } from "@/lib/types";
 
+// Org branding colors matching IHES Mission Control config
+const AFFILIATION_STYLES: Record<string, { bg: string; text: string; border: string }> = {
+  IHES: { bg: "bg-[#1a5632]", text: "text-white", border: "border-[#1a5632]" },
+  CPES: { bg: "bg-[#1a2b5f]", text: "text-white", border: "border-[#1a2b5f]" },
+  CSCE: { bg: "bg-[#c45a1a]", text: "text-white", border: "border-[#c45a1a]" },
+  MUAI: { bg: "bg-[#1a1a2e]", text: "text-white", border: "border-[#1a1a2e]" },
+};
+
 export default function ResourceCard({
   resource,
   onTrackClick,
@@ -14,6 +22,8 @@ export default function ResourceCard({
   activeTag?: string | null;
 }) {
   const hasTags = resource.tags && resource.tags.length > 0;
+  const hasAffiliations =
+    resource.affiliations && resource.affiliations.length > 0;
 
   return (
     <div className="group rounded-lg border border-border bg-white px-4 py-2.5 transition-all hover:border-primary/30 hover:shadow-sm">
@@ -25,9 +35,28 @@ export default function ResourceCard({
           onClick={() => onTrackClick(resource.id)}
           className="min-w-0 flex-1"
         >
-          <span className="text-sm font-medium text-foreground group-hover:text-primary truncate block">
-            {resource.name}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-foreground group-hover:text-primary truncate">
+              {resource.name}
+            </span>
+            {hasAffiliations && (
+              <div className="flex gap-1 shrink-0">
+                {resource.affiliations.map((org) => {
+                  const style = AFFILIATION_STYLES[org];
+                  if (!style) return null;
+                  return (
+                    <span
+                      key={org}
+                      className={`inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-bold tracking-wide ${style.bg} ${style.text}`}
+                      title={`${org} Member`}
+                    >
+                      {org}
+                    </span>
+                  );
+                })}
+              </div>
+            )}
+          </div>
           {resource.description && (
             <p className="text-xs text-muted truncate mt-0.5">
               {resource.description}
