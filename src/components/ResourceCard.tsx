@@ -7,7 +7,7 @@ const AFFILIATION_STYLES: Record<string, { bg: string; text: string; border: str
   IHES: { bg: "bg-[#1a5632]", text: "text-white", border: "border-[#1a5632]" },
   CPES: { bg: "bg-[#1a2b5f]", text: "text-white", border: "border-[#1a2b5f]" },
   CSCE: { bg: "bg-[#c45a1a]", text: "text-white", border: "border-[#c45a1a]" },
-  MUAI: { bg: "bg-[#1a1a2e]", text: "text-white", border: "border-[#1a1a2e]" },
+  MUIA: { bg: "bg-[#1a1a2e]", text: "text-white", border: "border-[#1a1a2e]" },
 };
 
 export default function ResourceCard({

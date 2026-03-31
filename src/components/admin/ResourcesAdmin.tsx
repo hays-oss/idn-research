@@ -11,7 +11,7 @@ interface ResourcesAdminProps {
   onRefresh: () => void;
 }
 
-const ORGS = ["IHES", "CPES", "CSCE", "MUAI"] as const;
+const ORGS = ["IHES", "CPES", "CSCE", "MUIA"] as const;
 
 interface ResourceForm {
   name: string;
