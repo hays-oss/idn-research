@@ -39,7 +39,8 @@ export default function Home() {
   // Fetch all data on mount
   useEffect(() => {
     async function fetchData() {
-      const [catRes, resRes, infRes, domRes, subRes, compRes, affRes] = await Promise.all([
+      // Core data (resources, categories, influencers)
+      const [catRes, resRes, infRes] = await Promise.all([
         supabase
           .from("resource_categories")
           .select("*")
@@ -55,11 +56,15 @@ export default function Home() {
           .select("*")
           .eq("is_active", true)
           .order("display_order"),
+      ]);
+
+      // New directory data (fetched separately so failures don't break the page)
+      const [domRes, subRes, compRes, affRes] = await Promise.all([
         supabase.from("taxonomy_domains").select("*").eq("is_active", true).order("display_order"),
         supabase.from("taxonomy_subcategories").select("*").eq("is_active", true).order("display_order"),
         supabase.from("companies").select("id, company_name, slug, website, linkedin_url, description, is_featured, primary_subcategory_id").eq("is_active", true).eq("review_status", "approved").order("company_name"),
         supabase.from("company_affiliations").select("organization_id, company_id, organizations(code, name)").eq("is_active", true),
-      ]);
+      ]).catch(() => [{ data: null }, { data: null }, { data: null }, { data: null }]);
 
       if (catRes.data) setAllCategories(catRes.data);
       if (resRes.data) setResources(resRes.data);
@@ -379,13 +384,59 @@ export default function Home() {
                 </section>
               )}
 
-              {/* Company Directory */}
+              {/* Company Directory Preview */}
               {filteredDirectoryDomains.length > 0 && (
-                <div className="mt-12 pt-8 border-t border-border">
-                  <DirectorySection
-                    domains={filteredDirectoryDomains}
-                    onTrackClick={trackClick}
-                  />
+                <div className="mt-12 pt-8 border-t border-border" id="company-directory">
+                  <div className="mb-4 flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-bold text-foreground">Company Directory</h2>
+                      <p className="text-sm text-muted mt-1">
+                        {filteredDirectoryDomains.reduce((s, d) => s + d.totalCompanies, 0)} companies across{" "}
+                        {filteredDirectoryDomains.reduce((s, d) => s + d.subcategories.length, 0)} market segments
+                      </p>
+                    </div>
+                    <a
+                      href="/directory"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-light transition-colors"
+                    >
+                      Explore Full Directory
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </a>
+                  </div>
+                  {/* Show domain summary cards */}
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {filteredDirectoryDomains.slice(0, 6).map((domain) => (
+                      <a
+                        key={domain.id}
+                        href={`/directory?domain=${domain.id}`}
+                        className="rounded-lg border border-border bg-white px-4 py-3 hover:border-primary/30 hover:shadow-sm transition-all group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                            {domain.name}
+                          </span>
+                          <span className="rounded-full bg-surface px-2 py-0.5 text-[10px] font-medium text-muted">
+                            {domain.totalCompanies}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted mt-1">
+                          {domain.subcategories.length} market segments
+                        </p>
+                      </a>
+                    ))}
+                  </div>
+                  {filteredDirectoryDomains.length > 6 && (
+                    <div className="mt-3 text-center">
+                      <a
+                        href="/directory"
+                        className="text-sm text-primary hover:text-primary-light transition-colors"
+                      >
+                        + {filteredDirectoryDomains.length - 6} more domains →
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
 

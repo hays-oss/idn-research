@@ -85,6 +85,9 @@ export default function Header({
 
           {/* Nav links */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+            <Link href="/directory" className="text-white/70 hover:text-white transition-colors">
+              Directory
+            </Link>
             <Link href="/about" className="text-white/70 hover:text-white transition-colors">
               About
             </Link>
