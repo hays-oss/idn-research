@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ResourceCategory } from "@/lib/types";
+import { ResourceCategory, DirectoryDomain } from "@/lib/types";
 
 // Group "Industry Meetings" sub-categories under a parent
 const MEETINGS_PREFIX = "Industry Meetings";
@@ -86,9 +86,84 @@ function SidebarNavItem({
   );
 }
 
+function DomainNavGroup({
+  domain,
+  activeSlug,
+  onNavigate,
+}: {
+  domain: DirectoryDomain;
+  activeSlug: string | null;
+  onNavigate: (slug: string) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  const hasActiveChild = domain.subcategories.some(
+    (sub) => activeSlug === `directory-sub-${sub.id}`
+  );
+
+  return (
+    <div>
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors ${
+          hasActiveChild && !expanded
+            ? "bg-primary/10 text-primary font-semibold"
+            : "text-foreground/80 hover:bg-surface hover:text-foreground"
+        }`}
+      >
+        <div className="flex items-center gap-1.5">
+          <svg
+            className={`h-3 w-3 shrink-0 text-muted transition-transform ${
+              expanded ? "rotate-90" : ""
+            }`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+          <span className="truncate">{domain.name}</span>
+        </div>
+        <span className="shrink-0 ml-2 rounded-full bg-surface px-1.5 py-0.5 text-[10px] font-medium text-muted">
+          {domain.totalCompanies}
+        </span>
+      </button>
+
+      {expanded && (
+        <div className="ml-4 mt-0.5 space-y-0.5 border-l border-border pl-2">
+          {domain.subcategories.map((sub) => {
+            const slug = `directory-sub-${sub.id}`;
+            const isActive = activeSlug === slug;
+            return (
+              <button
+                key={sub.id}
+                onClick={() => onNavigate(slug)}
+                className={`flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-xs transition-colors ${
+                  isActive
+                    ? "bg-primary/10 text-primary font-semibold"
+                    : "text-foreground/60 hover:bg-surface hover:text-foreground"
+                }`}
+              >
+                <span className="truncate">{sub.name}</span>
+                <span
+                  className={`shrink-0 ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
+                    isActive ? "bg-primary/20 text-primary" : "bg-surface text-muted"
+                  }`}
+                >
+                  {sub.companies.length}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Sidebar({
   categories,
-  directoryCategories,
+  directoryDomains,
   resourceCounts,
   influencerCount,
   activeSlug,
@@ -96,7 +171,7 @@ export default function Sidebar({
   onClose,
 }: {
   categories: ResourceCategory[];
-  directoryCategories: ResourceCategory[];
+  directoryDomains: DirectoryDomain[];
   resourceCounts: Record<string, number>;
   influencerCount: number;
   activeSlug: string | null;
@@ -241,7 +316,7 @@ export default function Sidebar({
           </nav>
 
           {/* ====== COMPANY DIRECTORY SECTION ====== */}
-          {directoryCategories.length > 0 && (
+          {directoryDomains.length > 0 && (
             <>
               <div className="mt-6 mb-2 flex items-center justify-between px-3">
                 <div className="text-[10px] font-semibold uppercase tracking-wider text-muted/60">
@@ -271,19 +346,14 @@ export default function Sidebar({
 
               {directoryExpanded && (
                 <nav className="space-y-0.5">
-                  {directoryCategories.map((cat) => {
-                    const count = resourceCounts[cat.id] || 0;
-                    return (
-                      <SidebarNavItem
-                        key={cat.slug}
-                        slug={cat.slug}
-                        name={cat.name}
-                        count={count}
-                        isActive={activeSlug === cat.slug}
-                        onClick={() => handleClick(cat.slug)}
-                      />
-                    );
-                  })}
+                  {directoryDomains.map((domain) => (
+                    <DomainNavGroup
+                      key={domain.id}
+                      domain={domain}
+                      activeSlug={activeSlug}
+                      onNavigate={handleClick}
+                    />
+                  ))}
                 </nav>
               )}
             </>

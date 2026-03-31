@@ -7,6 +7,11 @@ import {
   Resource,
   LinkedInInfluencer,
   CategoryWithResources,
+  TaxonomyDomain,
+  TaxonomySubcategory,
+  DirectoryCompany,
+  DirectoryDomain,
+  DirectorySubcategory,
 } from "@/lib/types";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
@@ -24,21 +29,17 @@ export default function Home() {
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [directoryDomains, setDirectoryDomains] = useState<DirectoryDomain[]>([]);
 
   // Split categories by type
   const resourceCategories = useMemo(
     () => allCategories.filter((c) => (c.category_type || "resource") === "resource"),
     [allCategories]
   );
-  const directoryCategories = useMemo(
-    () => allCategories.filter((c) => c.category_type === "directory"),
-    [allCategories]
-  );
-
   // Fetch all data on mount
   useEffect(() => {
     async function fetchData() {
-      const [catRes, resRes, infRes] = await Promise.all([
+      const [catRes, resRes, infRes, domRes, subRes, compRes, affRes] = await Promise.all([
         supabase
           .from("resource_categories")
           .select("*")
@@ -54,11 +55,69 @@ export default function Home() {
           .select("*")
           .eq("is_active", true)
           .order("display_order"),
+        supabase.from("taxonomy_domains").select("*").eq("is_active", true).order("display_order"),
+        supabase.from("taxonomy_subcategories").select("*").eq("is_active", true).order("display_order"),
+        supabase.from("companies").select("id, company_name, slug, website, linkedin_url, description, is_featured, primary_subcategory_id").eq("is_active", true).eq("review_status", "approved").order("company_name"),
+        supabase.from("company_affiliations").select("organization_id, company_id, organizations(code, name)").eq("is_active", true),
       ]);
 
       if (catRes.data) setAllCategories(catRes.data);
       if (resRes.data) setResources(resRes.data);
       if (infRes.data) setInfluencers(infRes.data);
+
+      // Build directory domains grouped structure
+      const domData = domRes.data;
+      const subData = subRes.data;
+      const compData = compRes.data;
+      const affData = affRes.data;
+
+      if (domData && subData && compData) {
+        const affMap = new Map<string, { code: string; name: string }[]>();
+        if (affData) {
+          for (const a of affData as any[]) {
+            const org = a.organizations as { code: string; name: string } | null;
+            if (!org) continue;
+            const list = affMap.get(a.company_id) || [];
+            list.push({ code: org.code, name: org.name });
+            affMap.set(a.company_id, list);
+          }
+        }
+
+        const domainList: DirectoryDomain[] = (domData as TaxonomyDomain[])
+          .map((domain) => {
+            const subs: DirectorySubcategory[] = (subData as TaxonomySubcategory[])
+              .filter((s) => s.domain_id === domain.id)
+              .map((sub) => ({
+                id: sub.id,
+                name: sub.name,
+                domain_id: sub.domain_id,
+                companies: (compData as any[])
+                  .filter((c) => c.primary_subcategory_id === sub.id)
+                  .map((c) => ({
+                    id: c.id,
+                    company_name: c.company_name,
+                    slug: c.slug,
+                    website: c.website,
+                    linkedin_url: c.linkedin_url,
+                    description: c.description,
+                    is_featured: c.is_featured,
+                    affiliations: affMap.get(c.id) || [],
+                  })),
+              }))
+              .filter((sub) => sub.companies.length > 0);
+
+            return {
+              id: domain.id,
+              name: domain.name,
+              subcategories: subs,
+              totalCompanies: subs.reduce((sum, s) => sum + s.companies.length, 0),
+            };
+          })
+          .filter((d) => d.totalCompanies > 0);
+
+        setDirectoryDomains(domainList);
+      }
+
       setLoading(false);
     }
     fetchData();
@@ -129,28 +188,33 @@ export default function Home() {
       .filter((cat) => cat.resources.length > 0);
   }, [resourceCategories, resources, searchQuery, activeTag]);
 
-  // Build directory categories with resources
-  const filteredDirectoryCategories = useMemo<CategoryWithResources[]>(() => {
+  // Filter directory domains by search query
+  const filteredDirectoryDomains = useMemo<DirectoryDomain[]>(() => {
     const q = searchQuery.toLowerCase().trim();
-    return directoryCategories
-      .map((cat) => ({
-        ...cat,
-        resources: resources
-          .filter((r) => {
-            if (r.category_id !== cat.id) return false;
-            if (activeTag && !(r.tags ?? []).includes(activeTag)) return false;
-            if (!q) return true;
-            return (
-              r.name.toLowerCase().includes(q) ||
-              (r.description && r.description.toLowerCase().includes(q)) ||
-              r.tags.some((t) => t.toLowerCase().includes(q)) ||
-              cat.name.toLowerCase().includes(q)
-            );
-          })
-          .sort((a, b) => a.name.localeCompare(b.name)),
-      }))
-      .filter((cat) => cat.resources.length > 0);
-  }, [directoryCategories, resources, searchQuery, activeTag]);
+    if (!q) return directoryDomains;
+
+    return directoryDomains
+      .map((domain) => {
+        const filteredSubs = domain.subcategories
+          .map((sub) => ({
+            ...sub,
+            companies: sub.companies.filter((c) =>
+              c.company_name.toLowerCase().includes(q) ||
+              (c.description && c.description.toLowerCase().includes(q)) ||
+              sub.name.toLowerCase().includes(q) ||
+              domain.name.toLowerCase().includes(q)
+            ),
+          }))
+          .filter((sub) => sub.companies.length > 0);
+
+        return {
+          ...domain,
+          subcategories: filteredSubs,
+          totalCompanies: filteredSubs.reduce((sum, s) => sum + s.companies.length, 0),
+        };
+      })
+      .filter((d) => d.totalCompanies > 0);
+  }, [directoryDomains, searchQuery]);
 
   // Filter and sort influencers
   const filteredInfluencers = useMemo(() => {
@@ -178,7 +242,7 @@ export default function Home() {
   // Count filtered results for tag bar
   const tagFilteredCount = activeTag
     ? filteredResourceCategories.reduce((sum, c) => sum + c.resources.length, 0) +
-      filteredDirectoryCategories.reduce((sum, c) => sum + c.resources.length, 0)
+      filteredDirectoryDomains.reduce((sum, d) => sum + d.totalCompanies, 0)
     : 0;
 
   if (loading) {
@@ -202,7 +266,7 @@ export default function Home() {
       <div className="flex flex-1">
         <Sidebar
           categories={resourceCategories}
-          directoryCategories={directoryCategories}
+          directoryDomains={filteredDirectoryDomains}
           resourceCounts={resourceCounts}
           influencerCount={influencers.length}
           activeSlug={activeSlug}
@@ -274,8 +338,8 @@ export default function Home() {
                     (sum, c) => sum + c.resources.length,
                     0
                   ) +
-                    filteredDirectoryCategories.reduce(
-                      (sum, c) => sum + c.resources.length,
+                    filteredDirectoryDomains.reduce(
+                      (sum, d) => sum + d.totalCompanies,
                       0
                     ) +
                     filteredInfluencers.length}{" "}
@@ -316,13 +380,11 @@ export default function Home() {
               )}
 
               {/* Company Directory */}
-              {filteredDirectoryCategories.length > 0 && (
+              {filteredDirectoryDomains.length > 0 && (
                 <div className="mt-12 pt-8 border-t border-border">
                   <DirectorySection
-                    categories={filteredDirectoryCategories}
+                    domains={filteredDirectoryDomains}
                     onTrackClick={trackClick}
-                    onTagClick={handleTagClick}
-                    activeTag={activeTag}
                   />
                 </div>
               )}
@@ -330,7 +392,7 @@ export default function Home() {
               {/* No results for tag filter */}
               {activeTag &&
                 filteredResourceCategories.length === 0 &&
-                filteredDirectoryCategories.length === 0 && (
+                filteredDirectoryDomains.length === 0 && (
                   <div className="text-center py-12">
                     <p className="text-muted">
                       No resources tagged with &ldquo;{activeTag}&rdquo;
