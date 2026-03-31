@@ -9,7 +9,7 @@ import {
   CategoryWithResources,
 } from "@/lib/types";
 import Header from "@/components/Header";
-import CategoryNav from "@/components/CategoryNav";
+import Sidebar from "@/components/Sidebar";
 import CategorySection from "@/components/CategorySection";
 import InfluencerCard from "@/components/InfluencerCard";
 import SubmitResourceForm from "@/components/SubmitResourceForm";
@@ -21,6 +21,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Fetch all data on mount
   useEffect(() => {
@@ -62,19 +63,29 @@ export default function Home() {
           }
         }
       },
-      { rootMargin: "-120px 0px -70% 0px", threshold: 0 }
+      { rootMargin: "-80px 0px -70% 0px", threshold: 0 }
     );
 
     categories.forEach((cat) => {
       const el = document.getElementById(cat.slug);
       if (el) observer.observe(el);
     });
-    // Also observe the influencers section
     const infEl = document.getElementById("linkedin-influencers");
     if (infEl) observer.observe(infEl);
 
     return () => observer.disconnect();
   }, [categories, loading]);
+
+  // Resource counts per category
+  const resourceCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const cat of categories) {
+      counts[cat.id] = resources.filter(
+        (r) => r.category_id === cat.id
+      ).length;
+    }
+    return counts;
+  }, [categories, resources]);
 
   // Build categories with resources, applying search filter
   const filteredCategories = useMemo<CategoryWithResources[]>(() => {
@@ -118,7 +129,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex flex-1 items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent mx-auto mb-3" />
           <p className="text-sm text-muted">Loading resources...</p>
@@ -128,104 +139,128 @@ export default function Home() {
   }
 
   return (
-    <>
-      <Header onSearch={setSearchQuery} />
-      <CategoryNav categories={categories} activeSlug={activeSlug} />
+    <div className="min-h-screen flex flex-col">
+      <Header
+        onSearch={setSearchQuery}
+        onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+      />
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero stats */}
-        {!searchQuery && (
-          <div className="mb-10 text-center">
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-              Healthcare Resource Intelligence
-            </h1>
-            <p className="text-muted max-w-2xl mx-auto">
-              {totalResources}+ curated resources across {categories.length}{" "}
-              categories — companies, meetings, organizations, podcasts,
-              influencers, and more.
-            </p>
-          </div>
-        )}
+      <div className="flex flex-1">
+        <Sidebar
+          categories={categories}
+          resourceCounts={resourceCounts}
+          influencerCount={influencers.length}
+          activeSlug={activeSlug}
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
 
-        {/* Search results header */}
-        {searchQuery && (
-          <div className="mb-6">
-            <p className="text-sm text-muted">
-              Showing results for{" "}
-              <span className="font-medium text-foreground">
-                &ldquo;{searchQuery}&rdquo;
-              </span>{" "}
-              &mdash;{" "}
-              {filteredCategories.reduce((sum, c) => sum + c.resources.length, 0) +
-                filteredInfluencers.length}{" "}
-              matches
-            </p>
-          </div>
-        )}
-
-        {/* Category sections */}
-        <div className="space-y-10">
-          {filteredCategories.map((cat) => (
-            <CategorySection
-              key={cat.id}
-              category={cat}
-              onTrackClick={trackClick}
-            />
-          ))}
-
-          {/* LinkedIn Influencers */}
-          {filteredInfluencers.length > 0 && (
-            <section id="linkedin-influencers" className="scroll-mt-28">
-              <div className="flex items-center gap-3 mb-4">
-                <h2 className="text-lg font-semibold text-foreground">
-                  LinkedIn Influencers
-                </h2>
-                <span className="rounded-full bg-surface px-2.5 py-0.5 text-xs font-medium text-muted">
-                  {filteredInfluencers.length}
-                </span>
+        {/* Main content — offset by sidebar on desktop */}
+        <main className="flex-1 lg:ml-64 min-w-0">
+          <div className="max-w-[1200px] px-4 sm:px-6 lg:px-8 py-8">
+            {/* Hero stats */}
+            {!searchQuery && (
+              <div className="mb-10">
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+                  Healthcare Resource Intelligence
+                </h1>
+                <p className="text-muted max-w-2xl">
+                  {totalResources}+ curated resources across {categories.length}{" "}
+                  categories — companies, meetings, organizations, podcasts,
+                  influencers, and more.
+                </p>
               </div>
-              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredInfluencers.map((inf) => (
-                  <InfluencerCard key={inf.id} influencer={inf} />
-                ))}
-              </div>
-            </section>
-          )}
+            )}
 
-          {/* Submit form */}
-          {!searchQuery && <SubmitResourceForm categories={categories} />}
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="mt-auto bg-header-bg py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/60">
-            <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded bg-accent text-header-bg text-[10px] font-bold">
-                IDN
+            {/* Search results header */}
+            {searchQuery && (
+              <div className="mb-6">
+                <p className="text-sm text-muted">
+                  Showing results for{" "}
+                  <span className="font-medium text-foreground">
+                    &ldquo;{searchQuery}&rdquo;
+                  </span>{" "}
+                  &mdash;{" "}
+                  {filteredCategories.reduce(
+                    (sum, c) => sum + c.resources.length,
+                    0
+                  ) + filteredInfluencers.length}{" "}
+                  matches
+                </p>
               </div>
-              <span>IDN Research &mdash; A project by IHES</span>
-            </div>
-            <div className="flex gap-6">
-              <a href="/about" className="hover:text-white transition-colors">
-                About
-              </a>
-              <a href="#submit" className="hover:text-white transition-colors">
-                Submit Resource
-              </a>
-              <a
-                href="https://www.ihesllc.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
-              >
-                IHES
-              </a>
+            )}
+
+            {/* Category sections */}
+            <div className="space-y-10">
+              {filteredCategories.map((cat) => (
+                <CategorySection
+                  key={cat.id}
+                  category={cat}
+                  onTrackClick={trackClick}
+                />
+              ))}
+
+              {/* LinkedIn Influencers */}
+              {filteredInfluencers.length > 0 && (
+                <section id="linkedin-influencers" className="scroll-mt-20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <h2 className="text-lg font-semibold text-foreground">
+                      LinkedIn Influencers
+                    </h2>
+                    <span className="rounded-full bg-surface px-2.5 py-0.5 text-xs font-medium text-muted">
+                      {filteredInfluencers.length}
+                    </span>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {filteredInfluencers.map((inf) => (
+                      <InfluencerCard key={inf.id} influencer={inf} />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Submit form */}
+              {!searchQuery && <SubmitResourceForm categories={categories} />}
             </div>
           </div>
-        </div>
-      </footer>
-    </>
+
+          {/* Footer */}
+          <footer className="mt-auto bg-header-bg py-8">
+            <div className="max-w-[1200px] px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/60">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded bg-accent text-header-bg text-[10px] font-bold">
+                    IDN
+                  </div>
+                  <span>IDN Research &mdash; A project by IHES</span>
+                </div>
+                <div className="flex gap-6">
+                  <a
+                    href="/about"
+                    className="hover:text-white transition-colors"
+                  >
+                    About
+                  </a>
+                  <a
+                    href="#submit"
+                    className="hover:text-white transition-colors"
+                  >
+                    Submit Resource
+                  </a>
+                  <a
+                    href="https://www.ihesllc.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white transition-colors"
+                  >
+                    IHES
+                  </a>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </main>
+      </div>
+    </div>
   );
 }

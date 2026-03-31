@@ -11,7 +11,7 @@ export default function CategorySection({
   onTrackClick: (id: string) => void;
 }) {
   return (
-    <section id={category.slug} className="scroll-mt-28">
+    <section id={category.slug} className="scroll-mt-20">
       <div className="flex items-center gap-3 mb-4">
         <h2 className="text-lg font-semibold text-foreground">{category.name}</h2>
         <span className="rounded-full bg-surface px-2.5 py-0.5 text-xs font-medium text-muted">
