@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Company, TaxonomyDomain, TaxonomySubcategory, CompanyType, ReviewStatus, Organization, CompanyAffiliation } from "@/lib/types";
+import { Company, TaxonomyDomain, TaxonomySubcategory, CategoryTaxonomy, CompanyType, ReviewStatus, Organization, CompanyAffiliation } from "@/lib/types";
 import { supabase } from "@/lib/supabase";
 import EditModal, { FormField, inputClass, selectClass } from "./EditModal";
 
@@ -11,6 +11,7 @@ interface CompaniesAdminProps {
   subcategories: TaxonomySubcategory[];
   organizations: Organization[];
   affiliations: CompanyAffiliation[];
+  tags: CategoryTaxonomy[];
   onRefresh: () => void;
 }
 
@@ -89,6 +90,7 @@ export default function CompaniesAdmin({
   subcategories,
   organizations,
   affiliations,
+  tags,
   onRefresh,
 }: CompaniesAdminProps) {
   const [search, setSearch] = useState("");
@@ -100,6 +102,8 @@ export default function CompaniesAdmin({
   const [form, setForm] = useState<CompanyForm>(emptyForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedOrgIds, setSelectedOrgIds] = useState<string[]>([]);
+  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
+  const [tagSearchQuery, setTagSearchQuery] = useState("");
 
   // Helper: find domain_id for a subcategory
   function getDomainIdForSubcategory(subcategoryId: number | null): string {
@@ -139,6 +143,28 @@ export default function CompaniesAdmin({
     );
   }
 
+  // Helper: toggle tag in selectedTagIds
+  function toggleTag(tagId: number) {
+    setSelectedTagIds((prev) =>
+      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
+    );
+  }
+
+  // Tags for the selected primary subcategory
+  const primaryTags = form.primary_subcategory_id
+    ? tags.filter((t) => String(t.subcategory_id) === form.primary_subcategory_id)
+    : [];
+
+  // Tag search results (across all subcategories)
+  const searchResults =
+    tagSearchQuery.length >= 2
+      ? tags
+          .filter((t) =>
+            t.level_3_tag.toLowerCase().includes(tagSearchQuery.toLowerCase())
+          )
+          .slice(0, 20)
+      : [];
+
   // Filter companies
   const filtered = companies.filter((c) => {
     const matchesSearch = c.company_name
@@ -156,10 +182,12 @@ export default function CompaniesAdmin({
     setEditingId(null);
     setForm(emptyForm);
     setSelectedOrgIds([]);
+    setSelectedTagIds([]);
+    setTagSearchQuery("");
     setModalOpen(true);
   }
 
-  function openEdit(company: Company) {
+  async function openEdit(company: Company) {
     setEditingId(company.id);
     setForm({
       company_name: company.company_name,
@@ -187,6 +215,17 @@ export default function CompaniesAdmin({
       .filter((a) => a.company_id === company.id)
       .map((a) => a.organization_id);
     setSelectedOrgIds(existingOrgIds);
+    // Load existing tags for this company
+    setTagSearchQuery("");
+    const existingTags = await supabase
+      .from("company_tags")
+      .select("taxonomy_id")
+      .eq("company_id", company.id);
+    if (existingTags.data) {
+      setSelectedTagIds(existingTags.data.map((t: { taxonomy_id: number }) => t.taxonomy_id));
+    } else {
+      setSelectedTagIds([]);
+    }
     setModalOpen(true);
   }
 
@@ -253,6 +292,22 @@ export default function CompaniesAdmin({
           is_active: true,
         }));
         await supabase.from("company_affiliations").insert(newAffs);
+      }
+    }
+
+    // Sync tags
+    if (companyId) {
+      // Delete all existing tags for this company
+      await supabase.from("company_tags").delete().eq("company_id", companyId);
+
+      // Insert selected tags
+      if (selectedTagIds.length > 0) {
+        const tagRows = selectedTagIds.map((tagId) => ({
+          company_id: companyId!,
+          taxonomy_id: tagId,
+          source_method: "manual",
+        }));
+        await supabase.from("company_tags").insert(tagRows);
       }
     }
 
@@ -693,6 +748,97 @@ export default function CompaniesAdmin({
               </label>
             ))}
           </div>
+        </FormField>
+
+        <FormField label="Tags">
+          {/* Show tags for selected primary subcategory */}
+          {form.primary_subcategory_id && (
+            <div className="mb-3">
+              <div className="text-xs text-[var(--muted)] mb-2">
+                Tags for selected category:
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {primaryTags.map((tag) => {
+                  const isSelected = selectedTagIds.includes(tag.id);
+                  return (
+                    <button
+                      key={tag.id}
+                      type="button"
+                      onClick={() => toggleTag(tag.id)}
+                      className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                        isSelected
+                          ? "bg-[var(--primary)] text-white"
+                          : "bg-[var(--surface)] text-[var(--muted)] hover:bg-[var(--primary)]/10 hover:text-[var(--primary)]"
+                      }`}
+                    >
+                      {tag.level_3_tag}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Search for tags across all subcategories */}
+          <div>
+            <input
+              type="text"
+              placeholder="Search all tags..."
+              value={tagSearchQuery}
+              onChange={(e) => setTagSearchQuery(e.target.value)}
+              className={inputClass + " mb-2"}
+            />
+            {tagSearchQuery.length >= 2 && searchResults.length > 0 && (
+              <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+                {searchResults.map((tag) => {
+                  const isSelected = selectedTagIds.includes(tag.id);
+                  return (
+                    <button
+                      key={tag.id}
+                      type="button"
+                      onClick={() => toggleTag(tag.id)}
+                      className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                        isSelected
+                          ? "bg-[var(--primary)] text-white"
+                          : "bg-[var(--surface)] text-[var(--muted)] hover:bg-[var(--primary)]/10 hover:text-[var(--primary)]"
+                      }`}
+                    >
+                      {tag.level_3_tag}
+                      <span className="ml-1 text-[10px] opacity-60">({tag.level_2_subcategory})</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {tagSearchQuery.length >= 2 && searchResults.length === 0 && (
+              <p className="text-xs text-[var(--muted)]">No tags found.</p>
+            )}
+          </div>
+
+          {/* Show selected tags from other subcategories */}
+          {selectedTagIds.filter((id) => !primaryTags.some((t) => t.id === id)).length > 0 && (
+            <div className="mt-3">
+              <div className="text-xs text-[var(--muted)] mb-2">Other selected tags:</div>
+              <div className="flex flex-wrap gap-2">
+                {selectedTagIds
+                  .filter((id) => !primaryTags.some((t) => t.id === id))
+                  .map((id) => {
+                    const tag = tags.find((t) => t.id === id);
+                    if (!tag) return null;
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => toggleTag(id)}
+                        className="rounded-full bg-[var(--primary)] text-white px-3 py-1 text-xs font-medium"
+                      >
+                        {tag.level_3_tag} &times;
+                      </button>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
         </FormField>
 
         <FormField label="Notes">

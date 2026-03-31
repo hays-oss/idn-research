@@ -224,6 +224,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             subcategories={subcategories}
             organizations={organizations}
             affiliations={affiliations}
+            tags={tags}
             onRefresh={fetchData}
           />
         )}
