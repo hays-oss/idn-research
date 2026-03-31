@@ -93,30 +93,34 @@ export default function Home() {
     return categories
       .map((cat) => ({
         ...cat,
-        resources: resources.filter((r) => {
-          if (r.category_id !== cat.id) return false;
-          if (!q) return true;
-          return (
-            r.name.toLowerCase().includes(q) ||
-            (r.description && r.description.toLowerCase().includes(q)) ||
-            r.tags.some((t) => t.toLowerCase().includes(q)) ||
-            cat.name.toLowerCase().includes(q)
-          );
-        }),
+        resources: resources
+          .filter((r) => {
+            if (r.category_id !== cat.id) return false;
+            if (!q) return true;
+            return (
+              r.name.toLowerCase().includes(q) ||
+              (r.description && r.description.toLowerCase().includes(q)) ||
+              r.tags.some((t) => t.toLowerCase().includes(q)) ||
+              cat.name.toLowerCase().includes(q)
+            );
+          })
+          .sort((a, b) => a.name.localeCompare(b.name)),
       }))
       .filter((cat) => cat.resources.length > 0);
   }, [categories, resources, searchQuery]);
 
-  // Filter influencers
+  // Filter and sort influencers
   const filteredInfluencers = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
-    if (!q) return influencers;
-    return influencers.filter(
-      (i) =>
-        i.name.toLowerCase().includes(q) ||
-        (i.title && i.title.toLowerCase().includes(q)) ||
-        (i.organization && i.organization.toLowerCase().includes(q))
-    );
+    const filtered = q
+      ? influencers.filter(
+          (i) =>
+            i.name.toLowerCase().includes(q) ||
+            (i.title && i.title.toLowerCase().includes(q)) ||
+            (i.organization && i.organization.toLowerCase().includes(q))
+        )
+      : [...influencers];
+    return filtered.sort((a, b) => a.name.localeCompare(b.name));
   }, [influencers, searchQuery]);
 
   // Track clicks
