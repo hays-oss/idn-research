@@ -19,6 +19,7 @@ export default function Home() {
   const [resources, setResources] = useState<Resource[]>([]);
   const [influencers, setInfluencers] = useState<LinkedInInfluencer[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -76,7 +77,12 @@ export default function Home() {
     return () => observer.disconnect();
   }, [categories, loading]);
 
-  // Resource counts per category
+  // Handle tag click — toggle tag filter
+  const handleTagClick = useCallback((tag: string) => {
+    setActiveTag((prev) => (prev === tag ? null : tag));
+  }, []);
+
+  // Resource counts per category (unfiltered)
   const resourceCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     for (const cat of categories) {
@@ -87,7 +93,7 @@ export default function Home() {
     return counts;
   }, [categories, resources]);
 
-  // Build categories with resources, applying search filter
+  // Build categories with resources, applying search + tag filter
   const filteredCategories = useMemo<CategoryWithResources[]>(() => {
     const q = searchQuery.toLowerCase().trim();
     return categories
@@ -96,6 +102,9 @@ export default function Home() {
         resources: resources
           .filter((r) => {
             if (r.category_id !== cat.id) return false;
+            // Tag filter
+            if (activeTag && !(r.tags ?? []).includes(activeTag)) return false;
+            // Search filter
             if (!q) return true;
             return (
               r.name.toLowerCase().includes(q) ||
@@ -107,11 +116,13 @@ export default function Home() {
           .sort((a, b) => a.name.localeCompare(b.name)),
       }))
       .filter((cat) => cat.resources.length > 0);
-  }, [categories, resources, searchQuery]);
+  }, [categories, resources, searchQuery, activeTag]);
 
   // Filter and sort influencers
   const filteredInfluencers = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
+    // Influencers don't have tags, so hide them when tag filter is active
+    if (activeTag) return [];
     const filtered = q
       ? influencers.filter(
           (i) =>
@@ -121,7 +132,7 @@ export default function Home() {
         )
       : [...influencers];
     return filtered.sort((a, b) => a.name.localeCompare(b.name));
-  }, [influencers, searchQuery]);
+  }, [influencers, searchQuery, activeTag]);
 
   // Track clicks
   const trackClick = useCallback(async (resourceId: string) => {
@@ -130,6 +141,11 @@ export default function Home() {
 
   // Total resource count
   const totalResources = resources.length + influencers.length;
+
+  // Count filtered results for tag bar
+  const tagFilteredCount = activeTag
+    ? filteredCategories.reduce((sum, c) => sum + c.resources.length, 0)
+    : 0;
 
   if (loading) {
     return (
@@ -163,7 +179,7 @@ export default function Home() {
         <main className="flex-1 lg:ml-64 min-w-0">
           <div className="max-w-[1200px] px-4 sm:px-6 lg:px-8 py-8">
             {/* Hero stats */}
-            {!searchQuery && (
+            {!searchQuery && !activeTag && (
               <div className="mb-10">
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
                   Healthcare Resource Intelligence
@@ -176,8 +192,31 @@ export default function Home() {
               </div>
             )}
 
+            {/* Active tag filter bar */}
+            {activeTag && (
+              <div className="mb-6 flex items-center gap-3">
+                <p className="text-sm text-muted">
+                  Filtered by tag:{" "}
+                  <span className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 px-2 py-0.5 text-sm font-medium text-primary">
+                    {activeTag}
+                    <button
+                      onClick={() => setActiveTag(null)}
+                      className="hover:text-primary/70 transition-colors"
+                    >
+                      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </span>
+                  <span className="ml-2 text-muted">
+                    &mdash; {tagFilteredCount} {tagFilteredCount === 1 ? "resource" : "resources"}
+                  </span>
+                </p>
+              </div>
+            )}
+
             {/* Search results header */}
-            {searchQuery && (
+            {searchQuery && !activeTag && (
               <div className="mb-6">
                 <p className="text-sm text-muted">
                   Showing results for{" "}
@@ -201,6 +240,8 @@ export default function Home() {
                   key={cat.id}
                   category={cat}
                   onTrackClick={trackClick}
+                  onTagClick={handleTagClick}
+                  activeTag={activeTag}
                 />
               ))}
 
@@ -223,8 +264,25 @@ export default function Home() {
                 </section>
               )}
 
+              {/* No results for tag filter */}
+              {activeTag && filteredCategories.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-muted">
+                    No resources tagged with &ldquo;{activeTag}&rdquo;
+                  </p>
+                  <button
+                    onClick={() => setActiveTag(null)}
+                    className="mt-2 text-sm text-primary hover:text-primary-light transition-colors"
+                  >
+                    Clear filter
+                  </button>
+                </div>
+              )}
+
               {/* Submit form */}
-              {!searchQuery && <SubmitResourceForm categories={categories} />}
+              {!searchQuery && !activeTag && (
+                <SubmitResourceForm categories={categories} />
+              )}
             </div>
           </div>
 

@@ -6,9 +6,13 @@ import ResourceCard from "./ResourceCard";
 export default function CategorySection({
   category,
   onTrackClick,
+  onTagClick,
+  activeTag,
 }: {
   category: CategoryWithResources;
   onTrackClick: (id: string) => void;
+  onTagClick?: (tag: string) => void;
+  activeTag?: string | null;
 }) {
   return (
     <section id={category.slug} className="scroll-mt-20">
@@ -27,6 +31,8 @@ export default function CategorySection({
             key={resource.id}
             resource={resource}
             onTrackClick={onTrackClick}
+            onTagClick={onTagClick}
+            activeTag={activeTag}
           />
         ))}
       </div>
