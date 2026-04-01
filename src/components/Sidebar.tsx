@@ -131,30 +131,18 @@ function DomainNavGroup({
 
       {expanded && (
         <div className="ml-4 mt-0.5 space-y-0.5 border-l border-border pl-2">
-          {domain.subcategories.map((sub) => {
-            const slug = `directory-sub-${sub.id}`;
-            const isActive = activeSlug === slug;
-            return (
-              <button
-                key={sub.id}
-                onClick={() => onNavigate(slug)}
-                className={`flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-xs transition-colors ${
-                  isActive
-                    ? "bg-primary/10 text-primary font-semibold"
-                    : "text-foreground/60 hover:bg-surface hover:text-foreground"
-                }`}
-              >
-                <span className="truncate">{sub.name}</span>
-                <span
-                  className={`shrink-0 ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
-                    isActive ? "bg-primary/20 text-primary" : "bg-surface text-muted"
-                  }`}
-                >
-                  {sub.companies.length}
-                </span>
-              </button>
-            );
-          })}
+          {domain.subcategories.map((sub) => (
+            <a
+              key={sub.id}
+              href={`/directory?domain=${domain.id}&sub=${sub.id}`}
+              className="flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-xs transition-colors text-foreground/60 hover:bg-surface hover:text-foreground"
+            >
+              <span className="truncate">{sub.name}</span>
+              <span className="shrink-0 ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-medium bg-surface text-muted">
+                {sub.companies.length}
+              </span>
+            </a>
+          ))}
         </div>
       )}
     </div>
