@@ -19,6 +19,8 @@ import CategorySection from "@/components/CategorySection";
 import DirectorySection from "@/components/DirectorySection";
 import InfluencerCard from "@/components/InfluencerCard";
 import SubmitResourceForm from "@/components/SubmitResourceForm";
+import HeroSection from "@/components/HeroSection";
+import HowItWorks from "@/components/HowItWorks";
 
 export default function Home() {
   const [allCategories, setAllCategories] = useState<ResourceCategory[]>([]);
@@ -250,6 +252,19 @@ export default function Home() {
       filteredDirectoryDomains.reduce((sum, d) => sum + d.totalCompanies, 0)
     : 0;
 
+  const uniqueTagCount = useMemo(() => {
+    const tags = new Set<string>();
+    for (const r of resources) {
+      for (const t of r.tags ?? []) tags.add(t);
+    }
+    return tags.size;
+  }, [resources]);
+
+  const totalCompanyCount = useMemo(
+    () => directoryDomains.reduce((sum, d) => sum + d.totalCompanies, 0),
+    [directoryDomains]
+  );
+
   if (loading) {
     return (
       <div className="flex flex-1 items-center justify-center min-h-screen">
@@ -281,21 +296,21 @@ export default function Home() {
 
         {/* Main content */}
         <main className="flex-1 lg:ml-64 min-w-0">
-          <div className="max-w-[1200px] px-4 sm:px-6 lg:px-8 py-8">
-            {/* Hero stats */}
-            {!searchQuery && !activeTag && (
-              <div className="mb-10">
-                <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-                  Healthcare Resource Intelligence
-                </h1>
-                <p className="text-muted max-w-2xl">
-                  {totalResources}+ curated resources across{" "}
-                  {allCategories.length} categories — companies, meetings,
-                  organizations, podcasts, influencers, and more.
-                </p>
-              </div>
-            )}
+          {/* Hero + How It Works — full-width, above content */}
+          {!searchQuery && !activeTag && (
+            <>
+              <HeroSection
+                companyCount={totalCompanyCount}
+                domainCount={directoryDomains.length}
+                tagCount={uniqueTagCount}
+                searchQuery={searchQuery}
+                onSearch={setSearchQuery}
+              />
+              <HowItWorks />
+            </>
+          )}
 
+          <div className="max-w-[1200px] px-4 sm:px-6 lg:px-8 py-8">
             {/* Active tag filter bar */}
             {activeTag && (
               <div className="mb-6 flex items-center gap-3">
