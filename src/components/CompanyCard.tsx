@@ -20,7 +20,7 @@ export default function CompanyCard({
   const hasLinkedIn = !!company.linkedin_url;
 
   return (
-    <div className="group rounded-lg border border-border bg-white px-4 py-2.5 transition-all hover:border-primary/30 hover:shadow-sm">
+    <div className="group rounded-xl border border-border bg-white px-4 py-3 transition-all duration-200 ease-out hover:border-teal/30 hover:shadow-md hover:-translate-y-0.5">
       <div className="flex items-center justify-between">
         <a
           href={company.website || "#"}
@@ -30,7 +30,7 @@ export default function CompanyCard({
           className="min-w-0 flex-1"
         >
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-foreground group-hover:text-primary truncate">
+            <span className="text-base font-bold text-foreground group-hover:text-primary truncate">
               {company.company_name}
             </span>
             {hasAffiliations && (
