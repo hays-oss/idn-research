@@ -1,0 +1,795 @@
+domain,subcategory,tag,is_new
+Medical Devices & Procedural Products,Orthopedic,Joint reconstruction,false
+Medical Devices & Procedural Products,Orthopedic,Spine,false
+Medical Devices & Procedural Products,Orthopedic,Trauma,false
+Medical Devices & Procedural Products,Orthopedic,Sports medicine,false
+Medical Devices & Procedural Products,Orthopedic,Extremities,false
+Medical Devices & Procedural Products,Orthopedic,Biologics,false
+Medical Devices & Procedural Products,Orthopedic,Power tools,false
+Medical Devices & Procedural Products,Orthopedic,Navigation,false
+Medical Devices & Procedural Products,Orthopedic,Hip replacement systems,true
+Medical Devices & Procedural Products,Orthopedic,Knee replacement systems,true
+Medical Devices & Procedural Products,Orthopedic,Bone cement,true
+Medical Devices & Procedural Products,Orthopedic,Spinal fusion devices,true
+Medical Devices & Procedural Products,Orthopedic,Bone graft substitutes,true
+Medical Devices & Procedural Products,Orthopedic,Orthopedic robotics,true
+Medical Devices & Procedural Products,Orthopedic,3D-printed implants,true
+Medical Devices & Procedural Products,Orthopedic,Cartilage repair,true
+Medical Devices & Procedural Products,Orthopedic,External fixation,true
+Medical Devices & Procedural Products,Cardiovascular,Interventional cardiology,false
+Medical Devices & Procedural Products,Cardiovascular,Structural heart,false
+Medical Devices & Procedural Products,Cardiovascular,Electrophysiology,false
+Medical Devices & Procedural Products,Cardiovascular,Cardiac rhythm management,false
+Medical Devices & Procedural Products,Cardiovascular,Vascular,false
+Medical Devices & Procedural Products,Cardiovascular,Peripheral vascular,false
+Medical Devices & Procedural Products,Cardiovascular,Heart failure,false
+Medical Devices & Procedural Products,Cardiovascular,Drug-eluting stents,true
+Medical Devices & Procedural Products,Cardiovascular,TAVR systems,true
+Medical Devices & Procedural Products,Cardiovascular,Left atrial appendage closure,true
+Medical Devices & Procedural Products,Cardiovascular,Ablation catheters,true
+Medical Devices & Procedural Products,Cardiovascular,Implantable defibrillators,true
+Medical Devices & Procedural Products,Cardiovascular,Pacemakers,true
+Medical Devices & Procedural Products,Cardiovascular,Cardiac mapping systems,true
+Medical Devices & Procedural Products,Cardiovascular,LVAD / mechanical support,true
+Medical Devices & Procedural Products,Cardiovascular,Atherectomy devices,true
+Medical Devices & Procedural Products,Surgical,General surgery,false
+Medical Devices & Procedural Products,Surgical,Minimally invasive surgery,false
+Medical Devices & Procedural Products,Surgical,Surgical robotics,false
+Medical Devices & Procedural Products,Surgical,Stapling / closure,false
+Medical Devices & Procedural Products,Surgical,Energy devices,false
+Medical Devices & Procedural Products,Surgical,Sutures,false
+Medical Devices & Procedural Products,Surgical,Surgical visualization,false
+Medical Devices & Procedural Products,Surgical,Hernia,false
+Medical Devices & Procedural Products,Surgical,Trocars / access devices,true
+Medical Devices & Procedural Products,Surgical,Surgical smoke evacuation,true
+Medical Devices & Procedural Products,Surgical,Vessel sealing,true
+Medical Devices & Procedural Products,Surgical,Bariatric surgery devices,true
+Medical Devices & Procedural Products,Surgical,Surgical mesh,true
+Medical Devices & Procedural Products,Surgical,Hemostatic agents,true
+Medical Devices & Procedural Products,General Med-Surg,Beds / stretchers,false
+Medical Devices & Procedural Products,General Med-Surg,IV products,false
+Medical Devices & Procedural Products,General Med-Surg,Pumps,false
+Medical Devices & Procedural Products,General Med-Surg,Compression therapy,false
+Medical Devices & Procedural Products,General Med-Surg,Patient warming,false
+Medical Devices & Procedural Products,General Med-Surg,Sharps,false
+Medical Devices & Procedural Products,General Med-Surg,Exam gloves,false
+Medical Devices & Procedural Products,General Med-Surg,Syringes,false
+Medical Devices & Procedural Products,General Med-Surg,Needleless connectors,true
+Medical Devices & Procedural Products,General Med-Surg,Catheters,true
+Medical Devices & Procedural Products,General Med-Surg,Drainage systems,true
+Medical Devices & Procedural Products,General Med-Surg,Patient positioning,true
+Medical Devices & Procedural Products,General Med-Surg,Pulse oximetry,true
+Medical Devices & Procedural Products,General Med-Surg,Sequential compression devices,true
+Medical Devices & Procedural Products,Anesthesia / Respiratory,Anesthesia machines,false
+Medical Devices & Procedural Products,Anesthesia / Respiratory,Airway products,false
+Medical Devices & Procedural Products,Anesthesia / Respiratory,Ventilators,false
+Medical Devices & Procedural Products,Anesthesia / Respiratory,Oxygen therapy,false
+Medical Devices & Procedural Products,Anesthesia / Respiratory,Respiratory therapy devices,false
+Medical Devices & Procedural Products,Anesthesia / Respiratory,Monitoring,false
+Medical Devices & Procedural Products,Anesthesia / Respiratory,Endotracheal tubes,true
+Medical Devices & Procedural Products,Anesthesia / Respiratory,Laryngoscopes,true
+Medical Devices & Procedural Products,Anesthesia / Respiratory,Capnography,true
+Medical Devices & Procedural Products,Anesthesia / Respiratory,Nebulizers,true
+Medical Devices & Procedural Products,Anesthesia / Respiratory,High-flow nasal cannula,true
+Medical Devices & Procedural Products,Anesthesia / Respiratory,Bronchoscopy devices,true
+Medical Devices & Procedural Products,Neurology / Neurosurgery,Neurovascular,false
+Medical Devices & Procedural Products,Neurology / Neurosurgery,Stroke devices,false
+Medical Devices & Procedural Products,Neurology / Neurosurgery,Spine neuro,false
+Medical Devices & Procedural Products,Neurology / Neurosurgery,Brain monitoring,false
+Medical Devices & Procedural Products,Neurology / Neurosurgery,Neuromodulation,false
+Medical Devices & Procedural Products,Neurology / Neurosurgery,Deep brain stimulation,true
+Medical Devices & Procedural Products,Neurology / Neurosurgery,Spinal cord stimulation,true
+Medical Devices & Procedural Products,Neurology / Neurosurgery,Flow diverters,true
+Medical Devices & Procedural Products,Neurology / Neurosurgery,EEG systems,true
+Medical Devices & Procedural Products,Neurology / Neurosurgery,Stereotactic navigation,true
+Medical Devices & Procedural Products,Neurology / Neurosurgery,Thrombectomy devices,true
+Medical Devices & Procedural Products,Ophthalmology,Surgical ophthalmology,false
+Medical Devices & Procedural Products,Ophthalmology,Vision diagnostics,false
+Medical Devices & Procedural Products,Ophthalmology,Laser / retina,false
+Medical Devices & Procedural Products,Ophthalmology,Cataract products,false
+Medical Devices & Procedural Products,Ophthalmology,IOL systems,true
+Medical Devices & Procedural Products,Ophthalmology,OCT imaging,true
+Medical Devices & Procedural Products,Ophthalmology,Glaucoma devices,true
+Medical Devices & Procedural Products,Ophthalmology,Vitreoretinal instruments,true
+Medical Devices & Procedural Products,ENT,ENT surgical devices,false
+Medical Devices & Procedural Products,ENT,Hearing-related devices,false
+Medical Devices & Procedural Products,ENT,Airway / sinus products,false
+Medical Devices & Procedural Products,ENT,Cochlear implants,true
+Medical Devices & Procedural Products,ENT,Sinus balloon dilation,true
+Medical Devices & Procedural Products,ENT,ENT navigation systems,true
+Medical Devices & Procedural Products,ENT,Hearing aids,true
+Medical Devices & Procedural Products,GI / Urology,Endoscopy,false
+Medical Devices & Procedural Products,GI / Urology,GI procedural devices,false
+Medical Devices & Procedural Products,GI / Urology,Urology devices,false
+Medical Devices & Procedural Products,GI / Urology,Stone management,false
+Medical Devices & Procedural Products,GI / Urology,Continence / pelvic health,false
+Medical Devices & Procedural Products,GI / Urology,Capsule endoscopy,true
+Medical Devices & Procedural Products,GI / Urology,Biliary stents,true
+Medical Devices & Procedural Products,GI / Urology,Lithotripsy,true
+Medical Devices & Procedural Products,GI / Urology,Ureteroscopes,true
+Medical Devices & Procedural Products,GI / Urology,Prostate therapy devices,true
+Medical Devices & Procedural Products,OB/GYN / Women's Health,Labor & delivery,false
+Medical Devices & Procedural Products,OB/GYN / Women's Health,Fertility,false
+Medical Devices & Procedural Products,OB/GYN / Women's Health,Gynecologic surgery,false
+Medical Devices & Procedural Products,OB/GYN / Women's Health,Maternal monitoring,false
+Medical Devices & Procedural Products,OB/GYN / Women's Health,Women's diagnostics,false
+Medical Devices & Procedural Products,OB/GYN / Women's Health,Fetal monitoring systems,true
+Medical Devices & Procedural Products,OB/GYN / Women's Health,IVF equipment,true
+Medical Devices & Procedural Products,OB/GYN / Women's Health,Uterine ablation,true
+Medical Devices & Procedural Products,OB/GYN / Women's Health,Breast biopsy systems,true
+Medical Devices & Procedural Products,OB/GYN / Women's Health,Neonatal care devices,true
+Medical Devices & Procedural Products,Dental / Oral Surgery,Dental devices,false
+Medical Devices & Procedural Products,Dental / Oral Surgery,Oral surgery,false
+Medical Devices & Procedural Products,Dental / Oral Surgery,Imaging,false
+Medical Devices & Procedural Products,Dental / Oral Surgery,Restorative / orthodontic,false
+Medical Devices & Procedural Products,Dental / Oral Surgery,Dental implants,true
+Medical Devices & Procedural Products,Dental / Oral Surgery,CAD/CAM dental systems,true
+Medical Devices & Procedural Products,Dental / Oral Surgery,Intraoral scanners,true
+Medical Devices & Procedural Products,Dental / Oral Surgery,Dental lasers,true
+Medical Devices & Procedural Products,Dental / Oral Surgery,Clear aligners,true
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Advanced wound care,false
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Dressings,false
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Negative pressure wound therapy,false
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Skin integrity,false
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Sterilization,false
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Infection prevention,false
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Disinfection,false
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,UV disinfection systems,true
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Antimicrobial dressings,true
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Skin prep / antiseptics,true
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Biological skin substitutes,true
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Surgical drapes / gowns,true
+Medical Devices & Procedural Products,Wound Care / Skin / Infection Prevention,Hand hygiene systems,true
+Medical Devices & Procedural Products,Rehab / Physical Medicine,Rehabilitation devices,false
+Medical Devices & Procedural Products,Rehab / Physical Medicine,Mobility,false
+Medical Devices & Procedural Products,Rehab / Physical Medicine,Therapy equipment,false
+Medical Devices & Procedural Products,Rehab / Physical Medicine,Pain management,false
+Medical Devices & Procedural Products,Rehab / Physical Medicine,Electrotherapy devices,true
+Medical Devices & Procedural Products,Rehab / Physical Medicine,Ultrasound therapy,true
+Medical Devices & Procedural Products,Rehab / Physical Medicine,Gait analysis systems,true
+Medical Devices & Procedural Products,Rehab / Physical Medicine,Functional electrical stimulation,true
+Medical Devices & Procedural Products,DME / Prosthetics / Orthotics / Home Medical Equipment,Mobility equipment,false
+Medical Devices & Procedural Products,DME / Prosthetics / Orthotics / Home Medical Equipment,Prosthetics,false
+Medical Devices & Procedural Products,DME / Prosthetics / Orthotics / Home Medical Equipment,Orthotics,false
+Medical Devices & Procedural Products,DME / Prosthetics / Orthotics / Home Medical Equipment,CPAP / home respiratory,false
+Medical Devices & Procedural Products,DME / Prosthetics / Orthotics / Home Medical Equipment,Home safety equipment,false
+Medical Devices & Procedural Products,DME / Prosthetics / Orthotics / Home Medical Equipment,Hospital beds (home),false
+Medical Devices & Procedural Products,DME / Prosthetics / Orthotics / Home Medical Equipment,Power wheelchairs,true
+Medical Devices & Procedural Products,DME / Prosthetics / Orthotics / Home Medical Equipment,BiPAP devices,true
+Medical Devices & Procedural Products,DME / Prosthetics / Orthotics / Home Medical Equipment,Home oxygen concentrators,true
+Medical Devices & Procedural Products,DME / Prosthetics / Orthotics / Home Medical Equipment,Patient lifts (home),true
+Medical Devices & Procedural Products,DME / Prosthetics / Orthotics / Home Medical Equipment,Diabetic footwear,true
+Capital Equipment & Imaging,Diagnostic Imaging,CT,false
+Capital Equipment & Imaging,Diagnostic Imaging,MRI,false
+Capital Equipment & Imaging,Diagnostic Imaging,X-ray,false
+Capital Equipment & Imaging,Diagnostic Imaging,Ultrasound,false
+Capital Equipment & Imaging,Diagnostic Imaging,Mammography,false
+Capital Equipment & Imaging,Diagnostic Imaging,Nuclear medicine,false
+Capital Equipment & Imaging,Diagnostic Imaging,PET,false
+Capital Equipment & Imaging,Diagnostic Imaging,Fluoroscopy,true
+Capital Equipment & Imaging,Diagnostic Imaging,Contrast injectors,true
+Capital Equipment & Imaging,Diagnostic Imaging,Portable X-ray,true
+Capital Equipment & Imaging,Diagnostic Imaging,3D tomosynthesis,true
+Capital Equipment & Imaging,Diagnostic Imaging,Bone densitometry,true
+Capital Equipment & Imaging,Diagnostic Imaging,Point-of-care ultrasound,true
+Capital Equipment & Imaging,Imaging IT,PACS,false
+Capital Equipment & Imaging,Imaging IT,VNA,false
+Capital Equipment & Imaging,Imaging IT,Radiology viewers,false
+Capital Equipment & Imaging,Imaging IT,Workflow,false
+Capital Equipment & Imaging,Imaging IT,AI imaging analytics,false
+Capital Equipment & Imaging,Imaging IT,Dose management software,true
+Capital Equipment & Imaging,Imaging IT,Radiology reporting / dictation,true
+Capital Equipment & Imaging,Imaging IT,3D rendering / post-processing,true
+Capital Equipment & Imaging,Imaging IT,Enterprise imaging platform,true
+Capital Equipment & Imaging,Surgical / Procedural Capital,OR towers,false
+Capital Equipment & Imaging,Surgical / Procedural Capital,Surgical tables,false
+Capital Equipment & Imaging,Surgical / Procedural Capital,Lights,false
+Capital Equipment & Imaging,Surgical / Procedural Capital,Booms,false
+Capital Equipment & Imaging,Surgical / Procedural Capital,Sterile processing equipment,false
+Capital Equipment & Imaging,Surgical / Procedural Capital,Endoscope reprocessing,false
+Capital Equipment & Imaging,Surgical / Procedural Capital,OR integration systems,true
+Capital Equipment & Imaging,Surgical / Procedural Capital,C-arm / mobile fluoroscopy,true
+Capital Equipment & Imaging,Surgical / Procedural Capital,Surgical navigation capital,true
+Capital Equipment & Imaging,Surgical / Procedural Capital,Electrosurgical generators,true
+Capital Equipment & Imaging,Surgical / Procedural Capital,Autoclaves / steam sterilizers,true
+Capital Equipment & Imaging,Patient Care Capital,Beds,false
+Capital Equipment & Imaging,Patient Care Capital,Monitoring systems,false
+Capital Equipment & Imaging,Patient Care Capital,Ventilators,false
+Capital Equipment & Imaging,Patient Care Capital,Infusion systems,false
+Capital Equipment & Imaging,Patient Care Capital,Patient lifts,false
+Capital Equipment & Imaging,Patient Care Capital,Nurse call systems,true
+Capital Equipment & Imaging,Patient Care Capital,Telemetry systems,true
+Capital Equipment & Imaging,Patient Care Capital,Smart bed platforms,true
+Capital Equipment & Imaging,Patient Care Capital,Clinical alarm management,true
+Capital Equipment & Imaging,Patient Care Capital,Central monitoring stations,true
+Capital Equipment & Imaging,Radiation / Oncology Capital,Radiation therapy systems,false
+Capital Equipment & Imaging,Radiation / Oncology Capital,Planning systems,false
+Capital Equipment & Imaging,Radiation / Oncology Capital,Oncology workflow tech,false
+Capital Equipment & Imaging,Radiation / Oncology Capital,Linear accelerators,true
+Capital Equipment & Imaging,Radiation / Oncology Capital,Proton therapy systems,true
+Capital Equipment & Imaging,Radiation / Oncology Capital,Brachytherapy equipment,true
+Capital Equipment & Imaging,Radiation / Oncology Capital,Treatment planning software,true
+Capital Equipment & Imaging,Lab / Pharmacy Capital,Lab analyzers,false
+Capital Equipment & Imaging,Lab / Pharmacy Capital,Lab automation lines,false
+Capital Equipment & Imaging,Lab / Pharmacy Capital,Pharmacy robots,false
+Capital Equipment & Imaging,Lab / Pharmacy Capital,Packaging systems,false
+Capital Equipment & Imaging,Lab / Pharmacy Capital,IV compounding equipment,false
+Capital Equipment & Imaging,Lab / Pharmacy Capital,Centrifuges,true
+Capital Equipment & Imaging,Lab / Pharmacy Capital,Cryostorage systems,true
+Capital Equipment & Imaging,Lab / Pharmacy Capital,Blood bank refrigerators,true
+Diagnostics & Laboratory,Core Lab,Clinical chemistry,false
+Diagnostics & Laboratory,Core Lab,Hematology,false
+Diagnostics & Laboratory,Core Lab,Coagulation,false
+Diagnostics & Laboratory,Core Lab,Immunoassay,false
+Diagnostics & Laboratory,Core Lab,Urinalysis,true
+Diagnostics & Laboratory,Core Lab,Mass spectrometry,true
+Diagnostics & Laboratory,Core Lab,Flow cytometry,true
+Diagnostics & Laboratory,Core Lab,Protein analysis,true
+Diagnostics & Laboratory,Pathology / Histology,Anatomic pathology,false
+Diagnostics & Laboratory,Pathology / Histology,Digital pathology,false
+Diagnostics & Laboratory,Pathology / Histology,Histology equipment,false
+Diagnostics & Laboratory,Pathology / Histology,Slide management,false
+Diagnostics & Laboratory,Pathology / Histology,Tissue processors,true
+Diagnostics & Laboratory,Pathology / Histology,Immunohistochemistry,true
+Diagnostics & Laboratory,Pathology / Histology,Cytology,true
+Diagnostics & Laboratory,Pathology / Histology,AI pathology analytics,true
+Diagnostics & Laboratory,Microbiology / Infectious Disease,Culture systems,false
+Diagnostics & Laboratory,Microbiology / Infectious Disease,Rapid ID,false
+Diagnostics & Laboratory,Microbiology / Infectious Disease,Susceptibility testing,false
+Diagnostics & Laboratory,Microbiology / Infectious Disease,Infection diagnostics,false
+Diagnostics & Laboratory,Microbiology / Infectious Disease,Blood culture systems,true
+Diagnostics & Laboratory,Microbiology / Infectious Disease,Antimicrobial stewardship tools,true
+Diagnostics & Laboratory,Microbiology / Infectious Disease,MALDI-TOF ID,true
+Diagnostics & Laboratory,Microbiology / Infectious Disease,Respiratory pathogen panels,true
+Diagnostics & Laboratory,Molecular / Genomics,PCR,false
+Diagnostics & Laboratory,Molecular / Genomics,NGS,false
+Diagnostics & Laboratory,Molecular / Genomics,Precision diagnostics,false
+Diagnostics & Laboratory,Molecular / Genomics,Molecular oncology,false
+Diagnostics & Laboratory,Molecular / Genomics,Liquid biopsy,true
+Diagnostics & Laboratory,Molecular / Genomics,Companion diagnostics,true
+Diagnostics & Laboratory,Molecular / Genomics,Pharmacogenomics,true
+Diagnostics & Laboratory,Molecular / Genomics,Genetic counseling platforms,true
+Diagnostics & Laboratory,Molecular / Genomics,Prenatal genetic testing,true
+Diagnostics & Laboratory,Blood Bank / Transfusion,Blood management,false
+Diagnostics & Laboratory,Blood Bank / Transfusion,Crossmatch,false
+Diagnostics & Laboratory,Blood Bank / Transfusion,Blood tracking,false
+Diagnostics & Laboratory,Blood Bank / Transfusion,Pathogen reduction,true
+Diagnostics & Laboratory,Blood Bank / Transfusion,Donor management systems,true
+Diagnostics & Laboratory,Blood Bank / Transfusion,Cell therapy processing,true
+Diagnostics & Laboratory,Point-of-Care Testing,Bedside diagnostics,false
+Diagnostics & Laboratory,Point-of-Care Testing,Rapid tests,false
+Diagnostics & Laboratory,Point-of-Care Testing,Glucose / coag / cardiac markers,false
+Diagnostics & Laboratory,Point-of-Care Testing,Blood gas analyzers,true
+Diagnostics & Laboratory,Point-of-Care Testing,Lactate testing,true
+Diagnostics & Laboratory,Point-of-Care Testing,POC connectivity / data management,true
+Diagnostics & Laboratory,Point-of-Care Testing,A1c testing,true
+Diagnostics & Laboratory,Lab Operations,Specimen collection,false
+Diagnostics & Laboratory,Lab Operations,Transport,false
+Diagnostics & Laboratory,Lab Operations,Accessioning,false
+Diagnostics & Laboratory,Lab Operations,Lab automation,false
+Diagnostics & Laboratory,Lab Operations,Reference lab services,false
+Diagnostics & Laboratory,Lab Operations,Lab information systems,true
+Diagnostics & Laboratory,Lab Operations,Pneumatic tube systems,true
+Diagnostics & Laboratory,Lab Operations,Pre-analytical automation,true
+Diagnostics & Laboratory,Lab Operations,Quality management systems,true
+Pharmacy & Medication Management,Pharmacy Automation,Automated dispensing cabinets,false
+Pharmacy & Medication Management,Pharmacy Automation,Central pharmacy automation,false
+Pharmacy & Medication Management,Pharmacy Automation,Packaging / repackaging,false
+Pharmacy & Medication Management,Pharmacy Automation,Carousel systems,false
+Pharmacy & Medication Management,Pharmacy Automation,Robotics,false
+Pharmacy & Medication Management,Pharmacy Automation,Counting technology,false
+Pharmacy & Medication Management,Pharmacy Automation,Unit-dose packaging,true
+Pharmacy & Medication Management,Pharmacy Automation,Narcotic vaults,true
+Pharmacy & Medication Management,Pharmacy Automation,Bedside medication verification,true
+Pharmacy & Medication Management,Pharmacy Automation,Anesthesia workstation dispensing,true
+Pharmacy & Medication Management,IV Workflow / Compounding,IV workflow software,false
+Pharmacy & Medication Management,IV Workflow / Compounding,Cleanroom technology,false
+Pharmacy & Medication Management,IV Workflow / Compounding,Compounding hardware,false
+Pharmacy & Medication Management,IV Workflow / Compounding,Hazardous drug containment,false
+Pharmacy & Medication Management,IV Workflow / Compounding,Gravimetric verification,true
+Pharmacy & Medication Management,IV Workflow / Compounding,Closed-system transfer devices,true
+Pharmacy & Medication Management,IV Workflow / Compounding,503B outsourcing services,true
+Pharmacy & Medication Management,Specialty Pharmacy,Specialty pharmacy services,false
+Pharmacy & Medication Management,Specialty Pharmacy,Oncology pharmacy,false
+Pharmacy & Medication Management,Specialty Pharmacy,Rare disease,false
+Pharmacy & Medication Management,Specialty Pharmacy,Patient support hubs,false
+Pharmacy & Medication Management,Specialty Pharmacy,Specialty pharmacy accreditation,true
+Pharmacy & Medication Management,Specialty Pharmacy,White bagging services,true
+Pharmacy & Medication Management,Specialty Pharmacy,Hub services / patient access,true
+Pharmacy & Medication Management,Specialty Pharmacy,Limited distribution drugs,true
+Pharmacy & Medication Management,Specialty Pharmacy,Biologics management,true
+Pharmacy & Medication Management,Infusion,Home infusion,false
+Pharmacy & Medication Management,Infusion,Infusion services,false
+Pharmacy & Medication Management,Infusion,Infusion pumps,false
+Pharmacy & Medication Management,Infusion,Infusion workflow,false
+Pharmacy & Medication Management,Infusion,Ambulatory infusion pumps,true
+Pharmacy & Medication Management,Infusion,Smart pump analytics,true
+Pharmacy & Medication Management,Infusion,Drug library management,true
+Pharmacy & Medication Management,Infusion,Infusion center management,true
+Pharmacy & Medication Management,Medication Management Software,Pharmacy information systems,false
+Pharmacy & Medication Management,Medication Management Software,E-prescribing,false
+Pharmacy & Medication Management,Medication Management Software,Medication reconciliation,false
+Pharmacy & Medication Management,Medication Management Software,Clinical surveillance,false
+Pharmacy & Medication Management,Medication Management Software,Diversion monitoring,false
+Pharmacy & Medication Management,Medication Management Software,BCMA systems,true
+Pharmacy & Medication Management,Medication Management Software,Drug interaction checking,true
+Pharmacy & Medication Management,Medication Management Software,Antimicrobial stewardship software,true
+Pharmacy & Medication Management,Medication Management Software,Opioid management platforms,true
+Pharmacy & Medication Management,Pharmacy Supply Chain / Procurement,Drug sourcing,false
+Pharmacy & Medication Management,Pharmacy Supply Chain / Procurement,Drug shortage tools,false
+Pharmacy & Medication Management,Pharmacy Supply Chain / Procurement,340B,false
+Pharmacy & Medication Management,Pharmacy Supply Chain / Procurement,Cold chain,false
+Pharmacy & Medication Management,Pharmacy Supply Chain / Procurement,Wholesaler / distributor pharmacy support,false
+Pharmacy & Medication Management,Pharmacy Supply Chain / Procurement,340B split billing,true
+Pharmacy & Medication Management,Pharmacy Supply Chain / Procurement,Drug traceability / DSCSA,true
+Pharmacy & Medication Management,Pharmacy Supply Chain / Procurement,GPO pharmacy contracts,true
+Pharmacy & Medication Management,Retail / Outpatient / Ambulatory Pharmacy,Outpatient pharmacy,false
+Pharmacy & Medication Management,Retail / Outpatient / Ambulatory Pharmacy,Retail pharmacy systems,false
+Pharmacy & Medication Management,Retail / Outpatient / Ambulatory Pharmacy,Adherence tech,false
+Pharmacy & Medication Management,Retail / Outpatient / Ambulatory Pharmacy,Patient communication,false
+Pharmacy & Medication Management,Retail / Outpatient / Ambulatory Pharmacy,Prescription delivery services,true
+Pharmacy & Medication Management,Retail / Outpatient / Ambulatory Pharmacy,Telepharmacy,true
+Pharmacy & Medication Management,Retail / Outpatient / Ambulatory Pharmacy,MTM platforms,true
+Pharmacy & Medication Management,Retail / Outpatient / Ambulatory Pharmacy,Immunization management,true
+Digital Health / Health IT / AI,Core Clinical IT,EHR / EMR,false
+Digital Health / Health IT / AI,Core Clinical IT,Clinical documentation,false
+Digital Health / Health IT / AI,Core Clinical IT,CPOE,false
+Digital Health / Health IT / AI,Core Clinical IT,Care coordination,false
+Digital Health / Health IT / AI,Core Clinical IT,Ambient clinical documentation,true
+Digital Health / Health IT / AI,Core Clinical IT,Clinical messaging / secure chat,true
+Digital Health / Health IT / AI,Core Clinical IT,Clinical pathways,true
+Digital Health / Health IT / AI,Core Clinical IT,Nursing documentation,true
+Digital Health / Health IT / AI,Core Clinical IT,EHR optimization / training,true
+Digital Health / Health IT / AI,Revenue Cycle,Coding,false
+Digital Health / Health IT / AI,Revenue Cycle,CDI,false
+Digital Health / Health IT / AI,Revenue Cycle,Claims,false
+Digital Health / Health IT / AI,Revenue Cycle,Denials,false
+Digital Health / Health IT / AI,Revenue Cycle,Patient access,false
+Digital Health / Health IT / AI,Revenue Cycle,Billing,false
+Digital Health / Health IT / AI,Revenue Cycle,Price transparency,false
+Digital Health / Health IT / AI,Revenue Cycle,Prior authorization automation,true
+Digital Health / Health IT / AI,Revenue Cycle,Charge capture,true
+Digital Health / Health IT / AI,Revenue Cycle,AI-powered coding,true
+Digital Health / Health IT / AI,Revenue Cycle,Underpayment recovery,true
+Digital Health / Health IT / AI,Revenue Cycle,Patient estimation tools,true
+Digital Health / Health IT / AI,Revenue Cycle,RCM outsourcing platforms,true
+Digital Health / Health IT / AI,Supply Chain Software,ERP,false
+Digital Health / Health IT / AI,Supply Chain Software,Procurement platforms,false
+Digital Health / Health IT / AI,Supply Chain Software,Inventory management,false
+Digital Health / Health IT / AI,Supply Chain Software,Contract management,false
+Digital Health / Health IT / AI,Supply Chain Software,Item master,false
+Digital Health / Health IT / AI,Supply Chain Software,Spend analytics,false
+Digital Health / Health IT / AI,Supply Chain Software,Preference card management,true
+Digital Health / Health IT / AI,Supply Chain Software,Requisition / PO automation,true
+Digital Health / Health IT / AI,Supply Chain Software,Vendor-managed inventory,true
+Digital Health / Health IT / AI,Supply Chain Software,Demand forecasting,true
+Digital Health / Health IT / AI,Pharmacy IT,Pharmacy management systems,false
+Digital Health / Health IT / AI,Pharmacy IT,Dose tracking,false
+Digital Health / Health IT / AI,Pharmacy IT,Medication analytics,false
+Digital Health / Health IT / AI,Pharmacy IT,Diversion analytics,false
+Digital Health / Health IT / AI,Pharmacy IT,Clinical pharmacology databases,true
+Digital Health / Health IT / AI,Pharmacy IT,Drug cost analytics,true
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,Ambient AI,false
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,Workflow AI,false
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,Predictive analytics,false
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,BI dashboards,false
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,Clinical decision support,false
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,NLP,false
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,Sepsis prediction,true
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,Patient deterioration alerts,true
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,Readmission risk models,true
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,Population health analytics,true
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,Computer vision / medical imaging AI,true
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,Generative AI platforms,true
+Digital Health / Health IT / AI,AI / Analytics / Decision Support,Social determinants analytics,true
+Digital Health / Health IT / AI,Patient Engagement,CRM,false
+Digital Health / Health IT / AI,Patient Engagement,Outreach,false
+Digital Health / Health IT / AI,Patient Engagement,Scheduling,false
+Digital Health / Health IT / AI,Patient Engagement,Texting,false
+Digital Health / Health IT / AI,Patient Engagement,Portals,false
+Digital Health / Health IT / AI,Patient Engagement,Surveys,false
+Digital Health / Health IT / AI,Patient Engagement,Digital front door,false
+Digital Health / Health IT / AI,Patient Engagement,Online reputation management,true
+Digital Health / Health IT / AI,Patient Engagement,Digital check-in / intake,true
+Digital Health / Health IT / AI,Patient Engagement,Chatbots / virtual assistants,true
+Digital Health / Health IT / AI,Patient Engagement,Patient education platforms,true
+Digital Health / Health IT / AI,Patient Engagement,Referral management,true
+Digital Health / Health IT / AI,Telehealth / Virtual Care / Remote Monitoring,Telemedicine,false
+Digital Health / Health IT / AI,Telehealth / Virtual Care / Remote Monitoring,RPM,false
+Digital Health / Health IT / AI,Telehealth / Virtual Care / Remote Monitoring,Hospital-at-home,false
+Digital Health / Health IT / AI,Telehealth / Virtual Care / Remote Monitoring,Virtual nursing,false
+Digital Health / Health IT / AI,Telehealth / Virtual Care / Remote Monitoring,Remote cardiac monitoring,true
+Digital Health / Health IT / AI,Telehealth / Virtual Care / Remote Monitoring,Chronic disease management,true
+Digital Health / Health IT / AI,Telehealth / Virtual Care / Remote Monitoring,Connected devices / wearables,true
+Digital Health / Health IT / AI,Telehealth / Virtual Care / Remote Monitoring,Asynchronous telehealth,true
+Digital Health / Health IT / AI,Telehealth / Virtual Care / Remote Monitoring,Virtual specialty consults,true
+Digital Health / Health IT / AI,Interoperability / Data Infrastructure,HL7 / FHIR,false
+Digital Health / Health IT / AI,Interoperability / Data Infrastructure,HIE,false
+Digital Health / Health IT / AI,Interoperability / Data Infrastructure,APIs,false
+Digital Health / Health IT / AI,Interoperability / Data Infrastructure,Data warehouse,false
+Digital Health / Health IT / AI,Interoperability / Data Infrastructure,Master data,false
+Digital Health / Health IT / AI,Interoperability / Data Infrastructure,Integration engine,false
+Digital Health / Health IT / AI,Interoperability / Data Infrastructure,Clinical data lake,true
+Digital Health / Health IT / AI,Interoperability / Data Infrastructure,ADT / patient identity,true
+Digital Health / Health IT / AI,Interoperability / Data Infrastructure,EMPI,true
+Digital Health / Health IT / AI,Interoperability / Data Infrastructure,Consent management,true
+Digital Health / Health IT / AI,Interoperability / Data Infrastructure,De-identification / anonymization,true
+Digital Health / Health IT / AI,Cybersecurity / Compliance IT,Identity,false
+Digital Health / Health IT / AI,Cybersecurity / Compliance IT,Endpoint protection,false
+Digital Health / Health IT / AI,Cybersecurity / Compliance IT,Compliance monitoring,false
+Digital Health / Health IT / AI,Cybersecurity / Compliance IT,Audit / governance,false
+Digital Health / Health IT / AI,Cybersecurity / Compliance IT,Medical device security,true
+Digital Health / Health IT / AI,Cybersecurity / Compliance IT,HIPAA compliance platforms,true
+Digital Health / Health IT / AI,Cybersecurity / Compliance IT,Ransomware protection,true
+Digital Health / Health IT / AI,Cybersecurity / Compliance IT,Vendor risk management,true
+Digital Health / Health IT / AI,Cybersecurity / Compliance IT,Privilege access management,true
+Supply Chain Distribution & Channel,GPOs,National GPO,false
+Supply Chain Distribution & Channel,GPOs,Regional GPO,false
+Supply Chain Distribution & Channel,GPOs,Pharmacy GPO,false
+Supply Chain Distribution & Channel,GPOs,Specialty contracting,false
+Supply Chain Distribution & Channel,GPOs,Custom contracting,true
+Supply Chain Distribution & Channel,GPOs,Committed volume programs,true
+Supply Chain Distribution & Channel,GPOs,GPO technology platform,true
+Supply Chain Distribution & Channel,GPOs,Coalition / aggregation,true
+Supply Chain Distribution & Channel,Distribution / Wholesaling,Med-surg distributors,false
+Supply Chain Distribution & Channel,Distribution / Wholesaling,Pharma wholesalers,false
+Supply Chain Distribution & Channel,Distribution / Wholesaling,Specialty distributors,false
+Supply Chain Distribution & Channel,Distribution / Wholesaling,Device distribution,false
+Supply Chain Distribution & Channel,Distribution / Wholesaling,Self-distribution,true
+Supply Chain Distribution & Channel,Distribution / Wholesaling,Prime vendor programs,true
+Supply Chain Distribution & Channel,Distribution / Wholesaling,Implant consignment,true
+Supply Chain Distribution & Channel,Distribution / Wholesaling,E-commerce / online ordering,true
+Supply Chain Distribution & Channel,Logistics / 3PL / Courier,Warehousing,false
+Supply Chain Distribution & Channel,Logistics / 3PL / Courier,Freight,false
+Supply Chain Distribution & Channel,Logistics / 3PL / Courier,Cold chain logistics,false
+Supply Chain Distribution & Channel,Logistics / 3PL / Courier,Courier,false
+Supply Chain Distribution & Channel,Logistics / 3PL / Courier,Last-mile delivery,false
+Supply Chain Distribution & Channel,Logistics / 3PL / Courier,Surgical kit / tray logistics,true
+Supply Chain Distribution & Channel,Logistics / 3PL / Courier,Reverse logistics,true
+Supply Chain Distribution & Channel,Logistics / 3PL / Courier,Temp-controlled packaging,true
+Supply Chain Distribution & Channel,Inventory / Traceability,RFID,false
+Supply Chain Distribution & Channel,Inventory / Traceability,RTLS,false
+Supply Chain Distribution & Channel,Inventory / Traceability,UDI,false
+Supply Chain Distribution & Channel,Inventory / Traceability,Recall management,false
+Supply Chain Distribution & Channel,Inventory / Traceability,Asset tracking,false
+Supply Chain Distribution & Channel,Inventory / Traceability,Expiration date management,true
+Supply Chain Distribution & Channel,Inventory / Traceability,Par level optimization,true
+Supply Chain Distribution & Channel,Inventory / Traceability,Consignment tracking,true
+Supply Chain Distribution & Channel,Inventory / Traceability,OR case pick / kit tracking,true
+Supply Chain Distribution & Channel,Inventory / Traceability,IoT sensor monitoring,true
+Supply Chain Distribution & Channel,Sourcing / Procurement Services,Strategic sourcing,false
+Supply Chain Distribution & Channel,Sourcing / Procurement Services,Category management,false
+Supply Chain Distribution & Channel,Sourcing / Procurement Services,Purchased services optimization,false
+Supply Chain Distribution & Channel,Sourcing / Procurement Services,Supplier diversity programs,true
+Supply Chain Distribution & Channel,Sourcing / Procurement Services,Value analysis committees,true
+Supply Chain Distribution & Channel,Sourcing / Procurement Services,Physician preference standardization,true
+Supply Chain Distribution & Channel,Sourcing / Procurement Services,Total cost of ownership analysis,true
+Supply Chain Distribution & Channel,Sourcing / Procurement Services,RFP management platforms,true
+Clinical Services & Outsourced Care,Laboratory Services,Reference lab,false
+Clinical Services & Outsourced Care,Laboratory Services,Outreach lab,false
+Clinical Services & Outsourced Care,Laboratory Services,Pathology services,false
+Clinical Services & Outsourced Care,Laboratory Services,Toxicology lab services,true
+Clinical Services & Outsourced Care,Laboratory Services,Genetics lab services,true
+Clinical Services & Outsourced Care,Laboratory Services,Lab management consulting,true
+Clinical Services & Outsourced Care,Laboratory Services,Esoteric testing services,true
+Clinical Services & Outsourced Care,Imaging Services,Mobile imaging,false
+Clinical Services & Outsourced Care,Imaging Services,Teleradiology,false
+Clinical Services & Outsourced Care,Imaging Services,Imaging interpretation,false
+Clinical Services & Outsourced Care,Imaging Services,Mobile MRI / CT services,true
+Clinical Services & Outsourced Care,Imaging Services,Radiation physics consulting,true
+Clinical Services & Outsourced Care,Imaging Services,Interventional radiology staffing,true
+Clinical Services & Outsourced Care,Imaging Services,Imaging center management,true
+Clinical Services & Outsourced Care,Clinical Outsourcing,Anesthesia groups,false
+Clinical Services & Outsourced Care,Clinical Outsourcing,Telepharmacy,false
+Clinical Services & Outsourced Care,Clinical Outsourcing,Tele-ICU,false
+Clinical Services & Outsourced Care,Clinical Outsourcing,Dialysis services,false
+Clinical Services & Outsourced Care,Clinical Outsourcing,Wound teams,false
+Clinical Services & Outsourced Care,Clinical Outsourcing,Surgical services,false
+Clinical Services & Outsourced Care,Clinical Outsourcing,Emergency medicine groups,true
+Clinical Services & Outsourced Care,Clinical Outsourcing,Hospitalist programs,true
+Clinical Services & Outsourced Care,Clinical Outsourcing,Radiology groups,true
+Clinical Services & Outsourced Care,Clinical Outsourcing,Pathology groups,true
+Clinical Services & Outsourced Care,Clinical Outsourcing,Neonatology services,true
+Clinical Services & Outsourced Care,Clinical Outsourcing,Intensivist programs,true
+Clinical Services & Outsourced Care,Post-Acute / Home-Based Services,Home health,false
+Clinical Services & Outsourced Care,Post-Acute / Home-Based Services,Hospice,false
+Clinical Services & Outsourced Care,Post-Acute / Home-Based Services,Rehab services,false
+Clinical Services & Outsourced Care,Post-Acute / Home-Based Services,Transitional care,false
+Clinical Services & Outsourced Care,Post-Acute / Home-Based Services,Home infusion,false
+Clinical Services & Outsourced Care,Post-Acute / Home-Based Services,Palliative care services,true
+Clinical Services & Outsourced Care,Post-Acute / Home-Based Services,Chronic care management,true
+Clinical Services & Outsourced Care,Post-Acute / Home-Based Services,Skilled nursing facility management,true
+Clinical Services & Outsourced Care,Post-Acute / Home-Based Services,LTACH services,true
+Clinical Services & Outsourced Care,Post-Acute / Home-Based Services,Personal care / aide services,true
+Non-Clinical Operational Services,Transportation,Patient transportation,false
+Non-Clinical Operational Services,Transportation,Discharge transportation,false
+Non-Clinical Operational Services,Transportation,Non-emergency medical transportation,false
+Non-Clinical Operational Services,Transportation,Courier services,false
+Non-Clinical Operational Services,Transportation,Medical transport logistics software,true
+Non-Clinical Operational Services,Transportation,Ride-share partnerships,true
+Non-Clinical Operational Services,Transportation,Ambulance services,true
+Non-Clinical Operational Services,Transportation,Air medical transport,true
+Non-Clinical Operational Services,Environmental / Hospitality,EVS,false
+Non-Clinical Operational Services,Environmental / Hospitality,Linen,false
+Non-Clinical Operational Services,Environmental / Hospitality,Laundry,false
+Non-Clinical Operational Services,Environmental / Hospitality,Food services,false
+Non-Clinical Operational Services,Environmental / Hospitality,Valet,false
+Non-Clinical Operational Services,Environmental / Hospitality,Waste management,false
+Non-Clinical Operational Services,Environmental / Hospitality,Room-ready turnover tracking,true
+Non-Clinical Operational Services,Environmental / Hospitality,Regulated medical waste,true
+Non-Clinical Operational Services,Environmental / Hospitality,Pest control,true
+Non-Clinical Operational Services,Environmental / Hospitality,Patient experience amenities,true
+Non-Clinical Operational Services,Environmental / Hospitality,Dietary / nutrition management,true
+Non-Clinical Operational Services,Language / Communication / Contact Center,Interpretation,false
+Non-Clinical Operational Services,Language / Communication / Contact Center,Translation,false
+Non-Clinical Operational Services,Language / Communication / Contact Center,Nurse triage,false
+Non-Clinical Operational Services,Language / Communication / Contact Center,Call center,false
+Non-Clinical Operational Services,Language / Communication / Contact Center,Answering services,false
+Non-Clinical Operational Services,Language / Communication / Contact Center,Video remote interpreting,true
+Non-Clinical Operational Services,Language / Communication / Contact Center,Patient access center,true
+Non-Clinical Operational Services,Language / Communication / Contact Center,Physician referral services,true
+Non-Clinical Operational Services,Language / Communication / Contact Center,After-hours triage,true
+Non-Clinical Operational Services,Language / Communication / Contact Center,Multilingual digital content,true
+Non-Clinical Operational Services,Administrative Outsourcing,Document management,false
+Non-Clinical Operational Services,Administrative Outsourcing,Mailroom,false
+Non-Clinical Operational Services,Administrative Outsourcing,Printing,false
+Non-Clinical Operational Services,Administrative Outsourcing,Records management,false
+Non-Clinical Operational Services,Administrative Outsourcing,Back-office outsourcing,false
+Non-Clinical Operational Services,Administrative Outsourcing,HIM / coding outsourcing,true
+Non-Clinical Operational Services,Administrative Outsourcing,AP / accounts payable automation,true
+Non-Clinical Operational Services,Administrative Outsourcing,Credentialing services,true
+Non-Clinical Operational Services,Administrative Outsourcing,Medical transcription,true
+Non-Clinical Operational Services,Administrative Outsourcing,Release of information,true
+Facilities Biomed & Infrastructure,Facilities / Construction,Design,false
+Facilities Biomed & Infrastructure,Facilities / Construction,Construction,false
+Facilities Biomed & Infrastructure,Facilities / Construction,Renovation,false
+Facilities Biomed & Infrastructure,Facilities / Construction,Medical planning,false
+Facilities Biomed & Infrastructure,Facilities / Construction,Project management,false
+Facilities Biomed & Infrastructure,Facilities / Construction,Modular / prefab construction,true
+Facilities Biomed & Infrastructure,Facilities / Construction,Healthcare architecture,true
+Facilities Biomed & Infrastructure,Facilities / Construction,Infection control design,true
+Facilities Biomed & Infrastructure,Facilities / Construction,Ambulatory facility design,true
+Facilities Biomed & Infrastructure,Facilities / Construction,Master facility planning,true
+Facilities Biomed & Infrastructure,Plant Operations,HVAC,false
+Facilities Biomed & Infrastructure,Plant Operations,Electrical,false
+Facilities Biomed & Infrastructure,Plant Operations,Backup power,false
+Facilities Biomed & Infrastructure,Plant Operations,Medical gas,false
+Facilities Biomed & Infrastructure,Plant Operations,Plumbing,false
+Facilities Biomed & Infrastructure,Plant Operations,Fire protection,false
+Facilities Biomed & Infrastructure,Plant Operations,Building automation systems,true
+Facilities Biomed & Infrastructure,Plant Operations,Energy management,true
+Facilities Biomed & Infrastructure,Plant Operations,Water treatment,true
+Facilities Biomed & Infrastructure,Plant Operations,Emergency preparedness systems,true
+Facilities Biomed & Infrastructure,Plant Operations,Pneumatic tube systems,true
+Facilities Biomed & Infrastructure,Biomedical / Clinical Engineering,Device maintenance,false
+Facilities Biomed & Infrastructure,Biomedical / Clinical Engineering,Service contracts,false
+Facilities Biomed & Infrastructure,Biomedical / Clinical Engineering,Imaging service,false
+Facilities Biomed & Infrastructure,Biomedical / Clinical Engineering,Asset lifecycle management,false
+Facilities Biomed & Infrastructure,Biomedical / Clinical Engineering,CMMS / work order systems,true
+Facilities Biomed & Infrastructure,Biomedical / Clinical Engineering,Parts management,true
+Facilities Biomed & Infrastructure,Biomedical / Clinical Engineering,Equipment planning,true
+Facilities Biomed & Infrastructure,Biomedical / Clinical Engineering,OEM vs. ISO service,true
+Facilities Biomed & Infrastructure,Biomedical / Clinical Engineering,Predictive maintenance,true
+Facilities Biomed & Infrastructure,Biomedical / Clinical Engineering,Capital equipment lifecycle,true
+Facilities Biomed & Infrastructure,Safety / Security / Access,Surveillance,false
+Facilities Biomed & Infrastructure,Safety / Security / Access,Access control,false
+Facilities Biomed & Infrastructure,Safety / Security / Access,Infant security,false
+Facilities Biomed & Infrastructure,Safety / Security / Access,Weapon detection,false
+Facilities Biomed & Infrastructure,Safety / Security / Access,Panic / alarm systems,false
+Facilities Biomed & Infrastructure,Safety / Security / Access,Visitor management systems,true
+Facilities Biomed & Infrastructure,Safety / Security / Access,Workplace violence prevention,true
+Facilities Biomed & Infrastructure,Safety / Security / Access,Wander management,true
+Facilities Biomed & Infrastructure,Safety / Security / Access,Emergency mass notification,true
+Facilities Biomed & Infrastructure,Safety / Security / Access,Badge / ID systems,true
+Facilities Biomed & Infrastructure,Safety / Security / Access,Security guard services,true
+Staffing Consulting & Professional Services,Staffing,Nurse staffing,false
+Staffing Consulting & Professional Services,Staffing,Physician staffing,false
+Staffing Consulting & Professional Services,Staffing,Locums,false
+Staffing Consulting & Professional Services,Staffing,Allied staffing,false
+Staffing Consulting & Professional Services,Staffing,Pharmacy staffing,false
+Staffing Consulting & Professional Services,Staffing,Executive search,false
+Staffing Consulting & Professional Services,Staffing,Travel nurse agencies,true
+Staffing Consulting & Professional Services,Staffing,Per diem staffing,true
+Staffing Consulting & Professional Services,Staffing,Workforce management software,true
+Staffing Consulting & Professional Services,Staffing,Credential verification,true
+Staffing Consulting & Professional Services,Staffing,Internal float pool tech,true
+Staffing Consulting & Professional Services,Staffing,Nurse retention platforms,true
+Staffing Consulting & Professional Services,Staffing,International nurse recruitment,true
+Staffing Consulting & Professional Services,Staffing,IT staffing,true
+Staffing Consulting & Professional Services,Consulting,Strategy consulting,false
+Staffing Consulting & Professional Services,Consulting,Operations consulting,false
+Staffing Consulting & Professional Services,Consulting,Purchased services consulting,false
+Staffing Consulting & Professional Services,Consulting,Pharmacy consulting,false
+Staffing Consulting & Professional Services,Consulting,Supply chain consulting,false
+Staffing Consulting & Professional Services,Consulting,IT / EHR consulting,true
+Staffing Consulting & Professional Services,Consulting,Revenue cycle consulting,true
+Staffing Consulting & Professional Services,Consulting,Clinical transformation,true
+Staffing Consulting & Professional Services,Consulting,Mergers & acquisitions advisory,true
+Staffing Consulting & Professional Services,Consulting,Value-based care consulting,true
+Staffing Consulting & Professional Services,Consulting,Labor cost optimization,true
+Staffing Consulting & Professional Services,Compliance / Legal / Accreditation,Legal services,false
+Staffing Consulting & Professional Services,Compliance / Legal / Accreditation,Regulatory consulting,false
+Staffing Consulting & Professional Services,Compliance / Legal / Accreditation,Accreditation support,false
+Staffing Consulting & Professional Services,Compliance / Legal / Accreditation,Privacy / compliance,false
+Staffing Consulting & Professional Services,Compliance / Legal / Accreditation,Joint Commission readiness,true
+Staffing Consulting & Professional Services,Compliance / Legal / Accreditation,CMS survey preparation,true
+Staffing Consulting & Professional Services,Compliance / Legal / Accreditation,HIPAA consulting,true
+Staffing Consulting & Professional Services,Compliance / Legal / Accreditation,Compliance hotline services,true
+Staffing Consulting & Professional Services,Compliance / Legal / Accreditation,Anti-kickback / Stark advisory,true
+Staffing Consulting & Professional Services,Education / Training,Simulation,false
+Staffing Consulting & Professional Services,Education / Training,Continuing education,false
+Staffing Consulting & Professional Services,Education / Training,Leadership development,false
+Staffing Consulting & Professional Services,Education / Training,LMS / training platforms,false
+Staffing Consulting & Professional Services,Education / Training,Clinical simulation labs,true
+Staffing Consulting & Professional Services,Education / Training,Nursing preceptor programs,true
+Staffing Consulting & Professional Services,Education / Training,Patient safety training,true
+Staffing Consulting & Professional Services,Education / Training,Surgical skills training,true
+Staffing Consulting & Professional Services,Education / Training,Physician onboarding,true
+Staffing Consulting & Professional Services,Education / Training,Compliance training,true
+Payer Financial & Payment Solutions,Health Plans / Benefits,Payer,false
+Payer Financial & Payment Solutions,Health Plans / Benefits,TPA,false
+Payer Financial & Payment Solutions,Health Plans / Benefits,Stop-loss,false
+Payer Financial & Payment Solutions,Health Plans / Benefits,Employer health solutions,false
+Payer Financial & Payment Solutions,Health Plans / Benefits,Self-funded plan administration,true
+Payer Financial & Payment Solutions,Health Plans / Benefits,Captive insurance,true
+Payer Financial & Payment Solutions,Health Plans / Benefits,Employee wellness programs,true
+Payer Financial & Payment Solutions,Health Plans / Benefits,Direct-to-employer contracting,true
+Payer Financial & Payment Solutions,Health Plans / Benefits,Medicare Advantage plans,true
+Payer Financial & Payment Solutions,Health Plans / Benefits,Medicaid managed care,true
+Payer Financial & Payment Solutions,Health Plans / Benefits,ACO enablement platforms,true
+Payer Financial & Payment Solutions,Payment / Fintech,Payment processing,false
+Payer Financial & Payment Solutions,Payment / Fintech,Patient financing,false
+Payer Financial & Payment Solutions,Payment / Fintech,Payment plans,false
+Payer Financial & Payment Solutions,Payment / Fintech,Eligibility / estimation,false
+Payer Financial & Payment Solutions,Payment / Fintech,Merchant services / POS,true
+Payer Financial & Payment Solutions,Payment / Fintech,Healthcare credit cards,true
+Payer Financial & Payment Solutions,Payment / Fintech,Patient propensity to pay,true
+Payer Financial & Payment Solutions,Payment / Fintech,Charity care screening,true
+Payer Financial & Payment Solutions,Payment / Fintech,Payment automation / lockbox,true
+Payer Financial & Payment Solutions,Payment Integrity / Risk,Fraud detection,false
+Payer Financial & Payment Solutions,Payment Integrity / Risk,Audits,false
+Payer Financial & Payment Solutions,Payment Integrity / Risk,Coding validation,false
+Payer Financial & Payment Solutions,Payment Integrity / Risk,Contract analytics,false
+Payer Financial & Payment Solutions,Payment Integrity / Risk,Claims editing,true
+Payer Financial & Payment Solutions,Payment Integrity / Risk,Payer contract modeling,true
+Payer Financial & Payment Solutions,Payment Integrity / Risk,DRG validation,true
+Payer Financial & Payment Solutions,Payment Integrity / Risk,Medicare cost report services,true
+Payer Financial & Payment Solutions,Payment Integrity / Risk,Workers comp / liability recovery,true
+Life Sciences Research & Trials,Biopharma,Pharma manufacturer,false
+Life Sciences Research & Trials,Biopharma,Biotech,false
+Life Sciences Research & Trials,Biopharma,Specialty therapeutics,false
+Life Sciences Research & Trials,Biopharma,Biosimilars,true
+Life Sciences Research & Trials,Biopharma,Gene therapy,true
+Life Sciences Research & Trials,Biopharma,Cell therapy / CAR-T,true
+Life Sciences Research & Trials,Biopharma,Vaccines,true
+Life Sciences Research & Trials,Biopharma,Medical affairs / MSL,true
+Life Sciences Research & Trials,Biopharma,Drug delivery platforms,true
+Life Sciences Research & Trials,Biopharma,Orphan drugs,true
+Life Sciences Research & Trials,Biopharma,REMS programs,true
+Life Sciences Research & Trials,Clinical Research,CRO,false
+Life Sciences Research & Trials,Clinical Research,Trial technology,false
+Life Sciences Research & Trials,Clinical Research,Site network,false
+Life Sciences Research & Trials,Clinical Research,Patient recruitment,false
+Life Sciences Research & Trials,Clinical Research,EDC / eClinical platforms,true
+Life Sciences Research & Trials,Clinical Research,IRB / ethics review services,true
+Life Sciences Research & Trials,Clinical Research,Decentralized trials,true
+Life Sciences Research & Trials,Clinical Research,Real-world evidence platforms,true
+Life Sciences Research & Trials,Clinical Research,Clinical trial supply chain,true
+Life Sciences Research & Trials,Clinical Research,Biostatistics / data management,true
+Life Sciences Research & Trials,Research Tools / Services,Lab research products,false
+Life Sciences Research & Trials,Research Tools / Services,Sample management,false
+Life Sciences Research & Trials,Research Tools / Services,Research software,false
+Life Sciences Research & Trials,Research Tools / Services,Biobanking,true
+Life Sciences Research & Trials,Research Tools / Services,LIMS,true
+Life Sciences Research & Trials,Research Tools / Services,Grant management platforms,true
+Life Sciences Research & Trials,Research Tools / Services,Animal research services,true
+Life Sciences Research & Trials,Research Tools / Services,Reagents / consumables,true
+Life Sciences Research & Trials,Research Tools / Services,Research data analytics,true
+Provider Organizations,Hospitals / Health Systems,Hospitals / Health Systems,false
+Provider Organizations,Hospitals / Health Systems,Academic medical centers,true
+Provider Organizations,Hospitals / Health Systems,Community hospitals,true
+Provider Organizations,Hospitals / Health Systems,Critical access hospitals,true
+Provider Organizations,Hospitals / Health Systems,Children's hospitals,true
+Provider Organizations,Hospitals / Health Systems,For-profit hospital chains,true
+Provider Organizations,Hospitals / Health Systems,Integrated delivery networks,true
+Provider Organizations,Hospitals / Health Systems,VA / military hospitals,true
+Provider Organizations,Hospitals / Health Systems,Specialty hospitals,true
+Provider Organizations,Hospitals / Health Systems,Rural hospitals,true
+Provider Organizations,Physician Groups,Physician Groups,false
+Provider Organizations,Physician Groups,Multi-specialty groups,true
+Provider Organizations,Physician Groups,Single-specialty groups,true
+Provider Organizations,Physician Groups,Primary care practices,true
+Provider Organizations,Physician Groups,Urgent care operators,true
+Provider Organizations,Physician Groups,Concierge / DPC practices,true
+Provider Organizations,Physician Groups,Physician management companies,true
+Provider Organizations,Physician Groups,Telehealth-first practices,true
+Provider Organizations,ASCs,ASCs,false
+Provider Organizations,ASCs,Single-specialty ASCs,true
+Provider Organizations,ASCs,Multi-specialty ASCs,true
+Provider Organizations,ASCs,Orthopedic ASCs,true
+Provider Organizations,ASCs,Ophthalmology ASCs,true
+Provider Organizations,ASCs,GI endoscopy centers,true
+Provider Organizations,ASCs,ASC management companies,true
+Provider Organizations,Imaging Centers,Imaging Centers,false
+Provider Organizations,Imaging Centers,Freestanding imaging centers,true
+Provider Organizations,Imaging Centers,Breast imaging centers,true
+Provider Organizations,Imaging Centers,Mobile imaging providers,true
+Provider Organizations,Imaging Centers,Outpatient radiology,true
+Provider Organizations,Laboratories,Laboratories,false
+Provider Organizations,Laboratories,National reference labs,true
+Provider Organizations,Laboratories,Regional reference labs,true
+Provider Organizations,Laboratories,Specialty / esoteric labs,true
+Provider Organizations,Laboratories,Genetics / genomics labs,true
+Provider Organizations,Laboratories,Pathology practices,true
+Provider Organizations,Laboratories,Blood banks / collection centers,true
+Provider Organizations,Post-Acute / SNF / Rehab,Post-Acute / SNF / Rehab,false
+Provider Organizations,Post-Acute / SNF / Rehab,Skilled nursing facilities,true
+Provider Organizations,Post-Acute / SNF / Rehab,Inpatient rehabilitation facilities,true
+Provider Organizations,Post-Acute / SNF / Rehab,Long-term acute care hospitals,true
+Provider Organizations,Post-Acute / SNF / Rehab,Assisted living facilities,true
+Provider Organizations,Post-Acute / SNF / Rehab,Memory care facilities,true
+Provider Organizations,Post-Acute / SNF / Rehab,Continuing care retirement communities,true
+Provider Organizations,Home Health / Hospice,Home Health / Hospice,false
+Provider Organizations,Home Health / Hospice,Medicare-certified home health,true
+Provider Organizations,Home Health / Hospice,Private-duty home care,true
+Provider Organizations,Home Health / Hospice,Hospice providers,true
+Provider Organizations,Home Health / Hospice,Pediatric home health,true
+Provider Organizations,Home Health / Hospice,Home-based primary care,true
+Provider Organizations,Home Health / Hospice,Home health technology platforms,true
+Provider Organizations,Specialty Pharmacy / Infusion Providers,Specialty Pharmacy / Infusion Providers,false
+Provider Organizations,Specialty Pharmacy / Infusion Providers,Health system specialty pharmacies,true
+Provider Organizations,Specialty Pharmacy / Infusion Providers,Independent specialty pharmacies,true
+Provider Organizations,Specialty Pharmacy / Infusion Providers,Ambulatory infusion centers,true
+Provider Organizations,Specialty Pharmacy / Infusion Providers,Home infusion providers,true
+Provider Organizations,Specialty Pharmacy / Infusion Providers,Oncology infusion networks,true
+Provider Organizations,FQHC / Community Health,FQHC / Community Health,false
+Provider Organizations,FQHC / Community Health,Federally qualified health centers,true
+Provider Organizations,FQHC / Community Health,Free clinics,true
+Provider Organizations,FQHC / Community Health,Rural health clinics,true
+Provider Organizations,FQHC / Community Health,School-based health centers,true
+Provider Organizations,FQHC / Community Health,Community mental health centers,true
+Provider Organizations,FQHC / Community Health,Tribal health organizations,true
+Provider Organizations,Behavioral Health,Behavioral Health,false
+Provider Organizations,Behavioral Health,Inpatient psychiatric facilities,true
+Provider Organizations,Behavioral Health,Outpatient behavioral health,true
+Provider Organizations,Behavioral Health,Substance use treatment centers,true
+Provider Organizations,Behavioral Health,Autism therapy providers,true
+Provider Organizations,Behavioral Health,Crisis stabilization units,true
+Provider Organizations,Behavioral Health,Telepsychiatry providers,true
+Provider Organizations,Behavioral Health,Behavioral health platforms,true
+Media Associations & Events,Associations,Associations,false
+Media Associations & Events,Associations,Supply chain associations,true
+Media Associations & Events,Associations,Clinical specialty societies,true
+Media Associations & Events,Associations,Hospital / health system associations,true
+Media Associations & Events,Associations,Nursing associations,true
+Media Associations & Events,Associations,Pharmacy associations,true
+Media Associations & Events,Associations,IT / HIMSS-type associations,true
+Media Associations & Events,Associations,GPO / purchasing associations,true
+Media Associations & Events,Associations,State hospital associations,true
+Media Associations & Events,Associations,Medical device trade associations,true
+Media Associations & Events,Industry media,Industry media,false
+Media Associations & Events,Industry media,Healthcare trade publications,true
+Media Associations & Events,Industry media,Supply chain media,true
+Media Associations & Events,Industry media,Health IT media,true
+Media Associations & Events,Industry media,Clinical specialty journals,true
+Media Associations & Events,Industry media,Healthcare podcasts,true
+Media Associations & Events,Industry media,Healthcare newsletters,true
+Media Associations & Events,Industry media,Market research / analyst firms,true
+Media Associations & Events,Industry media,Healthcare news aggregators,true
+Media Associations & Events,Conferences / events,Conferences / events,false
+Media Associations & Events,Conferences / events,Supply chain conferences,true
+Media Associations & Events,Conferences / events,Health IT conferences,true
+Media Associations & Events,Conferences / events,Clinical specialty congresses,true
+Media Associations & Events,Conferences / events,Medical device trade shows,true
+Media Associations & Events,Conferences / events,GPO summits,true
+Media Associations & Events,Conferences / events,Pharmacy conferences,true
+Media Associations & Events,Conferences / events,Regional health system events,true
+Media Associations & Events,Conferences / events,Virtual / hybrid events,true
+Media Associations & Events,Education / membership organizations,Education / membership organizations,false
+Media Associations & Events,Education / membership organizations,Healthcare executive programs,true
+Media Associations & Events,Education / membership organizations,Purchasing certifications,true
+Media Associations & Events,Education / membership organizations,Clinical leadership academies,true
+Media Associations & Events,Education / membership organizations,Peer benchmarking networks,true
+Media Associations & Events,Education / membership organizations,Online learning communities,true
+Media Associations & Events,Education / membership organizations,Fellowship / residency programs,true
+Media Associations & Events,Education / membership organizations,Advisory board networks,true
