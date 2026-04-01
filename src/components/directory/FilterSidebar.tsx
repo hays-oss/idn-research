@@ -116,11 +116,26 @@ export default function FilterSidebar({
   }
 
   function toggleSub(id: number) {
-    onSubsChange(
-      selectedSubIds.includes(id)
-        ? selectedSubIds.filter((s) => s !== id)
-        : [...selectedSubIds, id]
-    );
+    // If toggling off, just remove
+    if (selectedSubIds.includes(id)) {
+      const newSubs = selectedSubIds.filter((s) => s !== id);
+      onSubsChange(newSubs);
+      // If no subs left and domain was auto-set, clear domain too
+      if (newSubs.length === 0 && selectedDomainId) {
+        onDomainChange(null);
+      }
+      return;
+    }
+    // Toggling on — also set the parent domain filter if not already set
+    const sub = subcategories.find((s) => s.id === id);
+    if (sub && selectedDomainId !== sub.domain_id) {
+      onDomainChange(sub.domain_id);
+      setExpandedDomainId(sub.domain_id);
+      // Replace subs since we're switching domains
+      onSubsChange([id]);
+    } else {
+      onSubsChange([...selectedSubIds, id]);
+    }
   }
 
   function toggleTag(id: number) {
