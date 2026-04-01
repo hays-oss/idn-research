@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { ResourceCategory } from "@/lib/types";
+
+const TURNSTILE_SITE_KEY = "0x4AAAAAACzF-XO9naOGbgEB";
 
 type FormPurpose = "resource" | "contact" | "get-involved";
 
@@ -32,6 +34,49 @@ export default function SubmitResourceForm({
   const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [submitTime] = useState(() => Date.now());
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const turnstileWidgetId = useRef<string | null>(null);
+
+  // Load Turnstile script and render widget
+  useEffect(() => {
+    // Define callback before loading script
+    (window as any).onTurnstileLoad = () => {
+      if (turnstileRef.current && (window as any).turnstile) {
+        turnstileWidgetId.current = (window as any).turnstile.render(turnstileRef.current, {
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (token: string) => setTurnstileToken(token),
+          "expired-callback": () => setTurnstileToken(null),
+          theme: "light",
+          size: "flexible",
+        });
+      }
+    };
+
+    // Load script if not already loaded
+    if (!(window as any).turnstile) {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad";
+      script.async = true;
+      document.head.appendChild(script);
+    } else {
+      // Script already loaded, just render
+      (window as any).onTurnstileLoad();
+    }
+
+    return () => {
+      if (turnstileWidgetId.current && (window as any).turnstile) {
+        (window as any).turnstile.remove(turnstileWidgetId.current);
+      }
+    };
+  }, []);
+
+  const resetTurnstile = useCallback(() => {
+    if (turnstileWidgetId.current && (window as any).turnstile) {
+      (window as any).turnstile.reset(turnstileWidgetId.current);
+      setTurnstileToken(null);
+    }
+  }, []);
 
   function normalizeUrl(url: string): string {
     let trimmed = url.trim();
@@ -48,6 +93,10 @@ export default function SubmitResourceForm({
     // Bot detection
     if (honeypot) return;
     if (Date.now() - submitTime < 3000) return;
+    if (!turnstileToken) {
+      setStatus("error");
+      return;
+    }
 
     setStatus("submitting");
     try {
@@ -71,6 +120,7 @@ export default function SubmitResourceForm({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             type: "resource",
+            turnstileToken,
             name: form.name,
             url: normalizedUrl,
             description: form.description,
@@ -88,6 +138,7 @@ export default function SubmitResourceForm({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             type: "contact",
+            turnstileToken,
             submitted_by_name: form.submitted_by_name,
             submitted_by_email: form.submitted_by_email,
             message: form.message,
@@ -98,6 +149,7 @@ export default function SubmitResourceForm({
 
       setStatus("success");
       setForm({ name: "", url: "", description: "", category_id: "", suggested_category: "", submitted_by_name: "", submitted_by_email: "", message: "" });
+      resetTurnstile();
     } catch {
       setStatus("error");
     }
@@ -270,10 +322,15 @@ export default function SubmitResourceForm({
           />
         </div>
 
+        {/* Cloudflare Turnstile */}
+        <div className="sm:col-span-2">
+          <div ref={turnstileRef} />
+        </div>
+
         <div className="sm:col-span-2">
           <button
             type="submit"
-            disabled={status === "submitting"}
+            disabled={status === "submitting" || !turnstileToken}
             className="rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-light transition-colors disabled:opacity-50"
           >
             {status === "submitting"
