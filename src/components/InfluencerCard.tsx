@@ -12,9 +12,9 @@ export default function InfluencerCard({
       href={influencer.linkedin_url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-center gap-3 rounded-lg border border-border bg-white px-4 py-3 transition-all hover:border-blue-300 hover:shadow-sm"
+      className="group flex items-center gap-3 rounded-xl border border-border bg-white px-4 py-3 transition-all duration-200 ease-out hover:border-blue-300 hover:shadow-md hover:-translate-y-0.5"
     >
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-bold text-blue-700">
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-50 to-blue-100 text-base font-bold text-blue-700 shadow-sm">
         {influencer.name
           .split(" ")
           .map((n) => n[0])
