@@ -184,10 +184,7 @@ export default function Home() {
             if (r.category_id !== cat.id) return false;
             if (activeTag && !(r.tags ?? []).includes(activeTag)) return false;
             if (!q) return true;
-            return (
-              r.name.toLowerCase().includes(q) ||
-              (r.description && r.description.toLowerCase().includes(q))
-            );
+            return r.name.toLowerCase().includes(q);
           })
           .sort((a, b) => a.name.localeCompare(b.name)),
       }))
@@ -205,8 +202,7 @@ export default function Home() {
           .map((sub) => ({
             ...sub,
             companies: sub.companies.filter((c) =>
-              c.company_name.toLowerCase().includes(q) ||
-              (c.description && c.description.toLowerCase().includes(q))
+              c.company_name.toLowerCase().includes(q)
             ),
           }))
           .filter((sub) => sub.companies.length > 0);
@@ -286,7 +282,7 @@ export default function Home() {
           categories={resourceCategories}
           directoryDomains={filteredDirectoryDomains}
           resourceCounts={resourceCounts}
-          influencerCount={influencers.length}
+          influencerCount={filteredInfluencers.length}
           activeSlug={activeSlug}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
