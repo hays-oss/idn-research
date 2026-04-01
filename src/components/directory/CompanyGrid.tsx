@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ExpandableCompanyCard, { ExpandableCompany } from "./ExpandableCompanyCard";
 
 interface GridDomain {
@@ -27,6 +27,15 @@ export default function CompanyGrid({
     // If no filters active, start all collapsed; if filters active, expand all
     hasActiveFilters ? new Set() : new Set(domains.map((d) => d.id))
   );
+
+  // When filters become active, expand all domains; when cleared, collapse all
+  useEffect(() => {
+    if (hasActiveFilters) {
+      setCollapsedDomains(new Set());
+    } else {
+      setCollapsedDomains(new Set(domains.map((d) => d.id)));
+    }
+  }, [hasActiveFilters, domains]);
 
   function toggleDomainCollapse(domainId: number) {
     setCollapsedDomains((prev) => {
