@@ -1,16 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function Header({
   onSearch,
   onToggleSidebar,
+  searchQuery: externalQuery,
 }: {
   onSearch: (query: string) => void;
   onToggleSidebar: () => void;
+  searchQuery?: string;
 }) {
   const [query, setQuery] = useState("");
+
+  // Sync from parent when search is cleared externally
+  useEffect(() => {
+    if (externalQuery !== undefined && externalQuery !== query) {
+      setQuery(externalQuery);
+    }
+  }, [externalQuery]);
 
   function handleSearch(value: string) {
     setQuery(value);

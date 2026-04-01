@@ -185,9 +185,7 @@ export default function Home() {
             if (!q) return true;
             return (
               r.name.toLowerCase().includes(q) ||
-              (r.description && r.description.toLowerCase().includes(q)) ||
-              r.tags.some((t) => t.toLowerCase().includes(q)) ||
-              cat.name.toLowerCase().includes(q)
+              (r.description && r.description.toLowerCase().includes(q))
             );
           })
           .sort((a, b) => a.name.localeCompare(b.name)),
@@ -281,6 +279,7 @@ export default function Home() {
       <Header
         onSearch={setSearchQuery}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+        searchQuery={searchQuery}
       />
 
       <div className="flex flex-1">
@@ -347,7 +346,7 @@ export default function Home() {
 
             {/* Search results header */}
             {searchQuery && !activeTag && (
-              <div className="mb-6">
+              <div className="mb-6 flex items-center justify-between">
                 <p className="text-sm text-muted">
                   Showing results for{" "}
                   <span className="font-medium text-foreground">
@@ -365,6 +364,15 @@ export default function Home() {
                     filteredInfluencers.length}{" "}
                   matches
                 </p>
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
+                >
+                  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  Clear search
+                </button>
               </div>
             )}
 

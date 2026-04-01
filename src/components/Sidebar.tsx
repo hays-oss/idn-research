@@ -178,7 +178,7 @@ export default function Sidebar({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const [meetingsExpanded, setMeetingsExpanded] = useState(true);
+  const [meetingsExpanded, setMeetingsExpanded] = useState(false);
   const [directoryExpanded, setDirectoryExpanded] = useState(true);
   const groups = buildGroups(categories, resourceCounts);
 
