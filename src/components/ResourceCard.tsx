@@ -26,7 +26,10 @@ export default function ResourceCard({
     resource.affiliations && resource.affiliations.length > 0;
 
   return (
-    <div className="group rounded-lg border border-border bg-white px-4 py-2.5 transition-all hover:border-primary/30 hover:shadow-sm">
+    <div className="group rounded-xl border border-border bg-white pl-0 pr-4 py-2.5 transition-all duration-200 ease-out hover:border-teal/30 hover:shadow-md hover:-translate-y-0.5 flex">
+      {/* Left accent bar */}
+      <div className="w-1 shrink-0 rounded-l-xl bg-teal/60 group-hover:bg-teal transition-colors" />
+      <div className="flex-1 min-w-0 pl-3">
       <div className="flex items-center justify-between">
         <a
           href={resource.url}
@@ -87,7 +90,7 @@ export default function ResourceCard({
       </div>
       {hasTags && (
         <div className="flex flex-wrap gap-1 mt-1.5">
-          {resource.tags.map((tag) => (
+          {resource.tags.slice(0, 3).map((tag) => (
             <button
               key={tag}
               onClick={(e) => {
@@ -103,8 +106,14 @@ export default function ResourceCard({
               {tag}
             </button>
           ))}
+          {resource.tags.length > 3 && (
+            <span className="rounded px-1.5 py-0.5 text-[10px] text-muted bg-surface/50">
+              +{resource.tags.length - 3} more
+            </span>
+          )}
         </div>
       )}
+      </div>
     </div>
   );
 }
