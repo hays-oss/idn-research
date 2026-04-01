@@ -40,7 +40,7 @@ export async function POST(request: Request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "IDN Research <onboarding@resend.dev>",
+          from: "IDN Research <notifications@ihesllc.com>",
           to: [NOTIFY_EMAIL],
           subject,
           text,
