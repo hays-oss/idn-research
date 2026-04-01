@@ -18,6 +18,7 @@ import Sidebar from "@/components/Sidebar";
 import CategorySection from "@/components/CategorySection";
 import DirectorySection from "@/components/DirectorySection";
 import InfluencerCard from "@/components/InfluencerCard";
+import CompanyCard from "@/components/CompanyCard";
 import SubmitResourceForm from "@/components/SubmitResourceForm";
 import HeroSection from "@/components/HeroSection";
 import HowItWorks from "@/components/HowItWorks";
@@ -205,9 +206,7 @@ export default function Home() {
             ...sub,
             companies: sub.companies.filter((c) =>
               c.company_name.toLowerCase().includes(q) ||
-              (c.description && c.description.toLowerCase().includes(q)) ||
-              sub.name.toLowerCase().includes(q) ||
-              domain.name.toLowerCase().includes(q)
+              (c.description && c.description.toLowerCase().includes(q))
             ),
           }))
           .filter((sub) => sub.companies.length > 0);
@@ -417,8 +416,10 @@ export default function Home() {
                     <div>
                       <h2 className="text-xl font-bold text-foreground">Company Directory</h2>
                       <p className="text-sm text-muted mt-1">
-                        Browse {filteredDirectoryDomains.reduce((s, d) => s + d.totalCompanies, 0)} healthcare companies across{" "}
-                        {filteredDirectoryDomains.length} domains — from medical devices to health IT.
+                        {searchQuery
+                          ? `${filteredDirectoryDomains.reduce((s, d) => s + d.totalCompanies, 0)} matching companies`
+                          : `Browse ${filteredDirectoryDomains.reduce((s, d) => s + d.totalCompanies, 0)} healthcare companies across ${filteredDirectoryDomains.length} domains — from medical devices to health IT.`
+                        }
                       </p>
                     </div>
                     <a
@@ -431,37 +432,57 @@ export default function Home() {
                       </svg>
                     </a>
                   </div>
-                  {/* Show domain summary cards */}
-                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {filteredDirectoryDomains.slice(0, 6).map((domain) => (
-                      <a
-                        key={domain.id}
-                        href={`/directory?domain=${domain.id}`}
-                        className="rounded-lg border border-border bg-white px-4 py-3 hover:border-primary/30 hover:shadow-sm transition-all group"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
-                            {domain.name}
-                          </span>
-                          <span className="rounded-full bg-surface px-2 py-0.5 text-[10px] font-medium text-muted">
-                            {domain.totalCompanies}
-                          </span>
-                        </div>
-                        <p className="text-xs text-muted mt-1">
-                          {domain.subcategories.length} market segments
-                        </p>
-                      </a>
-                    ))}
-                  </div>
-                  {filteredDirectoryDomains.length > 6 && (
-                    <div className="mt-3 text-center">
-                      <a
-                        href="/directory"
-                        className="text-sm text-primary hover:text-primary-light transition-colors"
-                      >
-                        + {filteredDirectoryDomains.length - 6} more domains →
-                      </a>
+
+                  {/* When searching: show matching companies directly */}
+                  {searchQuery ? (
+                    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                      {filteredDirectoryDomains.flatMap((domain) =>
+                        domain.subcategories.flatMap((sub) =>
+                          sub.companies.map((company) => (
+                            <CompanyCard
+                              key={company.id}
+                              company={company}
+                              onTrackClick={trackClick}
+                            />
+                          ))
+                        )
+                      )}
                     </div>
+                  ) : (
+                    <>
+                      {/* Default: show domain summary cards */}
+                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {filteredDirectoryDomains.slice(0, 6).map((domain) => (
+                          <a
+                            key={domain.id}
+                            href={`/directory?domain=${domain.id}`}
+                            className="rounded-xl border border-border bg-white px-4 py-3 hover:border-teal/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ease-out group"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                                {domain.name}
+                              </span>
+                              <span className="rounded-full bg-surface px-2 py-0.5 text-[10px] font-medium text-muted">
+                                {domain.totalCompanies}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted mt-1">
+                              {domain.subcategories.length} market segments
+                            </p>
+                          </a>
+                        ))}
+                      </div>
+                      {filteredDirectoryDomains.length > 6 && (
+                        <div className="mt-3 text-center">
+                          <a
+                            href="/directory"
+                            className="text-sm text-teal hover:text-teal-light transition-colors"
+                          >
+                            + {filteredDirectoryDomains.length - 6} more domains →
+                          </a>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               )}
