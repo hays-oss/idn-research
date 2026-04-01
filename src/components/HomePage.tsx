@@ -383,7 +383,7 @@ export default function Home() {
               {/* LinkedIn Influencers */}
               {filteredInfluencers.length > 0 && (
                 <section id="linkedin-influencers" className="scroll-mt-20">
-                  <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-3 mb-2">
                     <h2 className="text-lg font-semibold text-foreground">
                       LinkedIn Influencers
                     </h2>
@@ -391,6 +391,9 @@ export default function Home() {
                       {filteredInfluencers.length}
                     </span>
                   </div>
+                  <p className="text-sm sm:text-base text-muted max-w-2xl mb-4">
+                    Follow the voices shaping healthcare leadership — executives and thought leaders active on LinkedIn.
+                  </p>
                   <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {filteredInfluencers.map((inf) => (
                       <InfluencerCard key={inf.id} influencer={inf} />
@@ -406,8 +409,8 @@ export default function Home() {
                     <div>
                       <h2 className="text-xl font-bold text-foreground">Company Directory</h2>
                       <p className="text-sm text-muted mt-1">
-                        {filteredDirectoryDomains.reduce((s, d) => s + d.totalCompanies, 0)} companies across{" "}
-                        {filteredDirectoryDomains.reduce((s, d) => s + d.subcategories.length, 0)} market segments
+                        Browse {filteredDirectoryDomains.reduce((s, d) => s + d.totalCompanies, 0)} healthcare companies across{" "}
+                        {filteredDirectoryDomains.length} domains — from medical devices to health IT.
                       </p>
                     </div>
                     <a
