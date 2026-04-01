@@ -112,7 +112,11 @@ export default function FilterSidebar({
   }
 
   function expandDomainOnly(id: number) {
-    setExpandedDomainId(expandedDomainId === id ? null : id);
+    if (expandedDomainId === id) {
+      setExpandedDomainId(null);
+    } else {
+      setExpandedDomainId(id);
+    }
   }
 
   function toggleSub(id: number) {
@@ -120,21 +124,18 @@ export default function FilterSidebar({
     if (selectedSubIds.includes(id)) {
       const newSubs = selectedSubIds.filter((s) => s !== id);
       onSubsChange(newSubs);
-      // If no subs left and domain was auto-set, clear domain too
-      if (newSubs.length === 0 && selectedDomainId) {
+      // If no subs left, clear domain too
+      if (newSubs.length === 0) {
         onDomainChange(null);
       }
       return;
     }
-    // Toggling on — also set the parent domain filter if not already set
+    // Toggling on — always set parent domain + this sub
     const sub = subcategories.find((s) => s.id === id);
-    if (sub && selectedDomainId !== sub.domain_id) {
+    if (sub) {
       onDomainChange(sub.domain_id);
       setExpandedDomainId(sub.domain_id);
-      // Replace subs since we're switching domains
       onSubsChange([id]);
-    } else {
-      onSubsChange([...selectedSubIds, id]);
     }
   }
 
