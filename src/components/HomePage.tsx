@@ -245,13 +245,15 @@ export default function Home() {
       filteredDirectoryDomains.reduce((sum, d) => sum + d.totalCompanies, 0)
     : 0;
 
-  const uniqueTagCount = useMemo(() => {
-    const tags = new Set<string>();
-    for (const r of resources) {
-      for (const t of r.tags ?? []) tags.add(t);
-    }
-    return tags.size;
-  }, [resources]);
+  // Tag count fetched from taxonomy (not the legacy resource tags)
+  const [taxonomyTagCount, setTaxonomyTagCount] = useState(0);
+  useEffect(() => {
+    supabase
+      .from("category_taxonomy")
+      .select("id", { count: "exact", head: true })
+      .eq("is_active", true)
+      .then(({ count }) => { if (count) setTaxonomyTagCount(count); });
+  }, []);
 
   const totalCompanyCount = useMemo(
     () => directoryDomains.reduce((sum, d) => sum + d.totalCompanies, 0),
@@ -296,7 +298,7 @@ export default function Home() {
               <HeroSection
                 companyCount={totalCompanyCount}
                 domainCount={directoryDomains.length}
-                tagCount={uniqueTagCount}
+                tagCount={taxonomyTagCount}
                 searchQuery={searchQuery}
                 onSearch={setSearchQuery}
               />
