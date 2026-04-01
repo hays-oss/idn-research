@@ -121,8 +121,8 @@ export default function ExpandableCompanyCard({
           {/* Meta row */}
           <div className="flex flex-wrap items-center gap-3 text-xs text-muted">
             {company.company_type && (
-              <span className="rounded-full bg-surface px-2 py-0.5 capitalize">
-                {company.company_type}
+              <span className="rounded-full bg-surface px-2 py-0.5">
+                {({ gpo: "GPO", distributor: "Distributor", manufacturer: "Manufacturer", vendor: "Vendor", consultant: "Consultant", payer: "Payer", media: "Media", association: "Association", provider: "Provider", other: "Other" } as Record<string, string>)[company.company_type] || company.company_type}
               </span>
             )}
             {hasLocation && (
