@@ -4,6 +4,8 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { ResourceCategory } from "@/lib/types";
 
+const NOTIFY_EMAIL = "hays+idn@ihesllc.com";
+
 export default function SubmitResourceForm({
   categories,
 }: {
@@ -18,15 +20,37 @@ export default function SubmitResourceForm({
     submitted_by_name: "",
     submitted_by_email: "",
   });
+  // Honeypot field — bots fill this in, humans don't see it
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [submitTime] = useState(() => Date.now());
+
+  function normalizeUrl(url: string): string {
+    let trimmed = url.trim();
+    if (!trimmed) return trimmed;
+    // Add https:// if no protocol present
+    if (!/^https?:\/\//i.test(trimmed)) {
+      trimmed = "https://" + trimmed;
+    }
+    return trimmed;
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    // Bot detection: honeypot field should be empty
+    if (honeypot) return;
+
+    // Bot detection: form submitted too quickly (under 3 seconds)
+    if (Date.now() - submitTime < 3000) return;
+
     setStatus("submitting");
     try {
+      const normalizedUrl = normalizeUrl(form.url);
+
       const { error } = await supabase.from("resource_submissions").insert({
         name: form.name,
-        url: form.url,
+        url: normalizedUrl,
         description: form.description || null,
         category_id: form.category_id || null,
         suggested_category: form.suggested_category || null,
@@ -34,6 +58,27 @@ export default function SubmitResourceForm({
         submitted_by_email: form.submitted_by_email || null,
       });
       if (error) throw error;
+
+      // Send email notification
+      try {
+        await fetch("/api/notify-submission", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: form.name,
+            url: normalizedUrl,
+            description: form.description,
+            submitted_by_name: form.submitted_by_name,
+            submitted_by_email: form.submitted_by_email,
+            category: form.category_id
+              ? categories.find((c) => c.id === form.category_id)?.name || "Unknown"
+              : form.suggested_category || "Not specified",
+          }),
+        });
+      } catch {
+        // Notification failure shouldn't block the submission
+      }
+
       setStatus("success");
       setForm({ name: "", url: "", description: "", category_id: "", suggested_category: "", submitted_by_name: "", submitted_by_email: "" });
     } catch {
@@ -66,6 +111,20 @@ export default function SubmitResourceForm({
         Know a healthcare resource that should be on this list? Let us know.
       </p>
       <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
+        {/* Honeypot — hidden from humans, bots fill it in */}
+        <div className="absolute opacity-0 h-0 w-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+          <label htmlFor="website_url">Website</label>
+          <input
+            id="website_url"
+            name="website_url"
+            type="text"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+            autoComplete="off"
+            tabIndex={-1}
+          />
+        </div>
+
         <div className="sm:col-span-2">
           <label className="block text-xs font-medium text-foreground mb-1">Resource Name *</label>
           <input
@@ -80,11 +139,11 @@ export default function SubmitResourceForm({
           <label className="block text-xs font-medium text-foreground mb-1">URL *</label>
           <input
             required
-            type="url"
+            type="text"
             value={form.url}
             onChange={(e) => setForm({ ...form, url: e.target.value })}
             className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            placeholder="https://..."
+            placeholder="www.example.com"
           />
         </div>
         <div>
