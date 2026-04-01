@@ -5,12 +5,18 @@
   --foreground: #1a2e1a;
   --primary: #1a5632;
   --primary-light: #237243;
-  --accent: #c5a84c;
-  --accent-light: #d4bc6a;
+  --accent: #e5b84c;
+  --accent-light: #f0d078;
   --surface: #e8f1eb;
   --border: #c8ddd0;
   --muted: #5a7a64;
   --header-bg: #1a5632;
+  --teal: #0d9488;
+  --teal-light: #14b8a6;
+  --coral: #e87461;
+  --coral-light: #f09a8d;
+  --gradient-hero: linear-gradient(135deg, #1a5632, #0d7a6a);
+  --gradient-btn: linear-gradient(135deg, #1a5632, #237243);
 }
 
 @theme inline {
@@ -24,6 +30,10 @@
   --color-border: var(--border);
   --color-muted: var(--muted);
   --color-header-bg: var(--header-bg);
+  --color-teal: var(--teal);
+  --color-teal-light: var(--teal-light);
+  --color-coral: var(--coral);
+  --color-coral-light: var(--coral-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
