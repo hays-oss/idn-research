@@ -34,9 +34,12 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [directoryDomains, setDirectoryDomains] = useState<DirectoryDomain[]>([]);
 
-  // Split categories by type
+  // Split categories by type (exclude "LinkedIn Influencers" category — influencers have their own dedicated section)
   const resourceCategories = useMemo(
-    () => allCategories.filter((c) => (c.category_type || "resource") === "resource"),
+    () => allCategories.filter((c) =>
+      (c.category_type || "resource") === "resource" &&
+      c.name !== "LinkedIn Influencers"
+    ),
     [allCategories]
   );
   // Fetch all data on mount
