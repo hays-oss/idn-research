@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import {
   getAllActiveResources,
   getAllActiveCompanies,
+  getAllResourceCategories,
+  getAllTaxonomy,
 } from "@/lib/resourceQueries";
 import { slugify } from "@/lib/slug";
 
@@ -18,10 +20,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_ORIGIN}/directory`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
   ];
 
-  const [resources, companies] = await Promise.all([
+  const [resources, companies, categories, taxonomy] = await Promise.all([
     getAllActiveResources(),
     getAllActiveCompanies(),
+    getAllResourceCategories(),
+    getAllTaxonomy(),
   ]);
+
+  const categoryEntries: MetadataRoute.Sitemap = categories
+    .filter((c) => !!c.slug)
+    .map((c) => ({
+      url: `${SITE_ORIGIN}/category/${c.slug}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    }));
+
+  const domainEntries: MetadataRoute.Sitemap = taxonomy.domains.map((d) => ({
+    url: `${SITE_ORIGIN}/domain/${slugify(d.name)}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }));
 
   const seenResourceSlugs = new Set<string>();
   const resourceEntries: MetadataRoute.Sitemap = [];
@@ -46,5 +66,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-  return [...staticEntries, ...resourceEntries, ...companyEntries];
+  return [
+    ...staticEntries,
+    ...categoryEntries,
+    ...domainEntries,
+    ...resourceEntries,
+    ...companyEntries,
+  ];
 }

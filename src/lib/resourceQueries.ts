@@ -132,6 +132,66 @@ export const getCompanyAffiliations = cache(
   }
 );
 
+// ===== Category page helpers =====
+
+export const getCategoryBySlug = cache(
+  async (
+    slug: string
+  ): Promise<{
+    category: ResourceCategory;
+    resources: Resource[];
+    siblings: ResourceCategory[];
+  } | null> => {
+    const [categories, resources] = await Promise.all([
+      getAllResourceCategories(),
+      getAllActiveResources(),
+    ]);
+    const category = categories.find((c) => c.slug === slug);
+    if (!category) return null;
+    const inCategory = resources.filter((r) => r.category_id === category.id);
+    const siblings = categories.filter((c) => c.id !== category.id).slice(0, 8);
+    return { category, resources: inCategory, siblings };
+  }
+);
+
+// ===== Domain page helpers =====
+
+export const getDomainBySlug = cache(
+  async (
+    slug: string
+  ): Promise<{
+    domain: TaxonomyDomain;
+    subcategories: Array<{
+      id: number;
+      name: string;
+      companies: CompanyRow[];
+    }>;
+    siblings: TaxonomyDomain[];
+    totalCompanies: number;
+  } | null> => {
+    const [taxonomy, companies] = await Promise.all([
+      getAllTaxonomy(),
+      getAllActiveCompanies(),
+    ]);
+    const domain = taxonomy.domains.find((d) => slugify(d.name) === slug);
+    if (!domain) return null;
+
+    const subs = taxonomy.subcategories
+      .filter((s) => s.domain_id === domain.id)
+      .map((sub) => ({
+        id: sub.id,
+        name: sub.name,
+        companies: companies.filter((c) => c.primary_subcategory_id === sub.id),
+      }))
+      .filter((sub) => sub.companies.length > 0);
+
+    const totalCompanies = subs.reduce((sum, s) => sum + s.companies.length, 0);
+    const siblings = taxonomy.domains.filter((d) => d.id !== domain.id);
+
+    return { domain, subcategories: subs, siblings, totalCompanies };
+  }
+);
+
 export const getCompanyBySlug = cache(
   async (
     slug: string
