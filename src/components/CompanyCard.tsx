@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { DirectoryCompany } from "@/lib/types";
 
 const AFFILIATION_STYLES: Record<string, { bg: string; text: string }> = {
@@ -22,41 +23,73 @@ export default function CompanyCard({
   return (
     <div className="group rounded-xl border border-border bg-white px-4 py-3 transition-all duration-200 ease-out hover:border-teal/30 hover:shadow-md hover:-translate-y-0.5">
       <div className="flex items-center justify-between">
-        <a
-          href={company.website || "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => onTrackClick(company.id)}
-          className="min-w-0 flex-1"
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-base font-bold text-foreground group-hover:text-primary truncate">
-              {company.company_name}
-            </span>
-            {hasAffiliations && (
-              <div className="flex gap-1 shrink-0">
-                {company.affiliations.map((aff) => {
-                  const style = AFFILIATION_STYLES[aff.code];
-                  if (!style) return null;
-                  return (
-                    <span
-                      key={aff.code}
-                      className={`inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-bold tracking-wide ${style.bg} ${style.text}`}
-                      title={aff.name}
-                    >
-                      {aff.code}
-                    </span>
-                  );
-                })}
-              </div>
+        {company.slug ? (
+          <Link href={`/company/${company.slug}`} className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-base font-bold text-foreground group-hover:text-primary truncate">
+                {company.company_name}
+              </span>
+              {hasAffiliations && (
+                <div className="flex gap-1 shrink-0">
+                  {company.affiliations.map((aff) => {
+                    const style = AFFILIATION_STYLES[aff.code];
+                    if (!style) return null;
+                    return (
+                      <span
+                        key={aff.code}
+                        className={`inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-bold tracking-wide ${style.bg} ${style.text}`}
+                        title={aff.name}
+                      >
+                        {aff.code}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+            {company.description && (
+              <p className="text-xs text-muted truncate mt-0.5">
+                {company.description}
+              </p>
             )}
-          </div>
-          {company.description && (
-            <p className="text-xs text-muted truncate mt-0.5">
-              {company.description}
-            </p>
-          )}
-        </a>
+          </Link>
+        ) : (
+          <a
+            href={company.website || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => onTrackClick(company.id)}
+            className="min-w-0 flex-1"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-base font-bold text-foreground group-hover:text-primary truncate">
+                {company.company_name}
+              </span>
+              {hasAffiliations && (
+                <div className="flex gap-1 shrink-0">
+                  {company.affiliations.map((aff) => {
+                    const style = AFFILIATION_STYLES[aff.code];
+                    if (!style) return null;
+                    return (
+                      <span
+                        key={aff.code}
+                        className={`inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-bold tracking-wide ${style.bg} ${style.text}`}
+                        title={aff.name}
+                      >
+                        {aff.code}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+            {company.description && (
+              <p className="text-xs text-muted truncate mt-0.5">
+                {company.description}
+              </p>
+            )}
+          </a>
+        )}
         <div className="flex items-center gap-2 shrink-0 ml-3">
           {hasLinkedIn && (
             <a

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 const AFFILIATION_STYLES: Record<string, { bg: string; text: string }> = {
   IHES: { bg: "bg-[#1a5632]", text: "text-white" },
   CPES: { bg: "bg-[#1a2b5f]", text: "text-white" },
@@ -150,6 +152,17 @@ export default function ExpandableCompanyCard({
 
           {/* Links */}
           <div className="flex items-center gap-4 pt-1">
+            {company.slug && (
+              <Link
+                href={`/company/${company.slug}`}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-light transition-colors"
+              >
+                View full profile
+                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+            )}
             {company.website && (
               <a
                 href={company.website}
