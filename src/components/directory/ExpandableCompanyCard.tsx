@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { trackExternalLinkClick } from "@/lib/analytics";
 
 const AFFILIATION_STYLES: Record<string, { bg: string; text: string }> = {
   IHES: { bg: "bg-[#1a5632]", text: "text-white" },
@@ -168,6 +169,14 @@ export default function ExpandableCompanyCard({
                 href={company.website}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  trackExternalLinkClick({
+                    resourceId: company.id,
+                    resourceName: company.company_name,
+                    destinationUrl: company.website!,
+                    source: "directory_card",
+                  })
+                }
                 className="inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary-light transition-colors"
               >
                 <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

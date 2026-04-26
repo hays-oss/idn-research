@@ -9,6 +9,7 @@ import { slugify } from "@/lib/slug";
 import { getCategoryCopy } from "@/lib/categoryIntros";
 import Breadcrumbs, { breadcrumbJsonLd } from "@/components/Breadcrumbs";
 import IhesPromoSidebar from "@/components/IhesPromoSidebar";
+import SiteFooter from "@/components/SiteFooter";
 
 const SITE_ORIGIN = "https://idnresearch.com";
 
@@ -192,6 +193,10 @@ export default async function CategoryPage({
             </div>
           )}
         </aside>
+      </div>
+
+      <div className="mt-16 -mx-4 sm:-mx-6 lg:-mx-8">
+        <SiteFooter />
       </div>
     </main>
   );

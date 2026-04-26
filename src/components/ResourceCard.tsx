@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Resource } from "@/lib/types";
 import { slugify } from "@/lib/slug";
+import { trackExternalLinkClick } from "@/lib/analytics";
 
 // Org branding colors matching IHES Mission Control config
 const AFFILIATION_STYLES: Record<string, { bg: string; text: string; border: string }> = {
@@ -70,7 +71,15 @@ export default function ResourceCard({
             href={resource.url}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => onTrackClick(resource.id)}
+            onClick={() => {
+              onTrackClick(resource.id);
+              trackExternalLinkClick({
+                resourceId: resource.id,
+                resourceName: resource.name,
+                destinationUrl: resource.url,
+                source: "homepage_card",
+              });
+            }}
             className="shrink-0 ml-3"
             title={`Visit ${resource.name} (external)`}
             aria-label={`Visit ${resource.name} website`}

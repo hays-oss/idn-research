@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "About IDN Research — Built by IHES",
@@ -108,6 +109,8 @@ export default function AboutPage() {
           </p>
         </div>
       </main>
+
+      <SiteFooter />
     </>
   );
 }

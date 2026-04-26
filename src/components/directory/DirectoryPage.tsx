@@ -9,6 +9,7 @@ import {
 import { ExpandableCompany } from "./ExpandableCompanyCard";
 import FilterSidebar from "./FilterSidebar";
 import CompanyGrid from "./CompanyGrid";
+import SiteFooter from "@/components/SiteFooter";
 
 interface TagOption {
   id: number;
@@ -400,24 +401,7 @@ export default function DirectoryPage({
         </main>
       </div>
 
-      {/* Footer */}
-      <footer className="mt-auto bg-header-bg py-6">
-        <div className="max-w-[1200px] px-4 sm:px-6 lg:px-8 mx-auto">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/60">
-            <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded bg-accent text-header-bg text-[10px] font-bold">
-                IDN
-              </div>
-              <span>IDN Research &mdash; A project by IHES</span>
-            </div>
-            <div className="flex gap-6">
-              <a href="/" className="hover:text-white transition-colors">Resources</a>
-              <a href="/about" className="hover:text-white transition-colors">About</a>
-              <a href="https://www.ihesllc.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">IHES</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

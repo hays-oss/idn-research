@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SubmitResourceForm from "@/components/SubmitResourceForm";
 import { getAllResourceCategories } from "@/lib/resourceQueries";
+import SiteFooter from "@/components/SiteFooter";
 
 export const revalidate = 3600;
 
@@ -104,6 +105,8 @@ export default async function ContactPage() {
           </dl>
         </section>
       </main>
+
+      <SiteFooter />
     </>
   );
 }

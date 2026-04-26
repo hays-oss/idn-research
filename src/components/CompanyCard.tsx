@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { DirectoryCompany } from "@/lib/types";
+import { trackExternalLinkClick } from "@/lib/analytics";
 
 const AFFILIATION_STYLES: Record<string, { bg: string; text: string }> = {
   IHES: { bg: "bg-[#1a5632]", text: "text-white" },
@@ -110,7 +111,15 @@ export default function CompanyCard({
               href={company.website}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => onTrackClick(company.id)}
+              onClick={() => {
+                onTrackClick(company.id);
+                trackExternalLinkClick({
+                  resourceId: company.id,
+                  resourceName: company.company_name,
+                  destinationUrl: company.website!,
+                  source: "homepage_company_card",
+                });
+              }}
             >
               <svg
                 className="h-3.5 w-3.5 text-muted/50 group-hover:text-primary transition-colors"

@@ -8,6 +8,8 @@ import {
 import { slugify } from "@/lib/slug";
 import Breadcrumbs, { breadcrumbJsonLd } from "@/components/Breadcrumbs";
 import IhesPromoSidebar from "@/components/IhesPromoSidebar";
+import SiteFooter from "@/components/SiteFooter";
+import TrackedExternalLink from "@/components/TrackedExternalLink";
 
 const SITE_ORIGIN = "https://idnresearch.com";
 
@@ -166,10 +168,11 @@ export default async function ResourcePage({
 
           <div className="mt-6 flex flex-wrap gap-3">
             {resource.url && (
-              <a
+              <TrackedExternalLink
                 href={resource.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                resourceId={resource.id}
+                resourceName={resource.name}
+                source="resource_page"
                 className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-light transition-colors"
               >
                 Visit {domain || "Website"}
@@ -186,7 +189,7 @@ export default async function ResourcePage({
                     d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                   />
                 </svg>
-              </a>
+              </TrackedExternalLink>
             )}
             {resource.linkedin_url && (
               <a
@@ -231,6 +234,10 @@ export default async function ResourcePage({
             </div>
           )}
         </aside>
+      </div>
+
+      <div className="mt-16 -mx-4 sm:-mx-6 lg:-mx-8">
+        <SiteFooter />
       </div>
     </main>
   );

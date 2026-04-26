@@ -17,6 +17,8 @@ import CompanyCard from "@/components/CompanyCard";
 import SubmitResourceForm from "@/components/SubmitResourceForm";
 import HeroSection from "@/components/HeroSection";
 import HowItWorks from "@/components/HowItWorks";
+import IhesPromoBanner from "@/components/IhesPromoBanner";
+import SiteFooter from "@/components/SiteFooter";
 
 export interface HomePageInitialData {
   allCategories: ResourceCategory[];
@@ -194,6 +196,7 @@ export default function Home({ initialData }: { initialData: HomePageInitialData
                 searchQuery={searchQuery}
                 onSearch={setSearchQuery}
               />
+              <IhesPromoBanner location="homepage_hero" />
               <HowItWorks />
             </>
           )}
@@ -401,41 +404,7 @@ export default function Home({ initialData }: { initialData: HomePageInitialData
             </div>
           </div>
 
-          {/* Footer */}
-          <footer className="mt-auto bg-header-bg py-8">
-            <div className="max-w-[1200px] px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/60">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-6 w-6 items-center justify-center rounded bg-accent text-header-bg text-[10px] font-bold">
-                    IDN
-                  </div>
-                  <span>IDN Research &mdash; A project by IHES</span>
-                </div>
-                <div className="flex gap-6">
-                  <a
-                    href="/about"
-                    className="hover:text-white transition-colors"
-                  >
-                    About
-                  </a>
-                  <a
-                    href="#submit"
-                    className="hover:text-white transition-colors"
-                  >
-                    Submit Resource
-                  </a>
-                  <a
-                    href="https://www.ihesllc.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    IHES
-                  </a>
-                </div>
-              </div>
-            </div>
-          </footer>
+          <SiteFooter />
         </main>
       </div>
     </div>
