@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 import {
   TaxonomyDomain,
   TaxonomySubcategory,
@@ -10,6 +9,7 @@ import {
 import { ExpandableCompany } from "./ExpandableCompanyCard";
 import FilterSidebar from "./FilterSidebar";
 import CompanyGrid from "./CompanyGrid";
+import SiteFooter from "@/components/SiteFooter";
 
 interface TagOption {
   id: number;
@@ -43,18 +43,37 @@ interface DomainGroup {
   totalCompanies: number;
 }
 
-export default function DirectoryPage() {
+export interface DirectoryInitialData {
+  domains: TaxonomyDomain[];
+  subcategories: TaxonomySubcategory[];
+  companies: RawCompany[];
+  affiliations: Record<string, { code: string; name: string }[]>;
+  allTags: TagOption[];
+  companyTags: Record<string, { id: number; name: string }[]>;
+}
+
+export default function DirectoryPage({
+  initialData,
+}: {
+  initialData: DirectoryInitialData;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Raw data
-  const [domains, setDomains] = useState<TaxonomyDomain[]>([]);
-  const [subcategories, setSubcategories] = useState<TaxonomySubcategory[]>([]);
-  const [companies, setCompanies] = useState<RawCompany[]>([]);
-  const [affiliations, setAffiliations] = useState<Map<string, { code: string; name: string }[]>>(new Map());
-  const [companyTags, setCompanyTags] = useState<Map<string, { id: number; name: string }[]>>(new Map());
-  const [allTags, setAllTags] = useState<TagOption[]>([]);
-  const [loading, setLoading] = useState(true);
+  const domains = initialData.domains;
+  const subcategories = initialData.subcategories;
+  const companies = initialData.companies;
+  const allTags = initialData.allTags;
+  // Convert from plain objects (server-serializable) into Maps for the
+  // existing filter logic below to keep using `.get()`.
+  const affiliations = useMemo(
+    () => new Map(Object.entries(initialData.affiliations)),
+    [initialData.affiliations]
+  );
+  const companyTags = useMemo(
+    () => new Map(Object.entries(initialData.companyTags)),
+    [initialData.companyTags]
+  );
 
   // Filter state from URL
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
@@ -94,74 +113,6 @@ export default function DirectoryPage() {
     const newUrl = qs ? `/directory?${qs}` : "/directory";
     router.replace(newUrl, { scroll: false });
   }, [debouncedSearch, selectedOrgs, selectedDomainId, selectedSubIds, selectedTagIds, router]);
-
-  // Fetch all data
-  useEffect(() => {
-    async function fetchData() {
-      const [domRes, subRes, compRes, affRes, tagRes, ctRes] = await Promise.all([
-        supabase.from("taxonomy_domains").select("*").eq("is_active", true).order("display_order"),
-        supabase.from("taxonomy_subcategories").select("*").eq("is_active", true).order("display_order"),
-        supabase.from("companies")
-          .select("id, company_name, slug, website, linkedin_url, description, is_featured, primary_subcategory_id, company_type, headquarters_city, headquarters_state")
-          .eq("is_active", true)
-          .eq("review_status", "approved")
-          .order("company_name"),
-        supabase.from("company_affiliations")
-          .select("organization_id, company_id, organizations(code, name)")
-          .eq("is_active", true),
-        supabase.from("category_taxonomy")
-          .select("id, level_3_tag, subcategory_id")
-          .eq("is_active", true)
-          .order("level_3_tag"),
-        supabase.from("company_tags")
-          .select("company_id, taxonomy_id, category_taxonomy(id, level_3_tag)"),
-      ]);
-
-      if (domRes.data) setDomains(domRes.data);
-      if (subRes.data) setSubcategories(subRes.data);
-      if (compRes.data) setCompanies(compRes.data as RawCompany[]);
-
-      // Build affiliation map
-      if (affRes.data) {
-        const affMap = new Map<string, { code: string; name: string }[]>();
-        for (const a of affRes.data as any[]) {
-          const org = a.organizations as { code: string; name: string } | null;
-          if (!org) continue;
-          const list = affMap.get(a.company_id) || [];
-          list.push({ code: org.code, name: org.name });
-          affMap.set(a.company_id, list);
-        }
-        setAffiliations(affMap);
-      }
-
-      // Build tag options
-      if (tagRes.data) {
-        setAllTags(
-          (tagRes.data as any[]).map((t) => ({
-            id: t.id,
-            name: t.level_3_tag,
-            subcategory_id: t.subcategory_id,
-          }))
-        );
-      }
-
-      // Build company → tags map
-      if (ctRes.data) {
-        const ctMap = new Map<string, { id: number; name: string }[]>();
-        for (const ct of ctRes.data as any[]) {
-          const tag = ct.category_taxonomy as { id: number; level_3_tag: string } | null;
-          if (!tag) continue;
-          const list = ctMap.get(ct.company_id) || [];
-          list.push({ id: tag.id, name: tag.level_3_tag });
-          ctMap.set(ct.company_id, list);
-        }
-        setCompanyTags(ctMap);
-      }
-
-      setLoading(false);
-    }
-    fetchData();
-  }, []);
 
   // Build filtered company list
   const filteredCompanies = useMemo(() => {
@@ -291,17 +242,6 @@ export default function DirectoryPage() {
     setSelectedSubIds([]);
     setSelectedTagIds([]);
   }, []);
-
-  if (loading) {
-    return (
-      <div className="flex flex-1 items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent mx-auto mb-3" />
-          <p className="text-sm text-muted">Loading directory...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -461,24 +401,7 @@ export default function DirectoryPage() {
         </main>
       </div>
 
-      {/* Footer */}
-      <footer className="mt-auto bg-header-bg py-6">
-        <div className="max-w-[1200px] px-4 sm:px-6 lg:px-8 mx-auto">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/60">
-            <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded bg-accent text-header-bg text-[10px] font-bold">
-                IDN
-              </div>
-              <span>IDN Research &mdash; A project by IHES</span>
-            </div>
-            <div className="flex gap-6">
-              <a href="/" className="hover:text-white transition-colors">Resources</a>
-              <a href="/about" className="hover:text-white transition-colors">About</a>
-              <a href="https://www.ihesllc.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">IHES</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

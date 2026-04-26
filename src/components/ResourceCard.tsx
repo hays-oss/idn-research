@@ -1,6 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { Resource } from "@/lib/types";
+import { slugify } from "@/lib/slug";
+import { trackExternalLinkClick } from "@/lib/analytics";
 
 // Org branding colors matching IHES Mission Control config
 const AFFILIATION_STYLES: Record<string, { bg: string; text: string; border: string }> = {
@@ -31,11 +34,8 @@ export default function ResourceCard({
       <div className="w-1 shrink-0 rounded-l-xl bg-teal/60 group-hover:bg-teal transition-colors" />
       <div className="flex-1 min-w-0 pl-3">
       <div className="flex items-center justify-between">
-        <a
-          href={resource.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => onTrackClick(resource.id)}
+        <Link
+          href={`/resource/${slugify(resource.name)}`}
           className="min-w-0 flex-1"
         >
           <div className="flex items-center gap-2">
@@ -65,28 +65,40 @@ export default function ResourceCard({
               {resource.description}
             </p>
           )}
-        </a>
-        <a
-          href={resource.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => onTrackClick(resource.id)}
-          className="shrink-0 ml-3"
-        >
-          <svg
-            className="h-3.5 w-3.5 text-muted/50 group-hover:text-primary transition-colors"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        </Link>
+        {resource.url && (
+          <a
+            href={resource.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              onTrackClick(resource.id);
+              trackExternalLinkClick({
+                resourceId: resource.id,
+                resourceName: resource.name,
+                destinationUrl: resource.url,
+                source: "homepage_card",
+              });
+            }}
+            className="shrink-0 ml-3"
+            title={`Visit ${resource.name} (external)`}
+            aria-label={`Visit ${resource.name} website`}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-            />
-          </svg>
-        </a>
+            <svg
+              className="h-3.5 w-3.5 text-muted/50 group-hover:text-primary transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+          </a>
+        )}
       </div>
       {hasTags && (
         <div className="flex flex-wrap gap-1 mt-1.5">

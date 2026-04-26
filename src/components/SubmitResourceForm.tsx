@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { ResourceCategory } from "@/lib/types";
+import { trackFormSubmit } from "@/lib/analytics";
 
 const TURNSTILE_SITE_KEY = "0x4AAAAAACzF-XO9naOGbgEB";
 
@@ -147,6 +148,7 @@ export default function SubmitResourceForm({
         });
       }
 
+      trackFormSubmit(purpose);
       setStatus("success");
       setForm({ name: "", url: "", description: "", category_id: "", suggested_category: "", submitted_by_name: "", submitted_by_email: "", message: "" });
       resetTurnstile();

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { trackSearch } from "@/lib/analytics";
 
 export default function Header({
   onSearch,
@@ -13,6 +14,7 @@ export default function Header({
   searchQuery?: string;
 }) {
   const [query, setQuery] = useState("");
+  const trackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync from parent when search is cleared externally
   useEffect(() => {
@@ -24,6 +26,14 @@ export default function Header({
   function handleSearch(value: string) {
     setQuery(value);
     onSearch(value);
+    // Debounced GA4 search event so we don't fire one per keystroke
+    if (trackTimer.current) clearTimeout(trackTimer.current);
+    if (value.trim().length >= 3) {
+      trackTimer.current = setTimeout(
+        () => trackSearch(value, "header"),
+        1000
+      );
+    }
   }
 
   return (

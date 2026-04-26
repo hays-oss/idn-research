@@ -7,129 +7,44 @@ import {
   Resource,
   LinkedInInfluencer,
   CategoryWithResources,
-  TaxonomyDomain,
-  TaxonomySubcategory,
-  DirectoryCompany,
   DirectoryDomain,
-  DirectorySubcategory,
 } from "@/lib/types";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import CategorySection from "@/components/CategorySection";
-import DirectorySection from "@/components/DirectorySection";
 import InfluencerCard from "@/components/InfluencerCard";
 import CompanyCard from "@/components/CompanyCard";
 import SubmitResourceForm from "@/components/SubmitResourceForm";
 import HeroSection from "@/components/HeroSection";
 import HowItWorks from "@/components/HowItWorks";
+import IhesPromoBanner from "@/components/IhesPromoBanner";
+import SiteFooter from "@/components/SiteFooter";
 
-export default function Home() {
-  const [allCategories, setAllCategories] = useState<ResourceCategory[]>([]);
-  const [resources, setResources] = useState<Resource[]>([]);
-  const [influencers, setInfluencers] = useState<LinkedInInfluencer[]>([]);
+export interface HomePageInitialData {
+  allCategories: ResourceCategory[];
+  resources: Resource[];
+  influencers: LinkedInInfluencer[];
+  directoryDomains: DirectoryDomain[];
+  taxonomyTagCount: number;
+}
+
+export default function Home({ initialData }: { initialData: HomePageInitialData }) {
+  const allCategories = initialData.allCategories;
+  const resources = initialData.resources;
+  const influencers = initialData.influencers;
+  const directoryDomains = initialData.directoryDomains;
+  const taxonomyTagCount = initialData.taxonomyTagCount;
+
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [directoryDomains, setDirectoryDomains] = useState<DirectoryDomain[]>([]);
 
   // Split categories by type
   const resourceCategories = useMemo(
     () => allCategories.filter((c) => (c.category_type || "resource") === "resource"),
     [allCategories]
   );
-  // Fetch all data on mount
-  useEffect(() => {
-    async function fetchData() {
-      // Core data (resources, categories, influencers)
-      const [catRes, resRes, infRes] = await Promise.all([
-        supabase
-          .from("resource_categories")
-          .select("*")
-          .eq("is_active", true)
-          .order("display_order"),
-        supabase
-          .from("resources")
-          .select("*")
-          .eq("is_active", true)
-          .order("display_order"),
-        supabase
-          .from("linkedin_influencers")
-          .select("*")
-          .eq("is_active", true)
-          .order("display_order"),
-      ]);
-
-      // New directory data (fetched separately so failures don't break the page)
-      const [domRes, subRes, compRes, affRes] = await Promise.all([
-        supabase.from("taxonomy_domains").select("*").eq("is_active", true).order("display_order"),
-        supabase.from("taxonomy_subcategories").select("*").eq("is_active", true).order("display_order"),
-        supabase.from("companies").select("id, company_name, slug, website, linkedin_url, description, is_featured, primary_subcategory_id").eq("is_active", true).eq("review_status", "approved").order("company_name"),
-        supabase.from("company_affiliations").select("organization_id, company_id, organizations(code, name)").eq("is_active", true),
-      ]).catch(() => [{ data: null }, { data: null }, { data: null }, { data: null }]);
-
-      if (catRes.data) setAllCategories(catRes.data);
-      if (resRes.data) setResources(resRes.data);
-      if (infRes.data) setInfluencers(infRes.data);
-
-      // Build directory domains grouped structure
-      const domData = domRes.data;
-      const subData = subRes.data;
-      const compData = compRes.data;
-      const affData = affRes.data;
-
-      if (domData && subData && compData) {
-        const affMap = new Map<string, { code: string; name: string }[]>();
-        if (affData) {
-          for (const a of affData as any[]) {
-            const org = a.organizations as { code: string; name: string } | null;
-            if (!org) continue;
-            const list = affMap.get(a.company_id) || [];
-            list.push({ code: org.code, name: org.name });
-            affMap.set(a.company_id, list);
-          }
-        }
-
-        const domainList: DirectoryDomain[] = (domData as TaxonomyDomain[])
-          .map((domain) => {
-            const subs: DirectorySubcategory[] = (subData as TaxonomySubcategory[])
-              .filter((s) => s.domain_id === domain.id)
-              .map((sub) => ({
-                id: sub.id,
-                name: sub.name,
-                domain_id: sub.domain_id,
-                companies: (compData as any[])
-                  .filter((c) => c.primary_subcategory_id === sub.id)
-                  .map((c) => ({
-                    id: c.id,
-                    company_name: c.company_name,
-                    slug: c.slug,
-                    website: c.website,
-                    linkedin_url: c.linkedin_url,
-                    description: c.description,
-                    is_featured: c.is_featured,
-                    affiliations: affMap.get(c.id) || [],
-                  })),
-              }))
-              .filter((sub) => sub.companies.length > 0);
-
-            return {
-              id: domain.id,
-              name: domain.name,
-              subcategories: subs,
-              totalCompanies: subs.reduce((sum, s) => sum + s.companies.length, 0),
-            };
-          })
-          .filter((d) => d.totalCompanies > 0);
-
-        setDirectoryDomains(domainList);
-      }
-
-      setLoading(false);
-    }
-    fetchData();
-  }, []);
 
   // Intersection observer for active category
   useEffect(() => {
@@ -155,7 +70,7 @@ export default function Home() {
     if (dirEl) observer.observe(dirEl);
 
     return () => observer.disconnect();
-  }, [allCategories, loading]);
+  }, [allCategories]);
 
   // Handle tag click
   const handleTagClick = useCallback((tag: string) => {
@@ -245,31 +160,10 @@ export default function Home() {
       filteredDirectoryDomains.reduce((sum, d) => sum + d.totalCompanies, 0)
     : 0;
 
-  // Tag count fetched from taxonomy (not the legacy resource tags)
-  const [taxonomyTagCount, setTaxonomyTagCount] = useState(0);
-  useEffect(() => {
-    supabase
-      .from("category_taxonomy")
-      .select("id", { count: "exact", head: true })
-      .eq("is_active", true)
-      .then(({ count }) => { if (count) setTaxonomyTagCount(count); });
-  }, []);
-
   const totalCompanyCount = useMemo(
     () => directoryDomains.reduce((sum, d) => sum + d.totalCompanies, 0),
     [directoryDomains]
   );
-
-  if (loading) {
-    return (
-      <div className="flex flex-1 items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent mx-auto mb-3" />
-          <p className="text-sm text-muted">Loading resources...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -302,6 +196,7 @@ export default function Home() {
                 searchQuery={searchQuery}
                 onSearch={setSearchQuery}
               />
+              <IhesPromoBanner location="homepage_hero" />
               <HowItWorks />
             </>
           )}
@@ -509,41 +404,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Footer */}
-          <footer className="mt-auto bg-header-bg py-8">
-            <div className="max-w-[1200px] px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/60">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-6 w-6 items-center justify-center rounded bg-accent text-header-bg text-[10px] font-bold">
-                    IDN
-                  </div>
-                  <span>IDN Research &mdash; A project by IHES</span>
-                </div>
-                <div className="flex gap-6">
-                  <a
-                    href="/about"
-                    className="hover:text-white transition-colors"
-                  >
-                    About
-                  </a>
-                  <a
-                    href="#submit"
-                    className="hover:text-white transition-colors"
-                  >
-                    Submit Resource
-                  </a>
-                  <a
-                    href="https://www.ihesllc.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    IHES
-                  </a>
-                </div>
-              </div>
-            </div>
-          </footer>
+          <SiteFooter />
         </main>
       </div>
     </div>
