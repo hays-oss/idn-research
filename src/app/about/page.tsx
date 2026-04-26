@@ -1,4 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About IDN Research — Built by IHES",
+  description:
+    "IDN Research is the most comprehensive curated directory of healthcare industry resources, built and maintained by the Institute of Healthcare Executives and Suppliers (IHES).",
+  alternates: { canonical: "https://idnresearch.com/about" },
+  openGraph: {
+    title: "About IDN Research — Built by IHES",
+    description:
+      "IDN Research is the most comprehensive curated directory of healthcare industry resources, built and maintained by IHES.",
+    url: "https://idnresearch.com/about",
+    type: "website",
+  },
+};
 
 export default function AboutPage() {
   return (
