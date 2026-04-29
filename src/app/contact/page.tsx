@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import SubmitResourceForm from "@/components/SubmitResourceForm";
 import { getAllResourceCategories } from "@/lib/resourceQueries";
 import SiteFooter from "@/components/SiteFooter";
+import AboutHeaderShim from "@/components/AboutHeaderShim";
 
 export const revalidate = 3600;
 
@@ -25,37 +25,16 @@ export default async function ContactPage() {
 
   return (
     <>
-      <header className="border-b border-[var(--border)] bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--primary)] text-white font-bold text-sm">
-                IDN
-              </div>
-              <div>
-                <div className="text-lg font-semibold text-[var(--primary)] leading-tight">
-                  IDN Research
-                </div>
-                <div className="text-xs text-[var(--muted)] leading-tight">
-                  Healthcare Resource Intelligence
-                </div>
-              </div>
-            </Link>
-            <Link
-              href="/"
-              className="text-sm font-medium text-[var(--muted)] hover:text-[var(--primary)] transition-colors"
-            >
-              &larr; Back to Directory
-            </Link>
-          </div>
-        </div>
-      </header>
+      <AboutHeaderShim />
 
-      <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl font-bold text-foreground mb-3">
+      <main className="mx-auto max-w-[720px] px-6 sm:px-8 py-16 sm:py-20">
+        <div className="text-[11px] uppercase tracking-[0.22em] font-semibold text-oxblood mb-5">
+          Contact
+        </div>
+        <h1 className="font-serif text-[40px] sm:text-[48px] leading-[1.1] tracking-[-0.02em] text-ink mb-6">
           Contact IDN Research
         </h1>
-        <p className="text-base text-muted mb-10 max-w-2xl">
+        <p className="font-serif text-[19px] leading-[1.55] text-ink-2 mb-12">
           Have a resource we should add to the directory, a question for the
           team, or interest in partnering with IHES? Use the form below — it
           goes straight to Hays.
@@ -63,41 +42,52 @@ export default async function ContactPage() {
 
         <SubmitResourceForm categories={categories} />
 
-        <section className="mt-12 rounded-xl border border-border bg-surface p-6 sm:p-8">
-          <h2 className="text-lg font-semibold text-foreground">
-            Reach Hays directly
+        <section className="mt-16 bg-cream-2 border border-rule rounded-[4px] p-8">
+          <div className="text-[11px] uppercase tracking-[0.22em] font-semibold text-oxblood mb-3">
+            Reach Hays Directly
+          </div>
+          <h2 className="font-serif text-[22px] tracking-[-0.01em] text-ink mb-5">
+            Founder, IHES
           </h2>
-          <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-[160px_1fr]">
-            <dt className="text-muted">Founder, IHES</dt>
-            <dd className="font-medium text-foreground">Hays Waldrop</dd>
+          <dl className="grid gap-y-3 gap-x-6 text-[14px] sm:grid-cols-[140px_1fr]">
+            <dt className="text-ink-muted uppercase tracking-[0.14em] text-[11px] font-semibold pt-0.5">
+              Name
+            </dt>
+            <dd className="font-serif text-ink text-[16px]">Hays Waldrop</dd>
 
-            <dt className="text-muted">Email</dt>
+            <dt className="text-ink-muted uppercase tracking-[0.14em] text-[11px] font-semibold pt-0.5">
+              Email
+            </dt>
             <dd>
               <a
                 href="mailto:Hays@ihesllc.com"
-                className="font-medium text-primary hover:underline"
+                className="text-oxblood hover:text-oxblood-deep underline decoration-rule-strong underline-offset-4"
               >
                 Hays@ihesllc.com
               </a>
             </dd>
 
-            <dt className="text-muted">Phone</dt>
+            <dt className="text-ink-muted uppercase tracking-[0.14em] text-[11px] font-semibold pt-0.5">
+              Phone
+            </dt>
             <dd>
               <a
                 href="tel:+16156694437"
-                className="font-medium text-foreground hover:text-primary transition-colors"
+                className="text-ink hover:text-oxblood transition-colors"
               >
                 (615) 669-IHES
               </a>
             </dd>
 
-            <dt className="text-muted">IHES</dt>
+            <dt className="text-ink-muted uppercase tracking-[0.14em] text-[11px] font-semibold pt-0.5">
+              IHES
+            </dt>
             <dd>
               <a
                 href="https://www.ihesllc.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-primary hover:underline"
+                className="text-oxblood hover:text-oxblood-deep underline decoration-rule-strong underline-offset-4"
               >
                 ihesllc.com
               </a>

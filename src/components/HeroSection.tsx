@@ -17,54 +17,71 @@ export default function HeroSection({
 }: HeroSectionProps) {
   return (
     <section
-      className="relative overflow-hidden py-16 sm:py-20 text-center"
-      style={{ background: "var(--gradient-hero)" }}
+      className="relative overflow-hidden bg-ink text-cream"
+      style={{
+        backgroundImage:
+          "radial-gradient(circle at 80% 0%, rgba(233,217,168,0.12), transparent 55%)",
+      }}
     >
-      {/* Subtle geometric pattern overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 25% 25%, rgba(255,255,255,0.2) 1px, transparent 1px), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.15) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
+      {/* Floating IHES family lockup, top-right */}
+      <div className="hidden md:flex absolute top-6 right-8 lg:right-16 z-10 items-center gap-2 text-cream/60">
+        <span className="text-[10px] uppercase tracking-[0.22em] font-semibold text-gold-deep">
+          From the Family
+        </span>
+        <div className="flex items-center gap-1.5">
+          <span
+            aria-hidden
+            className="block h-5 w-7 rounded-[2px] bg-ihes-green"
+            title="IHES"
+          />
+          <span
+            aria-hidden
+            className="block h-5 w-7 rounded-[2px] bg-cpes-blue"
+            title="CPES"
+          />
+          <span
+            aria-hidden
+            className="block h-5 w-7 rounded-[2px] bg-csce-orange"
+            title="CSCE"
+          />
+        </div>
+      </div>
 
-      <div className="relative max-w-3xl mx-auto px-4 sm:px-6">
-        {/* Headline */}
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
-          Empowering Healthcare through Executive Intelligence
-        </h1>
-
-        {/* Subtitle */}
-        <p className="text-base sm:text-lg text-white/80 max-w-2xl mx-auto mb-10">
-          Connecting healthcare leaders with the companies, resources, and
-          insights that matter — powered by IHES
-        </p>
-
-        {/* Stat counters */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mb-10">
-          {[
-            { value: `${companyCount}+`, label: "Companies" },
-            { value: `${domainCount}`, label: "Domains" },
-            { value: `${tagCount}+`, label: "Tags" },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-[var(--accent)]">
-                {stat.value}
-              </div>
-              <div className="text-sm text-white/70 mt-1">{stat.label}</div>
-            </div>
-          ))}
+      <div className="relative mx-auto max-w-[860px] px-6 sm:px-10 lg:px-16 py-20 sm:py-24 lg:py-28">
+        {/* Eyebrow */}
+        <div className="text-[11px] uppercase tracking-[0.22em] font-semibold text-gold-deep mb-6">
+          An IHES Resource · Curated Since 2003
         </div>
 
-        {/* Search bar */}
-        <div className="max-w-xl mx-auto relative">
+        {/* H1 */}
+        <h1 className="font-serif text-[40px] sm:text-[48px] lg:text-[56px] leading-[1.08] tracking-[-0.02em] text-cream max-w-[14ch] mb-7">
+          The healthcare industry,{" "}
+          <em className="text-gold not-italic font-serif italic">
+            organized.
+          </em>
+        </h1>
+
+        {/* Lede */}
+        <p className="font-serif text-[19px] leading-[1.55] text-cream/80 max-w-[60ch] mb-10">
+          A curated directory of the meetings, media, organizations, and people
+          that move healthcare forward — maintained by IHES.
+        </p>
+
+        {/* Stats row — live data */}
+        <div className="grid grid-cols-3 gap-0 border-y border-gold/30 py-7 mb-10 max-w-2xl">
+          <Stat value={`${companyCount}+`} label="Companies" divider />
+          <Stat value={`${domainCount}`} label="Domains" divider />
+          <Stat value={`${tagCount}+`} label="Tags" />
+        </div>
+
+        {/* Search — paper-white, prominent */}
+        <div className="relative max-w-xl">
           <svg
-            className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted"
+            className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-ink-muted"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden
           >
             <path
               strokeLinecap="round"
@@ -77,31 +94,42 @@ export default function HeroSection({
             type="text"
             value={searchQuery}
             onChange={(e) => onSearch(e.target.value)}
-            placeholder="Search companies, resources, and more..."
-            className="w-full rounded-full bg-white py-3.5 pl-12 pr-5 text-sm text-foreground shadow-lg placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 focus:ring-offset-transparent"
+            placeholder="Search 600+ resources, companies, and people…"
+            className="w-full rounded-[3px] bg-cream py-4 pl-12 pr-20 text-[15px] text-ink placeholder:text-ink-muted shadow-[0_2px_24px_rgba(0,0,0,0.18)] focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 focus:ring-offset-ink"
           />
-          {searchQuery && (
-            <button
-              onClick={() => onSearch("")}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
-            >
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          )}
+          <span className="hidden sm:inline-block absolute right-4 top-1/2 -translate-y-1/2 text-[10px] uppercase tracking-[0.18em] text-ink-muted font-semibold">
+            ⌘K
+          </span>
         </div>
+
+        {/* Tagline */}
+        <p className="mt-12 text-center font-serif italic text-[15px] text-gold/90 max-w-xl mx-auto">
+          Smart people. Small rooms. Big things happen.
+        </p>
       </div>
     </section>
+  );
+}
+
+function Stat({
+  value,
+  label,
+  divider,
+}: {
+  value: string;
+  label: string;
+  divider?: boolean;
+}) {
+  return (
+    <div
+      className={`px-4 ${divider ? "border-r border-gold/30" : ""} text-left`}
+    >
+      <div className="font-serif text-[34px] sm:text-[38px] leading-none text-gold tracking-[-0.01em]">
+        {value}
+      </div>
+      <div className="mt-2 text-[10.5px] uppercase tracking-[0.18em] font-semibold text-cream/60">
+        {label}
+      </div>
+    </div>
   );
 }

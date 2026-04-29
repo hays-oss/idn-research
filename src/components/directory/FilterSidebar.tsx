@@ -4,10 +4,10 @@ import { useState, useMemo } from "react";
 import { TaxonomyDomain, TaxonomySubcategory } from "@/lib/types";
 
 const ORG_OPTIONS = [
-  { code: "IHES", name: "IHES", color: "#1a5632" },
-  { code: "CPES", name: "CPES", color: "#1a2b5f" },
-  { code: "CSCE", name: "CSCE", color: "#c45a1a" },
-  { code: "MUIA", name: "MUIA", color: "#1a1a2e" },
+  { code: "IHES", name: "IHES", color: "#127046" },
+  { code: "CPES", name: "CPES", color: "#1f2c8c" },
+  { code: "CSCE", name: "CSCE", color: "#ed7d1a" },
+  { code: "MUIA", name: "MUIA", color: "#5a4a8a" },
 ];
 
 interface TagOption {
@@ -152,15 +152,17 @@ export default function FilterSidebar({
   }
 
   return (
-    <aside className="shrink-0 bg-white overflow-y-auto">
-      <div className="p-4 space-y-5">
+    <aside className="shrink-0 bg-cream-2 overflow-y-auto">
+      <div className="p-4 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-foreground">Filters</h2>
+          <h2 className="text-[10px] uppercase tracking-[0.22em] font-semibold text-oxblood">
+            Filters
+          </h2>
           {activeFilterCount > 0 && (
             <button
               onClick={onClearAll}
-              className="text-xs text-primary hover:text-primary-light transition-colors"
+              className="font-serif italic text-[12px] text-oxblood hover:text-oxblood-deep transition-colors"
             >
               Clear all ({activeFilterCount})
             </button>
@@ -171,19 +173,19 @@ export default function FilterSidebar({
         <div>
           <input
             type="text"
-            placeholder="Search companies..."
+            placeholder="Search companies…"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30"
+            className="w-full rounded-[3px] border border-rule bg-card px-3 py-2 text-[14px] text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink"
           />
         </div>
 
         {/* Organizations */}
         <div>
-          <h3 className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">
+          <h3 className="text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-2 mb-2.5">
             Organizations
             {selectedOrgs.length > 0 && (
-              <span className="ml-1.5 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-white font-bold">
+              <span className="ml-1.5 inline-flex h-4 w-4 items-center justify-center rounded-[2px] bg-oxblood text-[9px] text-cream font-bold">
                 {selectedOrgs.length}
               </span>
             )}
@@ -198,15 +200,15 @@ export default function FilterSidebar({
                   type="checkbox"
                   checked={selectedOrgs.includes(org.code)}
                   onChange={() => toggleOrg(org.code)}
-                  className="h-3.5 w-3.5 rounded border-border text-primary focus:ring-primary/20"
+                  className="h-3.5 w-3.5 rounded-[2px] border-rule text-ink focus:ring-ink/20"
                 />
                 <span
-                  className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-white"
+                  className="inline-flex items-center rounded-[2px] px-1.5 py-0.5 text-[10px] font-bold tracking-[0.08em] text-white"
                   style={{ backgroundColor: org.color }}
                 >
                   {org.code}
                 </span>
-                <span className="text-xs text-muted group-hover:text-foreground transition-colors">
+                <span className="text-[12px] text-ink-2 group-hover:text-ink transition-colors">
                   {org.name}
                 </span>
               </label>
@@ -216,10 +218,10 @@ export default function FilterSidebar({
 
         {/* Domains & Subcategories */}
         <div>
-          <h3 className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">
+          <h3 className="text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-2 mb-2.5">
             Domains
             {selectedDomainId && (
-              <span className="ml-1.5 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-white font-bold">
+              <span className="ml-1.5 inline-flex h-4 w-4 items-center justify-center rounded-[2px] bg-oxblood text-[9px] text-cream font-bold">
                 1
               </span>
             )}
@@ -236,7 +238,7 @@ export default function FilterSidebar({
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => expandDomainOnly(domain.id)}
-                      className="p-0.5 text-muted hover:text-foreground"
+                      className="p-0.5 text-ink-muted hover:text-ink"
                     >
                       <svg
                         className={`h-3 w-3 transition-transform duration-150 ${
@@ -251,14 +253,14 @@ export default function FilterSidebar({
                     </button>
                     <button
                       onClick={() => toggleDomain(domain.id)}
-                      className={`flex-1 flex items-center justify-between rounded px-2 py-1.5 text-left text-xs transition-colors ${
+                      className={`flex-1 flex items-center justify-between border-l-2 px-2 py-1.5 text-left text-[12px] transition-colors ${
                         isSelected
-                          ? "bg-primary/10 text-primary font-semibold"
-                          : "text-foreground hover:bg-surface"
+                          ? "border-oxblood bg-cream text-ink font-semibold"
+                          : "border-transparent text-ink-2 hover:bg-cream hover:text-ink"
                       }`}
                     >
                       <span className="truncate">{domain.name}</span>
-                      <span className="text-[10px] text-muted shrink-0 ml-1">{count}</span>
+                      <span className="text-[10px] text-ink-muted shrink-0 ml-1">{count}</span>
                     </button>
                   </div>
 
@@ -273,10 +275,10 @@ export default function FilterSidebar({
                           <button
                             key={sub.id}
                             onClick={() => toggleSub(sub.id)}
-                            className={`flex w-full items-center justify-between rounded px-2 py-1 text-left text-xs transition-colors ${
+                            className={`flex w-full items-center justify-between rounded-[2px] px-2 py-1 text-left text-[11px] transition-colors ${
                               isSubSelected
-                                ? "bg-primary/10 text-primary font-medium"
-                                : "text-muted hover:text-foreground hover:bg-surface"
+                                ? "bg-cream text-oxblood font-semibold"
+                                : "text-ink-muted hover:text-ink hover:bg-cream"
                             }`}
                           >
                             <span className="truncate">{sub.name}</span>
@@ -294,10 +296,10 @@ export default function FilterSidebar({
 
         {/* Tags */}
         <div>
-          <h3 className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">
+          <h3 className="text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-2 mb-2.5">
             Tags
             {selectedTagIds.length > 0 && (
-              <span className="ml-1.5 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-white font-bold">
+              <span className="ml-1.5 inline-flex h-4 w-4 items-center justify-center rounded-[2px] bg-oxblood text-[9px] text-cream font-bold">
                 {selectedTagIds.length}
               </span>
             )}
@@ -309,12 +311,12 @@ export default function FilterSidebar({
               {selectedTagObjects.map((tag) => (
                 <span
                   key={tag.id}
-                  className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 text-[11px] text-primary"
+                  className="inline-flex items-center gap-1 rounded-[2px] bg-ink/10 border border-ink/20 px-2 py-0.5 text-[11px] text-ink"
                 >
                   {tag.name}
                   <button
                     onClick={() => removeTag(tag.id)}
-                    className="hover:text-primary/70"
+                    className="hover:text-oxblood"
                   >
                     <svg className="h-2.5 w-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -328,23 +330,23 @@ export default function FilterSidebar({
           {/* Tag search */}
           <input
             type="text"
-            placeholder="Search tags..."
+            placeholder="Search tags…"
             value={tagSearch}
             onChange={(e) => setTagSearch(e.target.value)}
-            className="w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30"
+            className="w-full rounded-[3px] border border-rule bg-card px-3 py-1.5 text-[12px] text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink"
           />
           {filteredTags.length > 0 && (
-            <div className="mt-1.5 max-h-[150px] overflow-y-auto rounded-lg border border-border bg-white">
+            <div className="mt-1.5 max-h-[150px] overflow-y-auto rounded-[3px] border border-rule bg-card">
               {filteredTags.map((tag) => {
                 const isSelected = selectedTagIds.includes(tag.id);
                 return (
                   <button
                     key={tag.id}
                     onClick={() => toggleTag(tag.id)}
-                    className={`flex w-full items-center px-2.5 py-1.5 text-left text-xs transition-colors ${
+                    className={`flex w-full items-center px-2.5 py-1.5 text-left text-[12px] transition-colors ${
                       isSelected
-                        ? "bg-primary/10 text-primary font-medium"
-                        : "text-foreground hover:bg-surface"
+                        ? "bg-cream text-oxblood font-semibold"
+                        : "text-ink-2 hover:bg-cream hover:text-ink"
                     }`}
                   >
                     {tag.name}
@@ -356,9 +358,12 @@ export default function FilterSidebar({
         </div>
 
         {/* Result count */}
-        <div className="pt-3 border-t border-border">
-          <p className="text-xs text-muted text-center">
-            <span className="font-semibold text-foreground">{totalResults}</span> companies
+        <div className="pt-4 border-t border-rule">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-ink-muted text-center font-semibold">
+            <span className="font-serif text-[18px] text-ink tracking-tight font-normal block mb-0.5">
+              {totalResults}
+            </span>
+            companies
           </p>
         </div>
       </div>

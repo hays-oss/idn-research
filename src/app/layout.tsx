@@ -1,11 +1,22 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Source_Serif_4, Inter_Tight } from "next/font/google";
 import Script from "next/script";
+import EyebrowStrip from "@/components/EyebrowStrip";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-geist-sans",
+const sourceSerif = Source_Serif_4({
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-source-serif",
+  display: "swap",
+});
+
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter-tight",
+  display: "swap",
 });
 
 const SITE_ORIGIN = "https://idnresearch.com";
@@ -57,7 +68,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${sourceSerif.variable} ${interTight.variable} h-full antialiased`}
+    >
       <head>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-4PGRMM416V"
@@ -76,7 +90,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: ORGANIZATION_JSON_LD }}
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-cream text-ink">
+        <EyebrowStrip />
+        {children}
+      </body>
     </html>
   );
 }

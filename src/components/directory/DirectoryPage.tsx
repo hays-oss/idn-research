@@ -244,37 +244,39 @@ export default function DirectoryPage({
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      {/* Header */}
-      <header className="bg-header-bg text-white sticky top-0 z-30">
+    <div className="min-h-screen flex flex-col bg-cream">
+      {/* Editorial directory header */}
+      <header className="bg-cream border-b border-rule sticky top-0 z-30">
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           <div className="flex items-center gap-3">
-            <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <div className="flex h-7 w-7 items-center justify-center rounded bg-accent text-header-bg text-[10px] font-bold">
+            <a href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+              <div className="flex h-7 w-7 items-center justify-center rounded-[3px] bg-ink text-gold font-serif font-semibold text-[11px] tracking-tight">
                 IDN
               </div>
-              <span className="text-sm font-semibold hidden sm:inline">Company Directory</span>
+              <span className="font-serif text-[15px] text-ink hidden sm:inline">
+                Company Directory
+              </span>
             </a>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             {/* Mobile filter toggle */}
             <button
               onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-              className="lg:hidden flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium hover:bg-white/20 transition-colors"
+              className="lg:hidden flex items-center gap-1.5 rounded-[3px] border border-rule bg-card px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-2 hover:border-ink hover:text-ink transition-colors"
             >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
               Filters
               {hasActiveFilters && (
-                <span className="h-4 w-4 rounded-full bg-accent text-header-bg text-[10px] font-bold flex items-center justify-center">
+                <span className="h-4 w-4 rounded-full bg-oxblood text-cream text-[9px] font-bold flex items-center justify-center">
                   !
                 </span>
               )}
             </button>
             <a
               href="/"
-              className="text-xs text-white/70 hover:text-white transition-colors"
+              className="font-serif italic text-[14px] text-oxblood hover:text-oxblood-deep transition-colors"
             >
               ← Resources
             </a>
@@ -284,7 +286,7 @@ export default function DirectoryPage({
 
       <div className="flex flex-1">
         {/* Filter sidebar — desktop */}
-        <div className="hidden lg:block w-[280px] shrink-0 border-r border-border sticky top-14 h-[calc(100vh-3.5rem)]">
+        <div className="hidden lg:block w-[280px] shrink-0 border-r border-rule sticky top-14 h-[calc(100vh-3.5rem)] bg-cream-2">
         <FilterSidebar
           domains={domains}
           subcategories={subcategories}
@@ -310,15 +312,17 @@ export default function DirectoryPage({
         {mobileFiltersOpen && (
           <div className="fixed inset-0 z-40 lg:hidden">
             <div
-              className="absolute inset-0 bg-black/30"
+              className="absolute inset-0 bg-ink/40"
               onClick={() => setMobileFiltersOpen(false)}
             />
-            <div className="absolute left-0 top-0 bottom-0 w-[300px] bg-white shadow-xl overflow-y-auto">
-              <div className="flex items-center justify-between p-4 border-b border-border">
-                <span className="text-sm font-semibold">Filters</span>
+            <div className="absolute left-0 top-0 bottom-0 w-[300px] bg-cream-2 overflow-y-auto">
+              <div className="flex items-center justify-between p-4 border-b border-rule">
+                <span className="text-[10px] uppercase tracking-[0.22em] font-semibold text-oxblood">
+                  Filters
+                </span>
                 <button
                   onClick={() => setMobileFiltersOpen(false)}
-                  className="p-1 text-muted hover:text-foreground"
+                  className="p-1 text-ink-muted hover:text-ink"
                 >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -353,11 +357,11 @@ export default function DirectoryPage({
           <div className="max-w-[960px] px-4 sm:px-6 lg:px-8 py-6">
             {/* Active filters bar */}
             {hasActiveFilters && (
-              <div className="flex flex-wrap items-center gap-2 mb-4 pb-4 border-b border-border">
+              <div className="flex flex-wrap items-center gap-2 mb-4 pb-4 border-b border-rule">
                 {searchQuery && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-surface px-2 py-1 text-xs text-foreground">
+                  <span className="inline-flex items-center gap-1 rounded-[2px] bg-cream-2 border border-rule px-2 py-0.5 text-[12px] text-ink">
                     &ldquo;{searchQuery}&rdquo;
-                    <button onClick={() => setSearchQuery("")} className="text-muted hover:text-foreground ml-0.5">
+                    <button onClick={() => setSearchQuery("")} className="text-ink-muted hover:text-ink ml-0.5">
                       <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
@@ -365,9 +369,9 @@ export default function DirectoryPage({
                   </span>
                 )}
                 {selectedOrgs.map((org) => (
-                  <span key={org} className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2 py-1 text-xs text-primary font-medium">
+                  <span key={org} className="inline-flex items-center gap-1 rounded-[2px] bg-ink/10 border border-ink/20 px-2 py-0.5 text-[12px] text-ink font-medium">
                     {org}
-                    <button onClick={() => setSelectedOrgs(selectedOrgs.filter((o) => o !== org))} className="hover:text-primary/70">
+                    <button onClick={() => setSelectedOrgs(selectedOrgs.filter((o) => o !== org))} className="hover:text-oxblood">
                       <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
@@ -375,9 +379,9 @@ export default function DirectoryPage({
                   </span>
                 ))}
                 {selectedDomainId && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-surface px-2 py-1 text-xs text-foreground">
+                  <span className="inline-flex items-center gap-1 rounded-[2px] bg-cream-2 border border-rule px-2 py-0.5 text-[12px] text-ink">
                     {domains.find((d) => d.id === selectedDomainId)?.name || "Domain"}
-                    <button onClick={() => { setSelectedDomainId(null); setSelectedSubIds([]); }} className="text-muted hover:text-foreground ml-0.5">
+                    <button onClick={() => { setSelectedDomainId(null); setSelectedSubIds([]); }} className="text-ink-muted hover:text-ink ml-0.5">
                       <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
@@ -386,7 +390,7 @@ export default function DirectoryPage({
                 )}
                 <button
                   onClick={clearAll}
-                  className="text-xs text-primary hover:text-primary-light transition-colors ml-auto"
+                  className="font-serif italic text-[13px] text-oxblood hover:text-oxblood-deep transition-colors ml-auto"
                 >
                   Clear all
                 </button>

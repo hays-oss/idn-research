@@ -159,29 +159,44 @@ export default function SubmitResourceForm({
 
   if (status === "success") {
     return (
-      <div id="submit" className="scroll-mt-28 rounded-xl border border-emerald-200 bg-emerald-50 p-8 text-center">
-        <div className="text-3xl mb-3">&#10003;</div>
-        <h3 className="text-lg font-semibold text-emerald-800 mb-2">Thank you!</h3>
-        <p className="text-sm text-emerald-700">
+      <div
+        id="submit"
+        className="scroll-mt-28 rounded-[4px] border border-rule bg-cream-2 p-8 text-center"
+      >
+        <div className="text-[10px] uppercase tracking-[0.22em] font-semibold text-oxblood mb-3">
+          Received
+        </div>
+        <h3 className="font-serif text-[22px] tracking-[-0.01em] text-ink mb-3">
+          Thank you.
+        </h3>
+        <p className="text-[15px] leading-[1.6] text-ink-2 max-w-md mx-auto">
           {purpose === "resource"
-            ? "Your resource has been submitted for review. We'll add it to the directory once approved."
-            : "We've received your message and will get back to you soon."}
+            ? "Your resource has been submitted for review. I'll add it to the directory once approved."
+            : "I've received your message and will get back to you soon."}
         </p>
         <button
           onClick={() => setStatus("idle")}
-          className="mt-4 text-sm text-emerald-700 underline hover:no-underline"
+          className="mt-5 inline-flex items-center font-serif italic text-[14px] text-oxblood hover:text-oxblood-deep underline decoration-rule-strong underline-offset-4"
         >
-          {purpose === "resource" ? "Submit another" : "Send another message"}
+          {purpose === "resource" ? "Submit another →" : "Send another message →"}
         </button>
       </div>
     );
   }
 
   return (
-    <div id="submit" className="scroll-mt-28 rounded-xl border border-border bg-surface p-6 sm:p-8">
-      <h2 className="text-lg font-semibold text-foreground mb-1">Get in Touch</h2>
-      <p className="text-sm text-muted mb-5">
-        Submit a resource, ask a question, or explore collaboration opportunities.
+    <div
+      id="submit"
+      className="scroll-mt-28 rounded-[4px] border border-rule bg-cream-2 p-6 sm:p-8"
+    >
+      <div className="text-[11px] uppercase tracking-[0.22em] font-semibold text-oxblood mb-2">
+        Get in Touch
+      </div>
+      <h2 className="font-serif text-[22px] tracking-[-0.01em] text-ink mb-2">
+        Submit, ask, or partner
+      </h2>
+      <p className="text-[14px] text-ink-2 mb-6">
+        Submit a resource, ask a question, or explore collaboration with IHES.
       </p>
 
       {/* Purpose selector */}
@@ -191,10 +206,10 @@ export default function SubmitResourceForm({
             key={opt.value}
             type="button"
             onClick={() => setPurpose(opt.value)}
-            className={`rounded-lg px-4 py-2 text-xs font-medium transition-colors ${
+            className={`rounded-[3px] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors ${
               purpose === opt.value
-                ? "bg-primary text-white"
-                : "bg-white border border-border text-foreground hover:border-primary/30"
+                ? "bg-ink text-cream"
+                : "bg-card border border-rule text-ink-2 hover:border-ink hover:text-ink"
             }`}
           >
             {opt.label}
@@ -221,32 +236,32 @@ export default function SubmitResourceForm({
         {purpose === "resource" && (
           <>
             <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-foreground mb-1">Resource Name *</label>
+              <label className="block text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-2 mb-1.5">Resource Name *</label>
               <input
                 required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full rounded-[3px] border border-rule bg-card px-3 py-2 text-[14px] text-ink placeholder:text-ink-muted focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
                 placeholder="e.g., Becker's Healthcare"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-foreground mb-1">URL *</label>
+              <label className="block text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-2 mb-1.5">URL *</label>
               <input
                 required
                 type="text"
                 value={form.url}
                 onChange={(e) => setForm({ ...form, url: e.target.value })}
-                className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full rounded-[3px] border border-rule bg-card px-3 py-2 text-[14px] text-ink placeholder:text-ink-muted focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
                 placeholder="www.example.com"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-foreground mb-1">Category</label>
+              <label className="block text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-2 mb-1.5">Category</label>
               <select
                 value={form.category_id}
                 onChange={(e) => setForm({ ...form, category_id: e.target.value })}
-                className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full rounded-[3px] border border-rule bg-card px-3 py-2 text-[14px] text-ink placeholder:text-ink-muted focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
               >
                 <option value="">Select a category...</option>
                 {categories.map((cat) => (
@@ -257,21 +272,21 @@ export default function SubmitResourceForm({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-foreground mb-1">Or suggest a new category</label>
+              <label className="block text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-2 mb-1.5">Or suggest a new category</label>
               <input
                 value={form.suggested_category}
                 onChange={(e) => setForm({ ...form, suggested_category: e.target.value })}
-                className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full rounded-[3px] border border-rule bg-card px-3 py-2 text-[14px] text-ink placeholder:text-ink-muted focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
                 placeholder="e.g., AI in Healthcare"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-foreground mb-1">Description</label>
+              <label className="block text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-2 mb-1.5">Description</label>
               <textarea
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 rows={2}
-                className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full rounded-[3px] border border-rule bg-card px-3 py-2 text-[14px] text-ink placeholder:text-ink-muted focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
                 placeholder="Brief description of this resource..."
               />
             </div>
@@ -281,7 +296,7 @@ export default function SubmitResourceForm({
         {/* Contact / Get Involved — message field */}
         {(purpose === "contact" || purpose === "get-involved") && (
           <div className="sm:col-span-2">
-            <label className="block text-xs font-medium text-foreground mb-1">
+            <label className="block text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-2 mb-1.5">
               {purpose === "contact" ? "Your Question *" : "How would you like to get involved? *"}
             </label>
             <textarea
@@ -289,7 +304,7 @@ export default function SubmitResourceForm({
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
               rows={4}
-              className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="w-full rounded-[3px] border border-rule bg-card px-3 py-2 text-[14px] text-ink placeholder:text-ink-muted focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
               placeholder={
                 purpose === "contact"
                   ? "What would you like to know?"
@@ -301,18 +316,18 @@ export default function SubmitResourceForm({
 
         {/* Shared fields — name and email */}
         <div>
-          <label className="block text-xs font-medium text-foreground mb-1">
+          <label className="block text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-2 mb-1.5">
             Your Name {purpose !== "resource" ? "*" : ""}
           </label>
           <input
             required={purpose !== "resource"}
             value={form.submitted_by_name}
             onChange={(e) => setForm({ ...form, submitted_by_name: e.target.value })}
-            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full rounded-[3px] border border-rule bg-card px-3 py-2 text-[14px] text-ink placeholder:text-ink-muted focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-foreground mb-1">
+          <label className="block text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-2 mb-1.5">
             Your Email {purpose !== "resource" ? "*" : ""}
           </label>
           <input
@@ -320,7 +335,7 @@ export default function SubmitResourceForm({
             required={purpose !== "resource"}
             value={form.submitted_by_email}
             onChange={(e) => setForm({ ...form, submitted_by_email: e.target.value })}
-            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full rounded-[3px] border border-rule bg-card px-3 py-2 text-[14px] text-ink placeholder:text-ink-muted focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
           />
         </div>
 
@@ -333,10 +348,10 @@ export default function SubmitResourceForm({
           <button
             type="submit"
             disabled={status === "submitting" || !turnstileToken}
-            className="rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-light transition-colors disabled:opacity-50"
+            className="rounded-[3px] bg-ink px-7 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-cream hover:bg-oxblood transition-colors disabled:opacity-50"
           >
             {status === "submitting"
-              ? "Sending..."
+              ? "Sending…"
               : purpose === "resource"
               ? "Submit Resource"
               : purpose === "get-involved"
@@ -344,7 +359,7 @@ export default function SubmitResourceForm({
               : "Send Question"}
           </button>
           {status === "error" && (
-            <p className="mt-2 text-xs text-red-600">
+            <p className="mt-3 text-[12px] text-oxblood">
               Something went wrong. Please try again.
             </p>
           )}

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { ResourceCategory, DirectoryDomain } from "@/lib/types";
 
-// Group "Industry Meetings" sub-categories under a parent
 const MEETINGS_PREFIX = "Industry Meetings";
 
 interface CategoryGroup {
@@ -37,7 +36,6 @@ function buildGroups(
     }
   }
 
-  // Insert meetings group after first item (Companies/Newsletters)
   if (meetingsChildren.length > 0) {
     const insertIdx = groups.length > 0 ? 1 : 0;
     groups.splice(insertIdx, 0, {
@@ -51,6 +49,17 @@ function buildGroups(
 
   return groups;
 }
+
+const itemBase =
+  "flex w-full items-center justify-between px-3 py-2 text-left text-sm transition-colors border-l-2";
+const itemInactive =
+  "border-transparent text-ink-2 hover:bg-cream hover:text-ink";
+const itemActive =
+  "border-oxblood bg-cream text-ink font-semibold";
+const countBase =
+  "shrink-0 ml-2 px-1.5 py-0.5 text-[10px] font-medium tracking-wide rounded-[2px]";
+const countInactive = "bg-cream text-ink-muted border border-rule";
+const countActive = "bg-oxblood/10 text-oxblood";
 
 function SidebarNavItem({
   slug,
@@ -68,18 +77,10 @@ function SidebarNavItem({
   return (
     <button
       onClick={onClick}
-      className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors ${
-        isActive
-          ? "bg-primary/10 text-primary font-semibold border-l-2 border-primary"
-          : "text-foreground/80 hover:bg-surface hover:text-foreground"
-      }`}
+      className={`${itemBase} ${isActive ? itemActive : itemInactive}`}
     >
       <span className="truncate">{name}</span>
-      <span
-        className={`shrink-0 ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
-          isActive ? "bg-primary/20 text-primary" : "bg-surface text-muted"
-        }`}
-      >
+      <span className={`${countBase} ${isActive ? countActive : countInactive}`}>
         {count}
       </span>
     </button>
@@ -89,7 +90,6 @@ function SidebarNavItem({
 function DomainNavGroup({
   domain,
   activeSlug,
-  onNavigate,
 }: {
   domain: DirectoryDomain;
   activeSlug: string | null;
@@ -105,15 +105,13 @@ function DomainNavGroup({
     <div>
       <button
         onClick={() => setExpanded(!expanded)}
-        className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors ${
-          hasActiveChild && !expanded
-            ? "bg-primary/10 text-primary font-semibold"
-            : "text-foreground/80 hover:bg-surface hover:text-foreground"
+        className={`${itemBase} ${
+          hasActiveChild && !expanded ? itemActive : itemInactive
         }`}
       >
         <div className="flex items-center gap-1.5">
           <svg
-            className={`h-3 w-3 shrink-0 text-muted transition-transform ${
+            className={`h-3 w-3 shrink-0 text-ink-muted transition-transform ${
               expanded ? "rotate-90" : ""
             }`}
             fill="none"
@@ -124,21 +122,21 @@ function DomainNavGroup({
           </svg>
           <span className="truncate">{domain.name}</span>
         </div>
-        <span className="shrink-0 ml-2 rounded-full bg-surface px-1.5 py-0.5 text-[10px] font-medium text-muted">
+        <span className={`${countBase} ${countInactive}`}>
           {domain.totalCompanies}
         </span>
       </button>
 
       {expanded && (
-        <div className="ml-4 mt-0.5 space-y-0.5 border-l border-border pl-2">
+        <div className="ml-6 mt-0.5 space-y-0.5 border-l border-rule pl-2">
           {domain.subcategories.map((sub) => (
             <a
               key={sub.id}
               href={`/directory?domain=${domain.id}&sub=${sub.id}`}
-              className="flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-xs transition-colors text-foreground/60 hover:bg-surface hover:text-foreground"
+              className="flex w-full items-center justify-between px-2.5 py-1.5 text-left text-xs transition-colors text-ink-2/80 hover:bg-cream hover:text-ink"
             >
               <span className="truncate">{sub.name}</span>
-              <span className="shrink-0 ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-medium bg-surface text-muted">
+              <span className={`${countBase} ${countInactive}`}>
                 {sub.companies.length}
               </span>
             </a>
@@ -170,7 +168,6 @@ export default function Sidebar({
   const [directoryExpanded, setDirectoryExpanded] = useState(true);
   const groups = buildGroups(categories, resourceCounts);
 
-  // Check if any meetings child is active
   const meetingsSlugs = categories
     .filter(
       (c) =>
@@ -194,24 +191,24 @@ export default function Sidebar({
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-40 bg-ink/40 lg:hidden"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-16 left-0 z-50 h-[calc(100vh-4rem)] w-64 bg-white border-r border-border overflow-y-auto transition-transform duration-200 lg:translate-x-0 lg:z-30 ${
+        className={`fixed top-16 left-0 z-50 h-[calc(100vh-4rem)] w-64 bg-cream-2 border-r border-rule overflow-y-auto transition-transform duration-200 lg:translate-x-0 lg:z-30 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="px-3 py-4">
-          {/* ====== RESOURCES SECTION ====== */}
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted/60 px-3 mb-2">
+        <div className="px-2 py-5">
+          {/* Resources eyebrow */}
+          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-oxblood px-3 mb-3">
             Resources
           </div>
 
-          <nav className="space-y-0.5">
+          <nav className="space-y-px">
             {groups.map((group) => {
               if (group.type === "single") {
                 return (
@@ -226,20 +223,17 @@ export default function Sidebar({
                 );
               }
 
-              // Group (Industry Meetings)
               return (
                 <div key={group.slug}>
                   <button
                     onClick={() => setMeetingsExpanded(!meetingsExpanded)}
-                    className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors ${
-                      isMeetingsActive && !meetingsExpanded
-                        ? "bg-primary/10 text-primary font-semibold"
-                        : "text-foreground/80 hover:bg-surface hover:text-foreground"
+                    className={`${itemBase} ${
+                      isMeetingsActive && !meetingsExpanded ? itemActive : itemInactive
                     }`}
                   >
                     <div className="flex items-center gap-1.5">
                       <svg
-                        className={`h-3 w-3 shrink-0 text-muted transition-transform ${
+                        className={`h-3 w-3 shrink-0 text-ink-muted transition-transform ${
                           meetingsExpanded ? "rotate-90" : ""
                         }`}
                         fill="none"
@@ -255,31 +249,29 @@ export default function Sidebar({
                       </svg>
                       <span className="truncate">{group.name}</span>
                     </div>
-                    <span className="shrink-0 ml-2 rounded-full bg-surface px-1.5 py-0.5 text-[10px] font-medium text-muted">
+                    <span className={`${countBase} ${countInactive}`}>
                       {group.count}
                     </span>
                   </button>
 
                   {meetingsExpanded && group.children && (
-                    <div className="ml-4 mt-0.5 space-y-0.5 border-l border-border pl-2">
+                    <div className="ml-6 mt-0.5 space-y-0.5 border-l border-rule pl-2">
                       {group.children.map((child) => {
                         const isActive = activeSlug === child.slug;
                         return (
                           <button
                             key={child.slug}
                             onClick={() => handleClick(child.slug)}
-                            className={`flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-xs transition-colors ${
+                            className={`flex w-full items-center justify-between px-2.5 py-1.5 text-left text-xs transition-colors ${
                               isActive
-                                ? "bg-primary/10 text-primary font-semibold"
-                                : "text-foreground/60 hover:bg-surface hover:text-foreground"
+                                ? "text-oxblood font-semibold"
+                                : "text-ink-2/80 hover:bg-cream hover:text-ink"
                             }`}
                           >
                             <span className="truncate">{child.name}</span>
                             <span
-                              className={`shrink-0 ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
-                                isActive
-                                  ? "bg-primary/20 text-primary"
-                                  : "bg-surface text-muted"
+                              className={`${countBase} ${
+                                isActive ? countActive : countInactive
                               }`}
                             >
                               {child.count}
@@ -293,7 +285,6 @@ export default function Sidebar({
               );
             })}
 
-            {/* LinkedIn Influencers */}
             <SidebarNavItem
               slug="linkedin-influencers"
               name="LinkedIn Influencers"
@@ -303,16 +294,17 @@ export default function Sidebar({
             />
           </nav>
 
-          {/* ====== COMPANY DIRECTORY SECTION ====== */}
+          {/* Company Directory eyebrow */}
           {directoryDomains.length > 0 && (
             <>
-              <div className="mt-6 mb-2 flex items-center justify-between px-3">
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted/60">
+              <div className="mt-7 mb-3 flex items-center justify-between px-3">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-oxblood">
                   Company Directory
                 </div>
                 <button
                   onClick={() => setDirectoryExpanded(!directoryExpanded)}
-                  className="text-muted/40 hover:text-muted transition-colors"
+                  className="text-ink-muted/60 hover:text-ink-muted transition-colors"
+                  aria-label="Toggle Company Directory"
                 >
                   <svg
                     className={`h-3 w-3 transition-transform ${
@@ -333,7 +325,7 @@ export default function Sidebar({
               </div>
 
               {directoryExpanded && (
-                <nav className="space-y-0.5">
+                <nav className="space-y-px">
                   {directoryDomains.map((domain) => (
                     <DomainNavGroup
                       key={domain.id}

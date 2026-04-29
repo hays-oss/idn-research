@@ -1,25 +1,73 @@
 @import "tailwindcss";
 
+/*
+ * Editorial palette: cream paper, deep navy ink, oxblood accent, gold highlight.
+ * Existing semantic vars (--background, --primary, --accent, --header-bg, etc.)
+ * are remapped to the new palette so legacy components inherit the new look
+ * while individual components are polished one by one.
+ */
 :root {
-  --background: #f0f7f2;
-  --foreground: #1a2e1a;
-  --primary: #1a5632;
-  --primary-light: #237243;
-  --accent: #e5b84c;
-  --accent-light: #f0d078;
-  --surface: #e8f1eb;
-  --border: #c8ddd0;
-  --muted: #5a7a64;
-  --header-bg: #1a5632;
-  --teal: #0d9488;
-  --teal-light: #14b8a6;
-  --coral: #e87461;
-  --coral-light: #f09a8d;
-  --gradient-hero: linear-gradient(135deg, #1a5632, #0d7a6a);
-  --gradient-btn: linear-gradient(135deg, #1a5632, #237243);
+  /* New editorial tokens */
+  --cream: #fbfaf6;
+  --cream-2: #f3efe6;
+  --card: #ffffff;
+
+  --ink: #0f1d2e;
+  --ink-2: #3a4a5c;
+  --ink-muted: #6b7280;
+
+  --rule: #e6dfd0;
+  --rule-strong: #cfc6b3;
+
+  --oxblood: #7d2932;
+  --oxblood-deep: #5a1a23;
+  --gold: #e9d9a8;
+  --gold-deep: #d6b86a;
+
+  --ihes-green: #127046;
+  --cpes-blue: #1f2c8c;
+  --csce-orange: #ed7d1a;
+  --muia-purple: #5a4a8a;
+
+  /* Legacy aliases — remapped to the new palette for incremental migration */
+  --background: var(--cream);
+  --foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-light: var(--ink-2);
+  --accent: var(--oxblood);
+  --accent-light: var(--oxblood-deep);
+  --surface: var(--cream-2);
+  --border: var(--rule);
+  --muted: var(--ink-muted);
+  --header-bg: var(--ink);
+  --teal: var(--oxblood);
+  --teal-light: var(--oxblood-deep);
+  --coral: var(--oxblood);
+  --coral-light: var(--oxblood-deep);
+  --gradient-hero: var(--ink);
+  --gradient-btn: var(--oxblood);
 }
 
 @theme inline {
+  /* New editorial color tokens — generate Tailwind utility classes */
+  --color-cream: var(--cream);
+  --color-cream-2: var(--cream-2);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-muted: var(--ink-muted);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-oxblood: var(--oxblood);
+  --color-oxblood-deep: var(--oxblood-deep);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-ihes-green: var(--ihes-green);
+  --color-cpes-blue: var(--cpes-blue);
+  --color-csce-orange: var(--csce-orange);
+  --color-muia-purple: var(--muia-purple);
+
+  /* Legacy color tokens kept for backwards compat with existing components */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
@@ -34,14 +82,16 @@
   --color-teal-light: var(--teal-light);
   --color-coral: var(--coral);
   --color-coral-light: var(--coral-light);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* Font families wired to next/font CSS variables (set in app/layout.tsx) */
+  --font-serif: var(--font-source-serif), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-inter-tight), -apple-system, system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-inter-tight), -apple-system, system-ui, sans-serif;
 }
 
 /* Smooth scroll for anchor navigation */

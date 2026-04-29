@@ -1,8 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import IhesCtaLink from "@/components/IhesCtaLink";
 
-// Top categories surfaced in the footer for crawlable internal links to
-// the highest-traffic landing pages. Slugs match the category page routes.
 const FOOTER_CATEGORIES: { slug: string; label: string }[] = [
   { slug: "industry-meetings", label: "Industry Meetings" },
   { slug: "industry-meetings-pharmacy", label: "Pharmacy Conferences" },
@@ -14,77 +13,114 @@ const FOOTER_CATEGORIES: { slug: string; label: string }[] = [
   { slug: "federal-government-cms", label: "Federal / CMS" },
 ];
 
+type FamilyDivision = {
+  code: "IHES" | "CPES" | "CSCE" | "MUIA";
+  fullName: string;
+  chipBg: string;
+  asset?: string;
+  altText?: string;
+};
+
+// All wordmark PNGs ship as colored-letters-on-transparent, so we render them
+// on a cream chip rather than a same-color chip (which would erase them).
+const IHES_FAMILY: FamilyDivision[] = [
+  {
+    code: "IHES",
+    fullName: "Institute of Healthcare Executives & Suppliers",
+    chipBg: "bg-card",
+    asset: "/assets/ihes.png",
+    altText: "IHES",
+  },
+  {
+    code: "CPES",
+    fullName: "Council of Pharmacy Executives & Suppliers",
+    chipBg: "bg-card",
+    asset: "/assets/cpes.png",
+    altText: "CPES",
+  },
+  {
+    code: "MUIA",
+    fullName: "Med Use Intelligence & Automation",
+    chipBg: "bg-card",
+    asset: "/assets/muia.png",
+    altText: "MUIA",
+  },
+  {
+    code: "CSCE",
+    fullName: "Council of Supply Chain Executives",
+    chipBg: "bg-card",
+    asset: "/assets/csce.png",
+    altText: "CSCE",
+  },
+];
+
 export default function SiteFooter() {
   return (
-    <footer className="bg-header-bg text-white mt-auto">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid gap-10 md:grid-cols-4">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded bg-accent text-header-bg text-xs font-bold">
-                IDN
-              </div>
-              <span className="text-sm font-semibold">IDN Research</span>
+    <footer className="bg-cream-2 border-t border-rule mt-auto">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 py-14">
+        <div className="grid gap-10 lg:grid-cols-12">
+          {/* About column */}
+          <div className="lg:col-span-4">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-oxblood font-semibold mb-3">
+              IDN Research
             </div>
-            <p className="mt-3 text-xs text-white/60 max-w-xs">
-              The most comprehensive curated directory of healthcare industry
-              resources — built and maintained by IHES.
+            <p className="font-serif text-[19px] leading-[1.45] text-ink-2 max-w-sm">
+              A curated directory of the meetings, media, organizations, and
+              people that move healthcare forward — maintained by IHES.
             </p>
-            <a
-              href="https://www.linkedin.com/in/hayswaldrop/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-1.5 text-xs text-white/70 hover:text-white transition-colors"
-              aria-label="Hays Waldrop on LinkedIn"
-            >
-              <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-              </svg>
-              LinkedIn
-            </a>
+            <p className="mt-6 font-serif italic text-[15px] text-ink leading-snug max-w-sm border-l-2 border-oxblood pl-4">
+              Smart people. Small rooms. Big things happen.
+            </p>
           </div>
 
-          {/* Site */}
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-wide text-white/50">
-              Site
-            </h3>
-            <ul className="mt-3 space-y-2 text-sm">
+          {/* Explore column */}
+          <div className="lg:col-span-3">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-oxblood font-semibold mb-3">
+              Explore
+            </div>
+            <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="text-white/80 hover:text-white transition-colors">
+                <Link
+                  href="/"
+                  className="text-ink-2 hover:text-oxblood transition-colors"
+                >
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/directory" className="text-white/80 hover:text-white transition-colors">
-                  Directory
+                <Link
+                  href="/directory"
+                  className="text-ink-2 hover:text-oxblood transition-colors"
+                >
+                  Company Directory
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-white/80 hover:text-white transition-colors">
+                <Link
+                  href="/about"
+                  className="text-ink-2 hover:text-oxblood transition-colors"
+                >
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-white/80 hover:text-white transition-colors">
+                <Link
+                  href="/contact"
+                  className="text-ink-2 hover:text-oxblood transition-colors"
+                >
                   Contact
                 </Link>
               </li>
             </ul>
-          </div>
-
-          {/* Top categories */}
-          <div className="md:col-span-2">
-            <h3 className="text-xs font-bold uppercase tracking-wide text-white/50">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-oxblood font-semibold mb-3 mt-8">
               Top Categories
-            </h3>
-            <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-              {FOOTER_CATEGORIES.map((c) => (
+            </div>
+            <ul className="space-y-2 text-sm">
+              {FOOTER_CATEGORIES.slice(0, 6).map((c) => (
                 <li key={c.slug}>
                   <Link
                     href={`/category/${c.slug}`}
-                    className="text-white/80 hover:text-white transition-colors"
+                    className="text-ink-2 hover:text-oxblood transition-colors"
                   >
                     {c.label}
                   </Link>
@@ -92,18 +128,78 @@ export default function SiteFooter() {
               ))}
             </ul>
           </div>
+
+          {/* IHES Family column */}
+          <div className="lg:col-span-5">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-oxblood font-semibold mb-3">
+              The IHES Family
+            </div>
+            <p className="font-serif text-[15px] text-ink-2 leading-[1.55] mb-5 max-w-md">
+              IDN Research is curated by IHES — the parent peer-group network
+              connecting senior health system executives with the supplier
+              companies that serve them.
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {IHES_FAMILY.map((d) => (
+                <div
+                  key={d.code}
+                  className="border border-rule bg-card p-3 rounded-[3px]"
+                >
+                  <div
+                    className={`flex items-center justify-center h-12 ${d.chipBg} rounded-[2px]`}
+                  >
+                    {d.asset ? (
+                      <Image
+                        src={d.asset}
+                        alt={d.altText || d.code}
+                        width={120}
+                        height={36}
+                        className="h-7 w-auto object-contain"
+                      />
+                    ) : (
+                      <span
+                        className="text-white font-black text-[11px] tracking-[0.06em]"
+                        style={{ fontFamily: "Georgia, serif" }}
+                      >
+                        {d.code}
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-2 text-[11px] uppercase tracking-[0.16em] text-ink-2 font-semibold leading-tight">
+                    {d.code}
+                  </div>
+                  <div className="text-[11px] text-ink-muted leading-snug mt-1">
+                    {d.fullName}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <IhesCtaLink
+              location="footer_family"
+              className="mt-5 inline-flex items-center gap-2 font-serif italic text-sm text-oxblood hover:text-oxblood-deep transition-colors"
+            >
+              Learn more at ihesllc.com →
+            </IhesCtaLink>
+          </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-white/60">
+        {/* Copyright bar */}
+        <div className="mt-12 pt-6 border-t border-rule flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-ink-muted">
           <div>
-            &copy; {new Date().getFullYear()} IDN Research. Built by{" "}
-            <IhesCtaLink
-              location="footer"
-              className="text-accent hover:text-accent-light transition-colors"
+            © {new Date().getFullYear()} IHES LLC · All Rights Reserved · Franklin, TN
+          </div>
+          <div className="flex items-center gap-4">
+            <a
+              href="https://www.linkedin.com/in/hayswaldrop/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-oxblood transition-colors"
             >
-              IHES
-            </IhesCtaLink>
-            .
+              LinkedIn
+            </a>
+            <Link href="/contact" className="hover:text-oxblood transition-colors">
+              Contact
+            </Link>
           </div>
         </div>
       </div>
