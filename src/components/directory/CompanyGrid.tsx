@@ -59,11 +59,10 @@ export default function CompanyGrid({
   if (domains.length === 0) {
     return (
       <div className="text-center py-16">
-        <svg className="h-12 w-12 text-muted/30 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <p className="text-muted text-sm">No companies match your filters</p>
-        <p className="text-muted/60 text-xs mt-1">Try adjusting or clearing your filters</p>
+        <p className="font-serif text-[20px] text-ink-2">No companies match your filters.</p>
+        <p className="text-[13px] text-ink-muted mt-2">
+          Try adjusting or clearing your filters.
+        </p>
       </div>
     );
   }
@@ -71,15 +70,21 @@ export default function CompanyGrid({
   return (
     <div>
       {/* Summary bar */}
-      <div className="mb-6">
-        <p className="text-sm text-muted">
-          <span className="font-semibold text-foreground">{totalCompanies}</span> companies across{" "}
-          <span className="font-semibold text-foreground">{totalSegments}</span> market segments
+      <div className="mb-8 pb-4 border-b border-rule">
+        <p className="text-[13px] text-ink-2">
+          <span className="font-serif text-[18px] text-ink tracking-tight">
+            {totalCompanies}
+          </span>
+          <span className="mx-2 text-ink-muted">companies across</span>
+          <span className="font-serif text-[18px] text-ink tracking-tight">
+            {totalSegments}
+          </span>
+          <span className="ml-2 text-ink-muted">market segments</span>
         </p>
       </div>
 
       {/* Domain groups */}
-      <div className="space-y-6">
+      <div className="space-y-10">
         {domains.map((domain) => {
           const isCollapsed = collapsedDomains.has(domain.id);
           return (
@@ -90,7 +95,7 @@ export default function CompanyGrid({
                 className="flex items-center gap-3 mb-3 w-full text-left group"
               >
                 <svg
-                  className={`h-4 w-4 text-muted transition-transform duration-200 ${
+                  className={`h-3.5 w-3.5 text-ink-muted transition-transform duration-200 ${
                     isCollapsed ? "" : "rotate-90"
                   }`}
                   fill="none"
@@ -99,28 +104,30 @@ export default function CompanyGrid({
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
-                <h2 className="text-sm font-semibold text-foreground/70 uppercase tracking-wide group-hover:text-foreground transition-colors">
-                  {domain.name}
-                </h2>
-                <span className="rounded-full bg-surface px-2 py-0.5 text-[10px] font-medium text-muted">
-                  {domain.totalCompanies}
-                </span>
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.22em] font-semibold text-oxblood mb-0.5">
+                    {domain.totalCompanies} companies
+                  </div>
+                  <h2 className="font-serif text-[22px] tracking-[-0.01em] text-ink group-hover:text-oxblood transition-colors">
+                    {domain.name}
+                  </h2>
+                </div>
               </button>
 
               {/* Subcategories */}
               {!isCollapsed && (
-                <div className="space-y-4 ml-7">
+                <div className="space-y-6 ml-7">
                   {domain.subcategories.map((sub) => (
                     <div key={sub.id} id={`dir-sub-${sub.id}`}>
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-xs font-semibold text-foreground">
+                      <div className="flex items-baseline gap-2 mb-2 border-b border-rule pb-1">
+                        <h3 className="font-serif text-[16px] text-ink">
                           {sub.name}
                         </h3>
-                        <span className="rounded-full bg-surface px-2 py-0.5 text-[10px] font-medium text-muted">
+                        <span className="text-[10px] uppercase tracking-[0.16em] text-ink-muted">
                           {sub.companies.length}
                         </span>
                       </div>
-                      <div className="space-y-1.5">
+                      <div>
                         {sub.companies.map((company) => (
                           <ExpandableCompanyCard
                             key={company.id}

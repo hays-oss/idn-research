@@ -17,7 +17,6 @@ import CompanyCard from "@/components/CompanyCard";
 import SubmitResourceForm from "@/components/SubmitResourceForm";
 import HeroSection from "@/components/HeroSection";
 import HowItWorks from "@/components/HowItWorks";
-import IhesPromoBanner from "@/components/IhesPromoBanner";
 import SiteFooter from "@/components/SiteFooter";
 
 export interface HomePageInitialData {
@@ -39,6 +38,13 @@ export default function Home({ initialData }: { initialData: HomePageInitialData
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Seed search from ?q= so search performed on inner pages (header) lands here
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+    if (q) setSearchQuery(q);
+  }, []);
 
   // Split categories by type
   const resourceCategories = useMemo(
@@ -196,7 +202,6 @@ export default function Home({ initialData }: { initialData: HomePageInitialData
                 searchQuery={searchQuery}
                 onSearch={setSearchQuery}
               />
-              <IhesPromoBanner location="homepage_hero" />
               <HowItWorks />
             </>
           )}

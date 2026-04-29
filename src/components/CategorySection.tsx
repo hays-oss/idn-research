@@ -16,16 +16,20 @@ export default function CategorySection({
 }) {
   return (
     <section id={category.slug} className="scroll-mt-20">
-      <div className="flex items-center gap-3 mb-4">
-        <h2 className="text-lg font-semibold text-foreground">{category.name}</h2>
-        <span className="rounded-full bg-surface px-2.5 py-0.5 text-xs font-medium text-muted">
-          {category.resources.length}
-        </span>
+      <div className="border-t border-rule-strong pt-6 mb-2">
+        <div className="text-[10px] uppercase tracking-[0.22em] font-semibold text-oxblood mb-2">
+          {category.name} · {category.resources.length} resources
+        </div>
+        <h2 className="font-serif text-[26px] leading-[1.2] tracking-[-0.015em] text-ink">
+          {category.name}
+        </h2>
+        {category.description && (
+          <p className="text-[14px] leading-[1.6] text-ink-2 mt-2 max-w-3xl">
+            {category.description}
+          </p>
+        )}
       </div>
-      {category.description && (
-        <p className="text-sm text-muted mb-4">{category.description}</p>
-      )}
-      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <div>
         {category.resources.map((resource) => (
           <ResourceCard
             key={resource.id}

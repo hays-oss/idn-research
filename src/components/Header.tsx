@@ -16,7 +16,6 @@ export default function Header({
   const [query, setQuery] = useState("");
   const trackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Sync from parent when search is cleared externally
   useEffect(() => {
     if (externalQuery !== undefined && externalQuery !== query) {
       setQuery(externalQuery);
@@ -26,7 +25,6 @@ export default function Header({
   function handleSearch(value: string) {
     setQuery(value);
     onSearch(value);
-    // Debounced GA4 search event so we don't fire one per keystroke
     if (trackTimer.current) clearTimeout(trackTimer.current);
     if (value.trim().length >= 3) {
       trackTimer.current = setTimeout(
@@ -37,14 +35,14 @@ export default function Header({
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-header-bg shadow-md">
+    <header className="sticky top-0 z-50 bg-cream border-b border-rule">
       <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
-          {/* Mobile menu button + Logo */}
+          {/* Mobile menu + Logo */}
           <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={onToggleSidebar}
-              className="lg:hidden flex items-center justify-center h-9 w-9 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+              className="lg:hidden flex items-center justify-center h-9 w-9 rounded-sm text-ink-2 hover:text-ink hover:bg-cream-2 transition-colors"
               aria-label="Toggle navigation"
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,25 +50,25 @@ export default function Header({
               </svg>
             </button>
             <Link href="/" className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-header-bg font-bold text-sm">
+              <div className="flex h-9 w-9 items-center justify-center rounded-[3px] bg-ink text-gold font-serif font-semibold text-sm tracking-tight">
                 IDN
               </div>
               <div className="hidden sm:block">
-                <div className="text-lg font-semibold text-white leading-tight">
+                <div className="font-serif text-lg text-ink leading-tight tracking-tight">
                   IDN Research
                 </div>
-                <div className="text-xs text-white/60 leading-tight">
+                <div className="text-[10px] uppercase tracking-[0.18em] text-oxblood font-semibold leading-tight">
                   Healthcare Resource Intelligence
                 </div>
               </div>
             </Link>
           </div>
 
-          {/* Search */}
-          <div className="flex-1 max-w-xl">
+          {/* Slim search */}
+          <div className="flex-1 max-w-md">
             <div className="relative">
               <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40"
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -86,13 +84,14 @@ export default function Header({
                 type="text"
                 value={query}
                 onChange={(e) => handleSearch(e.target.value)}
-                placeholder="Search healthcare resources..."
-                className="w-full rounded-lg border border-white/20 bg-white/10 py-2 pl-10 pr-4 text-sm text-white placeholder:text-white/50 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent focus:bg-white/15"
+                placeholder="Search the directory…"
+                className="w-full rounded-[3px] border border-rule bg-card py-2 pl-9 pr-4 text-sm text-ink placeholder:text-ink-muted focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
               />
               {query && (
                 <button
                   onClick={() => handleSearch("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink"
+                  aria-label="Clear search"
                 >
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -102,17 +101,23 @@ export default function Header({
             </div>
           </div>
 
-          {/* Nav links */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link href="/directory" className="text-white/70 hover:text-white transition-colors">
+          {/* Nav links — serif italic oxblood */}
+          <nav className="hidden md:flex items-center gap-7 text-sm">
+            <Link
+              href="/directory"
+              className="font-serif italic text-oxblood hover:text-oxblood-deep transition-colors"
+            >
               Directory
             </Link>
-            <Link href="/about" className="text-white/70 hover:text-white transition-colors">
+            <Link
+              href="/about"
+              className="font-serif italic text-oxblood hover:text-oxblood-deep transition-colors"
+            >
               About
             </Link>
             <a
-              href="#submit"
-              className="rounded-lg bg-accent px-4 py-2 text-header-bg font-semibold hover:bg-accent-light transition-colors"
+              href="/#submit"
+              className="rounded-[3px] border border-ink bg-ink px-4 py-1.5 text-xs font-sans font-semibold uppercase tracking-[0.12em] text-cream hover:bg-oxblood hover:border-oxblood transition-colors"
             >
               Submit Resource
             </a>

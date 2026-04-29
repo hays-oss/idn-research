@@ -32,18 +32,29 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="bg-surface py-10 sm:py-12">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-          {steps.map((step) => (
-            <div key={step.label}>
-              <div className="inline-flex items-center justify-center text-teal mb-3">
+    <section className="bg-cream-2 border-y border-rule py-12 sm:py-14">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <div className="text-center text-[10px] uppercase tracking-[0.22em] font-semibold text-oxblood mb-8">
+          How It Works
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
+          {steps.map((step, idx) => (
+            <div key={step.label} className="relative">
+              {idx > 0 && (
+                <span
+                  aria-hidden
+                  className="hidden sm:block absolute -left-5 top-4 h-px w-10 bg-rule-strong"
+                />
+              )}
+              <div className="inline-flex items-center justify-center text-oxblood mb-3">
                 {step.icon}
               </div>
-              <h3 className="text-sm font-bold text-foreground mb-1">
+              <h3 className="font-serif text-[20px] tracking-[-0.01em] text-ink mb-2">
                 {step.label}
               </h3>
-              <p className="text-sm text-muted">{step.description}</p>
+              <p className="text-[14px] leading-[1.6] text-ink-2 max-w-[28ch] mx-auto">
+                {step.description}
+              </p>
             </div>
           ))}
         </div>
