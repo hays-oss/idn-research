@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 interface HeroSectionProps {
   companyCount: number;
   domainCount: number;
@@ -24,26 +26,31 @@ export default function HeroSection({
       }}
     >
       {/* Floating IHES family lockup, top-right */}
-      <div className="hidden md:flex absolute top-6 right-8 lg:right-16 z-10 items-center gap-2 text-cream/60">
+      <div className="hidden md:flex absolute top-6 right-8 lg:right-16 z-10 items-center gap-2.5 text-cream/60">
         <span className="text-[10px] uppercase tracking-[0.22em] font-semibold text-gold-deep">
           From the Family
         </span>
         <div className="flex items-center gap-1.5">
-          <span
-            aria-hidden
-            className="block h-5 w-7 rounded-[2px] bg-ihes-green"
-            title="IHES"
-          />
-          <span
-            aria-hidden
-            className="block h-5 w-7 rounded-[2px] bg-cpes-blue"
-            title="CPES"
-          />
-          <span
-            aria-hidden
-            className="block h-5 w-7 rounded-[2px] bg-csce-orange"
-            title="CSCE"
-          />
+          {[
+            { code: "IHES", asset: "/assets/ihes.png" },
+            { code: "CPES", asset: "/assets/cpes.png" },
+            { code: "MUIA", asset: "/assets/muia.png" },
+            { code: "CSCE", asset: "/assets/csce.png" },
+          ].map((d) => (
+            <div
+              key={d.code}
+              className="flex items-center justify-center h-6 w-14 rounded-[2px] bg-card px-1.5"
+              title={d.code}
+            >
+              <Image
+                src={d.asset}
+                alt={d.code}
+                width={120}
+                height={36}
+                className="h-4 w-auto object-contain"
+              />
+            </div>
+          ))}
         </div>
       </div>
 
