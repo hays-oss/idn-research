@@ -7,6 +7,7 @@ import {
   Company,
   TaxonomyDomain,
   TaxonomySubcategory,
+  MeetingDate,
 } from "@/lib/types";
 import { slugify } from "@/lib/slug";
 
@@ -227,3 +228,11 @@ export const getCompanyBySlug = cache(
     return { company, domain, subcategory, related, affiliations };
   }
 );
+
+export const getAllMeetingDates = cache(async (): Promise<MeetingDate[]> => {
+  const { data } = await supabase
+    .from("meeting_dates")
+    .select("*")
+    .order("start_date", { ascending: true, nullsFirst: false });
+  return (data ?? []) as MeetingDate[];
+});

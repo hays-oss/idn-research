@@ -199,3 +199,22 @@ export interface ReviewQueueItem {
   current_primary_subcategory: string | null
   current_primary_domain: string | null
 }
+
+export interface MeetingDate {
+  id: string
+  resource_id: string | null
+  name: string
+  org_short: string | null
+  start_date: string | null
+  end_date: string | null
+  city: string | null
+  state_country: string | null
+  category: string | null
+  tags: string[]
+  website_url: string | null
+  source_url: string | null
+  last_verified: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
