@@ -104,6 +104,12 @@ export default function Header({
           {/* Nav links — serif italic oxblood */}
           <nav className="hidden md:flex items-center gap-7 text-sm">
             <Link
+              href="/calendar"
+              className="font-serif italic text-oxblood hover:text-oxblood-deep transition-colors"
+            >
+              Meeting Calendar
+            </Link>
+            <Link
               href="/directory"
               className="font-serif italic text-oxblood hover:text-oxblood-deep transition-colors"
             >
