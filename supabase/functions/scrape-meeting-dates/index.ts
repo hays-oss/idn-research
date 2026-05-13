@@ -27,24 +27,90 @@ interface ScrapedResult {
   error?: string;
 }
 
-async function fetchPageText(url: string): Promise<string> {
+const EVENT_KEYWORDS = /event|conference|meeting|annual|summit|congress|symposium|expo/i;
+const STANDARD_SUBPATHS = ["/events", "/conferences", "/meetings", "/education/events"];
+
+async function fetchPage(url: string): Promise<{ html: string; text: string } | null> {
   try {
     const resp = await fetch(url, {
       headers: { "User-Agent": "IDNResearch-CalendarBot/1.0" },
       redirect: "follow",
     });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    if (!resp.ok) return null;
     const html = await resp.text();
-    return html
+    const text = html
       .replace(/<script[\s\S]*?<\/script>/gi, "")
       .replace(/<style[\s\S]*?<\/style>/gi, "")
       .replace(/<[^>]+>/g, " ")
       .replace(/\s+/g, " ")
-      .trim()
-      .slice(0, 8000);
-  } catch (e) {
-    throw new Error(`Failed to fetch ${url}: ${(e as Error).message}`);
+      .trim();
+    return { html, text };
+  } catch {
+    return null;
   }
+}
+
+function extractEventLinks(html: string, baseUrl: string): string[] {
+  const base = new URL(baseUrl);
+  const linkRegex = /<a[^>]+href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+  const found = new Set<string>();
+  let match;
+
+  while ((match = linkRegex.exec(html)) !== null) {
+    const href = match[1];
+    const linkText = match[2].replace(/<[^>]+>/g, "").trim();
+
+    // Check if link text or href contains event-related keywords
+    if (EVENT_KEYWORDS.test(linkText) || EVENT_KEYWORDS.test(href)) {
+      try {
+        const resolved = new URL(href, baseUrl);
+        // Only follow links on the same domain
+        if (resolved.hostname === base.hostname || resolved.hostname.endsWith("." + base.hostname)) {
+          found.add(resolved.href);
+        }
+      } catch {
+        // Skip invalid URLs
+      }
+    }
+  }
+
+  return Array.from(found).slice(0, 3);
+}
+
+async function gatherEventText(sourceUrl: string): Promise<string> {
+  // Step 1: Fetch homepage
+  const homepage = await fetchPage(sourceUrl);
+  if (!homepage) return "";
+
+  const texts: string[] = [homepage.text.slice(0, 4000)];
+
+  // Step 2: Find event-related links from homepage HTML
+  const eventLinks = extractEventLinks(homepage.html, sourceUrl);
+
+  // Step 3: Also build standard subpath URLs as fallbacks
+  const base = sourceUrl.replace(/\/+$/, "");
+  const subpathUrls = STANDARD_SUBPATHS.map((p) => base + p);
+
+  // Combine discovered links + standard subpaths, deduplicate
+  const allUrls = new Set<string>([...eventLinks, ...subpathUrls]);
+  // Remove the homepage URL itself
+  allUrls.delete(sourceUrl);
+  allUrls.delete(sourceUrl + "/");
+
+  // Step 4: Fetch top event pages in parallel (max 4)
+  const urlsToTry = Array.from(allUrls).slice(0, 4);
+  const fetches = await Promise.allSettled(
+    urlsToTry.map((url) => fetchPage(url))
+  );
+
+  for (const result of fetches) {
+    if (result.status === "fulfilled" && result.value) {
+      texts.push(result.value.text.slice(0, 3000));
+    }
+  }
+
+  // Combine all text, cap at 12000 chars for Claude
+  return texts.join("\n\n---\n\n").slice(0, 12000);
 }
 
 async function extractDates(
@@ -111,22 +177,16 @@ serve(async (req: Request) => {
 
     for (const m of meetings) {
       try {
-        const text = await fetchPageText(m.source_url);
+        const text = await gatherEventText(m.source_url);
+        if (!text) {
+          results.push({ id: m.id, name: m.name, meetings: [], status: "not_found" });
+          continue;
+        }
         const extracted = await extractDates(m.name, text);
         if (extracted.length > 0) {
-          results.push({
-            id: m.id,
-            name: m.name,
-            meetings: extracted,
-            status: "found",
-          });
+          results.push({ id: m.id, name: m.name, meetings: extracted, status: "found" });
         } else {
-          results.push({
-            id: m.id,
-            name: m.name,
-            meetings: [],
-            status: "not_found",
-          });
+          results.push({ id: m.id, name: m.name, meetings: [], status: "not_found" });
         }
       } catch (e) {
         results.push({
@@ -137,7 +197,7 @@ serve(async (req: Request) => {
           error: (e as Error).message,
         });
       }
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 200));
     }
 
     return new Response(JSON.stringify({ results }), {
