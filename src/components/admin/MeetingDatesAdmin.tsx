@@ -143,7 +143,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
       .filter((m) => m.source_url)
       .map((m) => ({ id: m.id, name: m.name, source_url: m.source_url! }));
 
-    const BATCH_SIZE = 5;
+    const BATCH_SIZE = 3;
     const allResults: Array<Record<string, unknown>> = [];
     const token = (await supabase.auth.getSession()).data.session?.access_token;
 

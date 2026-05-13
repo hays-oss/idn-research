@@ -29,11 +29,12 @@ interface ScrapedResult {
 
 const EVENT_KEYWORDS = /event|conference|meeting|annual|summit|congress|symposium|expo/i;
 const STANDARD_SUBPATHS = ["/events", "/conferences", "/meetings", "/education/events"];
+const BROWSER_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36";
 
 async function fetchPage(url: string): Promise<{ html: string; text: string } | null> {
   try {
     const resp = await fetch(url, {
-      headers: { "User-Agent": "IDNResearch-CalendarBot/1.0" },
+      headers: { "User-Agent": BROWSER_UA, "Accept": "text/html,application/xhtml+xml" },
       redirect: "follow",
     });
     if (!resp.ok) return null;
