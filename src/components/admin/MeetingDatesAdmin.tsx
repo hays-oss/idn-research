@@ -22,6 +22,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [scraping, setScraping] = useState(false);
+  const [scrapeProgress, setScrapeProgress] = useState("");
   const [scrapeResults, setScrapeResults] = useState<Array<{
     id: string;
     org_name: string;
@@ -137,37 +138,48 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
 
   async function handleScrape() {
     setScraping(true);
+    setScrapeProgress("");
     const toScrape = meetings
       .filter((m) => m.source_url)
       .map((m) => ({ id: m.id, name: m.name, source_url: m.source_url! }));
 
+    const BATCH_SIZE = 5;
+    const allResults: Array<Record<string, unknown>> = [];
+    const token = (await supabase.auth.getSession()).data.session?.access_token;
+
     try {
-      const resp = await fetch(
-        `https://aszhjzseobgadbgxaosq.supabase.co/functions/v1/scrape-meeting-dates`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
-          },
-          body: JSON.stringify({ meetings: toScrape }),
+      for (let i = 0; i < toScrape.length; i += BATCH_SIZE) {
+        const batch = toScrape.slice(i, i + BATCH_SIZE);
+        setScrapeProgress(`Scraping ${i + 1}–${Math.min(i + BATCH_SIZE, toScrape.length)} of ${toScrape.length}...`);
+
+        const resp = await fetch(
+          `https://aszhjzseobgadbgxaosq.supabase.co/functions/v1/scrape-meeting-dates`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ meetings: batch }),
+          }
+        );
+
+        if (!resp.ok) {
+          const errText = await resp.text();
+          throw new Error(`HTTP ${resp.status}: ${errText.slice(0, 300)}`);
         }
-      );
 
-      if (!resp.ok) {
-        const errText = await resp.text();
-        throw new Error(`HTTP ${resp.status}: ${errText.slice(0, 300)}`);
-      }
+        const data = await resp.json();
+        if (!data.results || !Array.isArray(data.results)) {
+          throw new Error(`Unexpected response: ${JSON.stringify(data).slice(0, 300)}`);
+        }
 
-      const data = await resp.json();
-
-      if (!data.results || !Array.isArray(data.results)) {
-        throw new Error(`Unexpected response: ${JSON.stringify(data).slice(0, 300)}`);
+        allResults.push(...data.results);
       }
 
       // Flatten multi-meeting results into individual review rows
       const rows: NonNullable<typeof scrapeResults> = [];
-      for (const r of data.results as Array<Record<string, unknown>>) {
+      for (const r of allResults) {
         const meetingsArr = r.meetings as Array<Record<string, unknown>> | undefined;
         if (r.status === "found" && meetingsArr?.length) {
           let first = true;
@@ -206,6 +218,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
       alert("Scraper failed: " + (e as Error).message);
     }
     setScraping(false);
+    setScrapeProgress("");
   }
 
   async function applyScrapeResults() {
@@ -274,7 +287,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
           disabled={scraping}
           className="rounded-md border border-[var(--primary)] px-4 py-2 text-sm font-medium text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white disabled:opacity-50 transition-colors"
         >
-          {scraping ? "Scraping..." : "Refresh All Dates"}
+          {scraping ? (scrapeProgress || "Scraping...") : "Refresh All Dates"}
         </button>
         <button
           onClick={openNew}
