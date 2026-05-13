@@ -80,7 +80,7 @@ export default function CalendarView({
         const endOrStart = m.end_date ?? m.start_date;
         if (endOrStart < today) return false;
       }
-      if (activeFilter !== "all" && m.category !== activeFilter) return false;
+      if (activeFilter !== "all" && !(m.categories ?? []).includes(activeFilter)) return false;
       if (search) {
         const s = search.toLowerCase();
         return (
@@ -263,7 +263,7 @@ export default function CalendarView({
                               </div>
                               <div
                                 className={`w-1 h-12 rounded-full ${
-                                  CAT_BAR_COLORS[m.category ?? ""] ?? "bg-ink"
+                                  CAT_BAR_COLORS[(m.categories ?? [])[0] ?? ""] ?? "bg-ink"
                                 }`}
                               />
                               <div className="flex-1 min-w-0">
@@ -350,7 +350,7 @@ export default function CalendarView({
                           </div>
                           <div
                             className={`w-1 h-12 rounded-full ${
-                              CAT_BAR_COLORS[m.category ?? ""] ?? "bg-ink"
+                              CAT_BAR_COLORS[(m.categories ?? [])[0] ?? ""] ?? "bg-ink"
                             }`}
                           />
                           <div className="flex-1 min-w-0">
@@ -429,15 +429,16 @@ export default function CalendarView({
                               ★ Featured
                             </span>
                           )}
-                          {m.category && (
+                          {(m.categories ?? []).map((cat) => (
                             <span
+                              key={cat}
                               className={`text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded text-white ${
-                                CAT_BAR_COLORS[m.category] ?? "bg-ink"
+                                CAT_BAR_COLORS[cat] ?? "bg-ink"
                               }`}
                             >
-                              {m.category.replace("-", " ")}
+                              {cat.replace("-", " ")}
                             </span>
-                          )}
+                          ))}
                         </div>
                       </div>
                       <div className="text-sm font-bold text-ink mb-0.5">
@@ -489,15 +490,16 @@ export default function CalendarView({
                             ★ Featured
                           </span>
                         )}
-                        {m.category && (
+                        {(m.categories ?? []).map((cat) => (
                           <span
+                            key={cat}
                             className={`text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded text-white ${
-                              CAT_BAR_COLORS[m.category] ?? "bg-ink"
+                              CAT_BAR_COLORS[cat] ?? "bg-ink"
                             }`}
                           >
-                            {m.category.replace("-", " ")}
+                            {cat.replace("-", " ")}
                           </span>
-                        )}
+                        ))}
                       </div>
                     </div>
                     <div className="text-sm font-bold text-ink mb-0.5">

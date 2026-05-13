@@ -43,7 +43,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
     end_date: "",
     city: "",
     state_country: "",
-    category: "",
+    categories: [] as string[],
     tags: "",
     website_url: "",
     source_url: "",
@@ -52,7 +52,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
   });
 
   const filtered = meetings.filter((m) => {
-    if (catFilter && m.category !== catFilter) return false;
+    if (catFilter && !(m.categories ?? []).includes(catFilter)) return false;
     if (search) {
       const s = search.toLowerCase();
       return (
@@ -74,7 +74,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
       end_date: m.end_date ?? "",
       city: m.city ?? "",
       state_country: m.state_country ?? "",
-      category: m.category ?? "",
+      categories: m.categories ?? (m.category ? [m.category] : []),
       tags: m.tags.join(", "),
       website_url: m.website_url ?? "",
       source_url: m.source_url ?? "",
@@ -93,7 +93,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
       end_date: "",
       city: "",
       state_country: "",
-      category: "",
+      categories: [],
       tags: "",
       website_url: "",
       source_url: "",
@@ -111,7 +111,8 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
       end_date: form.end_date || null,
       city: form.city || null,
       state_country: form.state_country || null,
-      category: form.category || null,
+      category: form.categories[0] || null,
+      categories: form.categories,
       tags: form.tags
         ? form.tags.split(",").map((t) => t.trim().toUpperCase()).filter(Boolean)
         : [],
@@ -440,11 +441,13 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
                     : "—"}
                 </td>
                 <td className="px-4 py-3">
-                  {m.category && (
-                    <span className="text-xs capitalize px-2 py-0.5 rounded bg-[var(--surface)]">
-                      {m.category.replace("-", " ")}
-                    </span>
-                  )}
+                  <div className="flex flex-wrap gap-1">
+                    {(m.categories ?? []).map((cat) => (
+                      <span key={cat} className="text-xs capitalize px-2 py-0.5 rounded bg-[var(--surface)]">
+                        {cat.replace("-", " ")}
+                      </span>
+                    ))}
+                  </div>
                 </td>
                 <td className="px-4 py-3 text-xs text-[var(--muted)]">
                   {m.last_verified
@@ -531,19 +534,32 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
             />
           </FormField>
         </div>
-        <FormField label="Category">
-          <select
-            className={selectClass}
-            value={form.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
-          >
-            <option value="">Select...</option>
+        <FormField label="Categories (select all that apply)">
+          <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c.replace("-", " ")}
-              </option>
+              <label
+                key={c}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium cursor-pointer transition-colors ${
+                  form.categories.includes(c)
+                    ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                    : "bg-white text-[var(--foreground)] border-[var(--border)] hover:border-[var(--primary)]"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={form.categories.includes(c)}
+                  onChange={(e) => {
+                    const cats = e.target.checked
+                      ? [...form.categories, c]
+                      : form.categories.filter((x) => x !== c);
+                    setForm({ ...form, categories: cats });
+                  }}
+                />
+                <span className="capitalize">{c.replace("-", " ")}</span>
+              </label>
             ))}
-          </select>
+          </div>
         </FormField>
         <FormField label="Tags (comma-separated)">
           <input

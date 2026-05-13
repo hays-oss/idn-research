@@ -73,7 +73,7 @@ export default function CalendarMap({ meetings }: Props) {
         />
         {Array.from(grouped.entries()).map(([key, groupMeetings]) => {
           const color =
-            CAT_COLORS[groupMeetings[0].category ?? ""] ?? "#1a1a2e";
+            CAT_COLORS[(groupMeetings[0].categories ?? [])[0] ?? ""] ?? "#1a1a2e";
           return (
             <CircleMarker
               key={key}

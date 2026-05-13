@@ -210,6 +210,7 @@ export interface MeetingDate {
   city: string | null
   state_country: string | null
   category: string | null
+  categories: string[]
   tags: string[]
   website_url: string | null
   source_url: string | null
