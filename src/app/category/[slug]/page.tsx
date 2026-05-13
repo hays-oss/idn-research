@@ -119,6 +119,38 @@ export default async function CategoryPage({
           </p>
         </header>
 
+        {slug === "industry-meetings" && (
+          <a
+            href="/calendar"
+            className="flex items-center justify-between mt-4 mb-6 p-4 rounded-lg bg-ink text-cream hover:bg-ink/90 transition-colors"
+          >
+            <div>
+              <div className="text-gold text-[10px] uppercase tracking-widest font-semibold">
+                New
+              </div>
+              <div className="font-serif text-lg">
+                View the Meeting Calendar &rarr;
+              </div>
+              <div className="text-cream/60 text-xs">
+                All conference dates, locations, and categories in one place
+              </div>
+            </div>
+            <svg
+              className="w-6 h-6 text-gold"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+          </a>
+        )}
+
         <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_280px]">
           <section>
             {resources.length === 0 ? (
