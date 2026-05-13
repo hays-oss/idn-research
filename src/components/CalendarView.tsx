@@ -58,6 +58,12 @@ function daysBetween(start: string, end: string): number {
   );
 }
 
+const FEATURED_ORGS = new Set(["IHES", "CPES", "CSCE", "MUIA", "IDN Summit"]);
+
+function isFeatured(m: MeetingDate): boolean {
+  return FEATURED_ORGS.has(m.org_short ?? "");
+}
+
 export default function CalendarView({
   meetings,
 }: {
@@ -67,8 +73,15 @@ export default function CalendarView({
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"timeline" | "grid" | "map">("timeline");
 
+  const today = useMemo(() => new Date().toISOString().split("T")[0], []);
+
   const filtered = useMemo(() => {
     return meetings.filter((m) => {
+      // Exclude past events (end_date or start_date before today)
+      if (m.start_date) {
+        const endOrStart = m.end_date ?? m.start_date;
+        if (endOrStart < today) return false;
+      }
       if (activeFilter !== "all" && m.category !== activeFilter) return false;
       if (search) {
         const s = search.toLowerCase();
@@ -82,7 +95,7 @@ export default function CalendarView({
       }
       return true;
     });
-  }, [meetings, activeFilter, search]);
+  }, [meetings, activeFilter, search, today]);
 
   const grouped = useMemo(() => {
     const map: Record<string, MeetingDate[]> = {};
@@ -236,7 +249,11 @@ export default function CalendarView({
                               href={m.website_url ?? "#"}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-5 bg-white rounded-xl px-5 py-4 border border-rule hover:border-gold hover:shadow-sm transition-all group"
+                              className={`flex items-center gap-5 rounded-xl px-5 py-4 border hover:shadow-sm transition-all group ${
+                                isFeatured(m)
+                                  ? "bg-amber-50/50 border-gold/40 border-l-4 border-l-gold"
+                                  : "bg-white border-rule hover:border-gold"
+                              }`}
                             >
                               <div className="text-center min-w-[56px]">
                                 <div className="text-[10px] font-bold uppercase tracking-widest text-ink-muted">
@@ -252,8 +269,15 @@ export default function CalendarView({
                                 }`}
                               />
                               <div className="flex-1 min-w-0">
-                                <div className="text-sm font-bold text-ink group-hover:text-oxblood transition-colors">
-                                  {m.name}
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-bold text-ink group-hover:text-oxblood transition-colors">
+                                    {m.name}
+                                  </span>
+                                  {isFeatured(m) && (
+                                    <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-gold/15 text-amber-700">
+                                      ★ Featured
+                                    </span>
+                                  )}
                                 </div>
                                 <div className="text-xs text-ink-muted">
                                   {m.org_short}
@@ -315,7 +339,11 @@ export default function CalendarView({
                           href={m.website_url ?? "#"}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-5 bg-white rounded-xl px-5 py-4 border border-rule hover:border-gold hover:shadow-sm transition-all group"
+                          className={`flex items-center gap-5 rounded-xl px-5 py-4 border hover:shadow-sm transition-all group ${
+                            isFeatured(m)
+                              ? "bg-amber-50/50 border-gold/40 border-l-4 border-l-gold"
+                              : "bg-white border-rule hover:border-gold"
+                          }`}
                         >
                           <div className="text-center min-w-[56px]">
                             <div className="text-[10px] font-bold uppercase tracking-widest text-ink-muted">
@@ -328,8 +356,15 @@ export default function CalendarView({
                             }`}
                           />
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm font-bold text-ink group-hover:text-oxblood transition-colors">
-                              {m.name}
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-bold text-ink group-hover:text-oxblood transition-colors">
+                                {m.name}
+                              </span>
+                              {isFeatured(m) && (
+                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-gold/15 text-amber-700">
+                                  ★ Featured
+                                </span>
+                              )}
                             </div>
                             <div className="text-xs text-ink-muted">
                               {m.org_short}
@@ -379,22 +414,33 @@ export default function CalendarView({
                       href={m.website_url ?? "#"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-white rounded-xl p-5 border border-rule hover:border-gold hover:shadow-sm transition-all"
+                      className={`rounded-xl p-5 border hover:shadow-sm transition-all ${
+                        isFeatured(m)
+                          ? "bg-amber-50/50 border-gold/40 border-l-4 border-l-gold"
+                          : "bg-white border-rule hover:border-gold"
+                      }`}
                     >
                       <div className="flex justify-between items-start mb-3">
                         <span className="text-xs font-bold text-gold">
                           {MONTH_ABBR[s.getMonth()]} {s.getDate()}–
                           {e.getDate()}, {s.getFullYear()}
                         </span>
-                        {m.category && (
-                          <span
-                            className={`text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded text-white ${
-                              CAT_BAR_COLORS[m.category] ?? "bg-ink"
-                            }`}
-                          >
-                            {m.category.replace("-", " ")}
-                          </span>
-                        )}
+                        <div className="flex items-center gap-1.5">
+                          {isFeatured(m) && (
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-gold/15 text-amber-700">
+                              ★ Featured
+                            </span>
+                          )}
+                          {m.category && (
+                            <span
+                              className={`text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded text-white ${
+                                CAT_BAR_COLORS[m.category] ?? "bg-ink"
+                              }`}
+                            >
+                              {m.category.replace("-", " ")}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <div className="text-sm font-bold text-ink mb-0.5">
                         {m.name}
@@ -431,19 +477,30 @@ export default function CalendarView({
                     href={m.website_url ?? "#"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-white rounded-xl p-5 border border-dashed border-rule hover:border-gold transition-all"
+                    className={`rounded-xl p-5 border border-dashed transition-all ${
+                      isFeatured(m)
+                        ? "bg-amber-50/50 border-gold/40 border-l-4 border-l-solid border-l-gold"
+                        : "bg-white border-rule hover:border-gold"
+                    }`}
                   >
                     <div className="flex justify-between items-start mb-3">
                       <span className="text-xs font-bold text-amber-500">Dates TBD</span>
-                      {m.category && (
-                        <span
-                          className={`text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded text-white ${
-                            CAT_BAR_COLORS[m.category] ?? "bg-ink"
-                          }`}
-                        >
-                          {m.category.replace("-", " ")}
-                        </span>
-                      )}
+                      <div className="flex items-center gap-1.5">
+                        {isFeatured(m) && (
+                          <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-gold/15 text-amber-700">
+                            ★ Featured
+                          </span>
+                        )}
+                        {m.category && (
+                          <span
+                            className={`text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded text-white ${
+                              CAT_BAR_COLORS[m.category] ?? "bg-ink"
+                            }`}
+                          >
+                            {m.category.replace("-", " ")}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="text-sm font-bold text-ink mb-0.5">
                       {m.name}
@@ -473,8 +530,13 @@ export default function CalendarView({
                     key={m.id}
                     className="py-3 border-b border-white/10 last:border-0"
                   >
-                    <div className="text-cream text-xs font-semibold">
-                      {m.name}
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-cream text-xs font-semibold">
+                        {m.name}
+                      </span>
+                      {isFeatured(m) && (
+                        <span className="text-gold text-[9px]">★</span>
+                      )}
                     </div>
                     <div className="text-cream/50 text-[11px] mt-0.5">
                       {MONTH_ABBR[s.getMonth()]} {s.getDate()} · {m.city},{" "}
