@@ -21,6 +21,17 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
   const [editing, setEditing] = useState<MeetingDate | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [scraping, setScraping] = useState(false);
+  const [scrapeResults, setScrapeResults] = useState<Array<{
+    id: string;
+    name: string;
+    start_date: string | null;
+    end_date: string | null;
+    city: string | null;
+    state_country: string | null;
+    status: string;
+    approved: boolean;
+  }> | null>(null);
 
   const [form, setForm] = useState({
     name: "",
@@ -122,6 +133,53 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
     onRefresh();
   }
 
+  async function handleScrape() {
+    setScraping(true);
+    const toScrape = meetings
+      .filter((m) => m.source_url)
+      .map((m) => ({ id: m.id, name: m.name, source_url: m.source_url! }));
+
+    try {
+      const resp = await fetch(
+        `https://aszhjzseobgadbgxaosq.supabase.co/functions/v1/scrape-meeting-dates`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+          },
+          body: JSON.stringify({ meetings: toScrape }),
+        }
+      );
+      const data = await resp.json();
+      setScrapeResults(
+        data.results.map((r: Record<string, unknown>) => ({ ...r, approved: r.status === "found" }))
+      );
+    } catch (e) {
+      alert("Scraper failed: " + (e as Error).message);
+    }
+    setScraping(false);
+  }
+
+  async function applyScrapeResults() {
+    const approved = scrapeResults?.filter((r) => r.approved && r.start_date);
+    if (!approved?.length) return;
+    for (const r of approved) {
+      await supabase
+        .from("meeting_dates")
+        .update({
+          start_date: r.start_date,
+          end_date: r.end_date,
+          city: r.city,
+          state_country: r.state_country,
+          last_verified: new Date().toISOString(),
+        })
+        .eq("id", r.id);
+    }
+    setScrapeResults(null);
+    onRefresh();
+  }
+
   return (
     <div>
       {/* Toolbar */}
@@ -147,12 +205,91 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
         </select>
         <div className="flex-1" />
         <button
+          onClick={handleScrape}
+          disabled={scraping}
+          className="rounded-md border border-[var(--primary)] px-4 py-2 text-sm font-medium text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white disabled:opacity-50 transition-colors"
+        >
+          {scraping ? "Scraping..." : "Refresh All Dates"}
+        </button>
+        <button
           onClick={openNew}
           className="rounded-md bg-[var(--primary)] px-4 py-2 text-sm font-medium text-white hover:opacity-90"
         >
           + Add Meeting
         </button>
       </div>
+
+      {/* Scraper Review Results */}
+      {scrapeResults && (
+        <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="font-semibold text-sm">
+              Scraper Results — Review & Approve
+            </h4>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setScrapeResults(null)}
+                className="text-xs text-[var(--muted)] hover:underline"
+              >
+                Dismiss
+              </button>
+              <button
+                onClick={applyScrapeResults}
+                className="text-xs bg-[var(--primary)] text-white px-3 py-1 rounded hover:opacity-90"
+              >
+                Apply Approved ({scrapeResults.filter((r) => r.approved).length})
+              </button>
+            </div>
+          </div>
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="text-left">
+                <th className="px-2 py-1">Approve</th>
+                <th className="px-2 py-1">Meeting</th>
+                <th className="px-2 py-1">Scraped Dates</th>
+                <th className="px-2 py-1">Location</th>
+                <th className="px-2 py-1">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {scrapeResults.map((r, i) => (
+                <tr
+                  key={r.id}
+                  className={
+                    r.status === "found"
+                      ? "bg-green-50"
+                      : r.status === "error"
+                      ? "bg-red-50"
+                      : "bg-amber-50"
+                  }
+                >
+                  <td className="px-2 py-1.5">
+                    <input
+                      type="checkbox"
+                      checked={r.approved}
+                      onChange={(e) => {
+                        const updated = [...scrapeResults];
+                        updated[i] = { ...r, approved: e.target.checked };
+                        setScrapeResults(updated);
+                      }}
+                    />
+                  </td>
+                  <td className="px-2 py-1.5 font-medium">{r.name}</td>
+                  <td className="px-2 py-1.5">
+                    {r.start_date
+                      ? `${r.start_date} → ${r.end_date}`
+                      : "Not found"}
+                  </td>
+                  <td className="px-2 py-1.5">
+                    {r.city ? `${r.city}, ${r.state_country}` : "—"}
+                  </td>
+                  <td className="px-2 py-1.5 capitalize">{r.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Table */}
       <div className="overflow-x-auto rounded-lg border border-[var(--border)] bg-white">
