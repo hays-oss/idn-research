@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { getAllMeetingDates } from "@/lib/resourceQueries";
+import SiteNav from "@/components/SiteNav";
 import CalendarView from "@/components/CalendarView";
 
 export const revalidate = 300;
@@ -20,6 +21,7 @@ export default async function CalendarPage() {
 
   return (
     <main className="min-h-screen bg-cream">
+      <SiteNav />
       <CalendarView meetings={meetings} />
     </main>
   );
