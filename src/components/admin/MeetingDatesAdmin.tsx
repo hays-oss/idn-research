@@ -47,6 +47,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
     tags: "",
     website_url: "",
     source_url: "",
+    scraper_hint: "",
     notes: "",
     featured: false,
   });
@@ -78,6 +79,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
       tags: m.tags.join(", "),
       website_url: m.website_url ?? "",
       source_url: m.source_url ?? "",
+      scraper_hint: m.scraper_hint ?? "",
       notes: m.notes ?? "",
       featured: m.featured ?? false,
     });
@@ -97,6 +99,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
       tags: "",
       website_url: "",
       source_url: "",
+      scraper_hint: "",
       notes: "",
       featured: false,
     });
@@ -118,6 +121,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
         : [],
       website_url: form.website_url || null,
       source_url: form.source_url || null,
+      scraper_hint: form.scraper_hint || null,
       notes: form.notes || null,
       featured: form.featured,
     };
@@ -146,7 +150,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
     setScrapeProgress("");
     const toScrape = meetings
       .filter((m) => m.source_url)
-      .map((m) => ({ id: m.id, name: m.name, source_url: m.source_url! }));
+      .map((m) => ({ id: m.id, name: m.name, source_url: m.source_url!, scraper_hint: m.scraper_hint ?? undefined }));
 
     const BATCH_SIZE = 3;
     const allResults: Array<Record<string, unknown>> = [];
@@ -582,6 +586,17 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
             value={form.source_url}
             onChange={(e) => setForm({ ...form, source_url: e.target.value })}
           />
+        </FormField>
+        <FormField label="Scraper Hint">
+          <input
+            className={inputClass}
+            value={form.scraper_hint}
+            onChange={(e) => setForm({ ...form, scraper_hint: e.target.value })}
+            placeholder="e.g. Only look for Annual Conference and Spring Forum"
+          />
+          <p className="text-[11px] text-[var(--muted)] mt-1">
+            Guides the AI scraper — tell it which specific events to look for
+          </p>
         </FormField>
         <FormField label="Notes">
           <textarea

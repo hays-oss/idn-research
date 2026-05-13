@@ -11,7 +11,10 @@ interface MeetingInput {
   id: string;
   name: string;
   source_url: string;
+  scraper_hint?: string;
 }
+
+const EXCLUDE_KEYWORDS = /webinar|webcast|virtual\s+event|online\s+event|lunch\s+and\s+learn|lunch\s*&\s*learn|ce\s+credit|ceu\s+session|podcast|on-demand|on\s+demand|recorded\s+session|twitter\s+chat|town\s+hall|office\s+hours|happy\s+hour|networking\s+call|book\s+club/i;
 
 interface ScrapedResult {
   id: string;
@@ -131,9 +134,26 @@ async function gatherEventText(sourceUrl: string): Promise<GatherResult> {
 
 async function extractDates(
   name: string,
-  pageText: string
+  pageText: string,
+  scraperHint?: string
 ): Promise<{ extracted: Array<{ meeting_name: string; start_date: string; end_date: string; city: string; state_country: string }>; claudeRaw: string }> {
   if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not set");
+
+  // Build prompt with hint if provided
+  let prompt = 'Extract ONLY major in-person conferences, annual meetings, summits, and exhibitions for "' + name + '" from this webpage text.';
+  prompt += "\n\nIMPORTANT: Only include large flagship events (multi-day conferences, annual meetings, expos, summits).";
+  prompt += "\nDO NOT include: webinars, webcasts, virtual events, online sessions, workshops, CE/CME credits, podcasts, lunch-and-learns, networking calls, town halls, recorded sessions, or any small/recurring events.";
+
+  if (scraperHint) {
+    prompt += "\n\nADDITIONAL GUIDANCE from the curator: " + scraperHint;
+  }
+
+  prompt += '\n\nReturn ONLY valid JSON array (no markdown, no explanation):';
+  prompt += '\n[{"meeting_name":"Full Event Name","start_date":"YYYY-MM-DD","end_date":"YYYY-MM-DD","city":"CityName","state_country":"XX"}]';
+  prompt += "\n\nIf multiple major events exist (e.g. spring conference + annual meeting + leadership summit), include all of them.";
+  prompt += "\nIf you cannot find any dates for major events, return: []";
+  prompt += "\nUse 2-letter US state codes (TX, CA) or 2-letter country codes (DE, NL) for international events.";
+  prompt += "\n\nWebpage text:\n" + pageText;
 
   const resp = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -148,16 +168,7 @@ async function extractDates(
       messages: [
         {
           role: "user",
-          content: `Extract ALL upcoming conferences, annual meetings, and events for "${name}" from this webpage text. Return ONLY valid JSON array (no markdown, no explanation):
-[{"meeting_name":"Full Event Name","start_date":"YYYY-MM-DD","end_date":"YYYY-MM-DD","city":"CityName","state_country":"XX"}]
-
-If multiple events exist (e.g. spring conference, annual meeting, leadership summit), include ALL of them.
-If you cannot find any dates, return: []
-
-Use 2-letter US state codes (TX, CA) or 2-letter country codes (DE, NL) for international events.
-
-Webpage text:
-${pageText}`,
+          content: prompt,
         },
       ],
     }),
@@ -176,7 +187,17 @@ ${pageText}`,
     const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
     const parsed = JSON.parse(cleaned);
     if (!Array.isArray(parsed)) return { extracted: [], claudeRaw: text };
-    return { extracted: parsed.filter((entry: Record<string, unknown>) => entry.start_date), claudeRaw: text };
+    // Filter: must have start_date AND not match excluded keywords
+    const filtered = parsed.filter((entry: Record<string, unknown>) => {
+      if (!entry.start_date) return false;
+      const meetingName = String(entry.meeting_name ?? "");
+      if (EXCLUDE_KEYWORDS.test(meetingName)) {
+        console.log("Filtered out (keyword match):", meetingName);
+        return false;
+      }
+      return true;
+    });
+    return { extracted: filtered, claudeRaw: text };
   } catch (e) {
     console.log("JSON parse failed:", (e as Error).message, "Raw:", text.slice(0, 200));
     return { extracted: [], claudeRaw: text };
@@ -202,7 +223,7 @@ serve(async (req: Request) => {
           results.push({ id: m.id, name: m.name, meetings: [], status: "not_found", error: `No text gathered. Debug: ${JSON.stringify(gathered.debug)}` });
           continue;
         }
-        const { extracted, claudeRaw } = await extractDates(m.name, gathered.text);
+        const { extracted, claudeRaw } = await extractDates(m.name, gathered.text, m.scraper_hint);
         if (extracted.length > 0) {
           results.push({ id: m.id, name: m.name, meetings: extracted, status: "found" });
         } else {
