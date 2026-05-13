@@ -232,8 +232,15 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
     if (!approved?.length) return;
     for (const r of approved) {
       if (r.is_new) {
-        // New meeting discovered — insert with metadata from the source org
+        // New meeting discovered — check for duplicates first, then insert
         const source = meetings.find((m) => m.id === r.id);
+        const { data: existing } = await supabase
+          .from("meeting_dates")
+          .select("id")
+          .eq("name", r.meeting_name)
+          .eq("start_date", r.start_date)
+          .limit(1);
+        if (existing && existing.length > 0) continue; // skip duplicate
         await supabase.from("meeting_dates").insert({
           name: r.meeting_name,
           org_short: source?.org_short ?? null,
