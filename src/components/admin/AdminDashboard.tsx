@@ -13,8 +13,10 @@ import {
   ReviewQueueItem,
   Organization,
   CompanyAffiliation,
+  MeetingDate,
 } from "@/lib/types";
 import CategoriesAdmin from "./CategoriesAdmin";
+import MeetingDatesAdmin from "./MeetingDatesAdmin";
 import ResourcesAdmin from "./ResourcesAdmin";
 import InfluencersAdmin from "./InfluencersAdmin";
 import CompaniesAdmin from "./CompaniesAdmin";
@@ -22,7 +24,7 @@ import TaxonomyAdmin from "./TaxonomyAdmin";
 import ReviewQueueAdmin from "./ReviewQueueAdmin";
 import ImportWizard from "./ImportWizard";
 
-type Tab = "companies" | "taxonomy" | "review" | "import" | "resources" | "categories" | "influencers";
+type Tab = "companies" | "taxonomy" | "review" | "import" | "resources" | "categories" | "influencers" | "meetings";
 
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [activeTab, setActiveTab] = useState<Tab>("companies");
@@ -40,11 +42,12 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [queueItems, setQueueItems] = useState<ReviewQueueItem[]>([]);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [affiliations, setAffiliations] = useState<CompanyAffiliation[]>([]);
+  const [meetingDates, setMeetingDates] = useState<MeetingDate[]>([]);
 
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
-    const [catRes, resRes, infRes, compRes, domRes, subRes, tagRes, queueRes, orgRes, affRes] =
+    const [catRes, resRes, infRes, compRes, domRes, subRes, tagRes, queueRes, orgRes, affRes, meetRes] =
       await Promise.all([
         supabase.from("resource_categories").select("*").order("display_order"),
         supabase.from("resources").select("*").order("display_order"),
@@ -56,6 +59,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         supabase.from("company_review_queue").select("*, companies(company_name, description, website, confidence_score, review_status, primary_subcategory_id)").eq("status", "open").order("created_at", { ascending: false }),
         supabase.from("organizations").select("*").order("code"),
         supabase.from("company_affiliations").select("*"),
+        supabase.from("meeting_dates").select("*").order("start_date"),
       ]);
     if (catRes.data) setCategories(catRes.data);
     if (resRes.data) setResources(resRes.data);
@@ -66,6 +70,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     if (tagRes.data) setTags(tagRes.data);
     if (orgRes.data) setOrganizations(orgRes.data);
     if (affRes.data) setAffiliations(affRes.data);
+    if (meetRes.data) setMeetingDates(meetRes.data);
     if (queueRes.data) {
       // Transform queue data to match ReviewQueueItem interface
       const items: ReviewQueueItem[] = (queueRes.data || []).map((q: Record<string, unknown>) => {
@@ -107,6 +112,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     { key: "taxonomy", label: "Taxonomy", count: tags.length, section: "directory" },
     { key: "review", label: "Review Queue", count: openQueueCount, section: "directory" },
     { key: "import", label: "Import", count: 0, section: "directory" },
+    { key: "meetings", label: "Meeting Calendar", count: meetingDates.length, section: "legacy" },
     { key: "resources", label: "Resources", count: resources.length, section: "legacy" },
     { key: "categories", label: "Categories", count: categories.length, section: "legacy" },
     { key: "influencers", label: "Influencers", count: influencers.length, section: "legacy" },
@@ -267,6 +273,9 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         )}
         {activeTab === "influencers" && (
           <InfluencersAdmin influencers={influencers} onRefresh={fetchData} />
+        )}
+        {activeTab === "meetings" && (
+          <MeetingDatesAdmin meetings={meetingDates} onRefresh={fetchData} />
         )}
       </div>
     </div>
