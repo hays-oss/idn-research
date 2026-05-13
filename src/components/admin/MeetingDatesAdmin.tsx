@@ -153,7 +153,17 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
           body: JSON.stringify({ meetings: toScrape }),
         }
       );
+
+      if (!resp.ok) {
+        const errText = await resp.text();
+        throw new Error(`HTTP ${resp.status}: ${errText.slice(0, 300)}`);
+      }
+
       const data = await resp.json();
+
+      if (!data.results || !Array.isArray(data.results)) {
+        throw new Error(`Unexpected response: ${JSON.stringify(data).slice(0, 300)}`);
+      }
 
       // Flatten multi-meeting results into individual review rows
       const rows: NonNullable<typeof scrapeResults> = [];
