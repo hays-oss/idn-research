@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { getAllMeetingDates } from "@/lib/resourceQueries";
 import CalendarView from "@/components/CalendarView";
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Industry Meeting Calendar — IDN Research",
