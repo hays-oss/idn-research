@@ -214,6 +214,12 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
         }
       }
       setScrapeResults(rows);
+
+      // Log first 3 raw results for debugging
+      const notFound = allResults.filter((r) => r.status !== "found").slice(0, 3);
+      if (notFound.length > 0) {
+        console.log("Scraper debug (first 3 not_found):", notFound.map((r) => ({ name: r.name, status: r.status, error: r.error })));
+      }
     } catch (e) {
       alert("Scraper failed: " + (e as Error).message);
     }

@@ -78,10 +78,15 @@ function extractEventLinks(html: string, baseUrl: string): string[] {
   return Array.from(found).slice(0, 3);
 }
 
-async function gatherEventText(sourceUrl: string): Promise<string> {
+interface GatherResult {
+  text: string;
+  debug: { homepage_chars: number; event_links: string[]; subpaths_tried: string[]; pages_fetched: number; total_chars: number };
+}
+
+async function gatherEventText(sourceUrl: string): Promise<GatherResult> {
   // Step 1: Fetch homepage
   const homepage = await fetchPage(sourceUrl);
-  if (!homepage) return "";
+  if (!homepage) return { text: "", debug: { homepage_chars: 0, event_links: [], subpaths_tried: [], pages_fetched: 0, total_chars: 0 } };
 
   const texts: string[] = [homepage.text.slice(0, 4000)];
 
@@ -94,7 +99,6 @@ async function gatherEventText(sourceUrl: string): Promise<string> {
 
   // Combine discovered links + standard subpaths, deduplicate
   const allUrls = new Set<string>([...eventLinks, ...subpathUrls]);
-  // Remove the homepage URL itself
   allUrls.delete(sourceUrl);
   allUrls.delete(sourceUrl + "/");
 
@@ -104,14 +108,25 @@ async function gatherEventText(sourceUrl: string): Promise<string> {
     urlsToTry.map((url) => fetchPage(url))
   );
 
+  let pagesFetched = 0;
   for (const result of fetches) {
     if (result.status === "fulfilled" && result.value) {
       texts.push(result.value.text.slice(0, 3000));
+      pagesFetched++;
     }
   }
 
-  // Combine all text, cap at 12000 chars for Claude
-  return texts.join("\n\n---\n\n").slice(0, 12000);
+  const combined = texts.join("\n\n---\n\n").slice(0, 12000);
+  return {
+    text: combined,
+    debug: {
+      homepage_chars: homepage.text.length,
+      event_links: eventLinks,
+      subpaths_tried: urlsToTry,
+      pages_fetched: pagesFetched,
+      total_chars: combined.length,
+    },
+  };
 }
 
 async function extractDates(
@@ -178,16 +193,16 @@ serve(async (req: Request) => {
 
     for (const m of meetings) {
       try {
-        const text = await gatherEventText(m.source_url);
-        if (!text) {
-          results.push({ id: m.id, name: m.name, meetings: [], status: "not_found" });
+        const gathered = await gatherEventText(m.source_url);
+        if (!gathered.text) {
+          results.push({ id: m.id, name: m.name, meetings: [], status: "not_found", error: `No text gathered. Debug: ${JSON.stringify(gathered.debug)}` });
           continue;
         }
-        const extracted = await extractDates(m.name, text);
+        const extracted = await extractDates(m.name, gathered.text);
         if (extracted.length > 0) {
           results.push({ id: m.id, name: m.name, meetings: extracted, status: "found" });
         } else {
-          results.push({ id: m.id, name: m.name, meetings: [], status: "not_found" });
+          results.push({ id: m.id, name: m.name, meetings: [], status: "not_found", error: `Claude found no dates. Debug: ${JSON.stringify(gathered.debug)}. First 200 chars: ${gathered.text.slice(0, 200)}` });
         }
       } catch (e) {
         results.push({
