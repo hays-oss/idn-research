@@ -214,6 +214,7 @@ export interface MeetingDate {
   website_url: string | null
   source_url: string | null
   last_verified: string | null
+  featured: boolean
   notes: string | null
   created_at: string
   updated_at: string

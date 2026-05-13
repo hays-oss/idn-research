@@ -58,10 +58,8 @@ function daysBetween(start: string, end: string): number {
   );
 }
 
-const FEATURED_ORGS = new Set(["IHES", "CPES", "CSCE", "MUIA", "IDN Summit"]);
-
 function isFeatured(m: MeetingDate): boolean {
-  return FEATURED_ORGS.has(m.org_short ?? "");
+  return m.featured === true;
 }
 
 export default function CalendarView({

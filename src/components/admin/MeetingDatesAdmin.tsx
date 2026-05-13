@@ -48,6 +48,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
     website_url: "",
     source_url: "",
     notes: "",
+    featured: false,
   });
 
   const filtered = meetings.filter((m) => {
@@ -78,6 +79,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
       website_url: m.website_url ?? "",
       source_url: m.source_url ?? "",
       notes: m.notes ?? "",
+      featured: m.featured ?? false,
     });
   }
 
@@ -96,6 +98,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
       website_url: "",
       source_url: "",
       notes: "",
+      featured: false,
     });
   }
 
@@ -115,6 +118,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
       website_url: form.website_url || null,
       source_url: form.source_url || null,
       notes: form.notes || null,
+      featured: form.featured,
     };
 
     if (isNew) {
@@ -408,7 +412,10 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
             {filtered.map((m) => (
               <tr key={m.id} className="hover:bg-[var(--surface)]/50">
                 <td className="px-4 py-3">
-                  <div className="font-medium">{m.name}</div>
+                  <div className="font-medium">
+                    {m.featured && <span className="text-amber-500 mr-1" title="Featured">★</span>}
+                    {m.name}
+                  </div>
                   <div className="text-xs text-[var(--muted)]">
                     {m.org_short}
                   </div>
@@ -568,6 +575,16 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
           />
         </FormField>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.featured}
+            onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+            className="rounded border-gray-300"
+          />
+          <span className="text-sm font-medium">★ Featured Meeting</span>
+          <span className="text-xs text-[var(--muted)]">Highlighted on public calendar</span>
+        </label>
       </EditModal>
     </div>
   );
