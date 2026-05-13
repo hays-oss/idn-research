@@ -16,10 +16,13 @@ interface MeetingInput {
 interface ScrapedResult {
   id: string;
   name: string;
-  start_date: string | null;
-  end_date: string | null;
-  city: string | null;
-  state_country: string | null;
+  meetings: Array<{
+    meeting_name: string;
+    start_date: string | null;
+    end_date: string | null;
+    city: string | null;
+    state_country: string | null;
+  }>;
   status: "found" | "not_found" | "error";
   error?: string;
 }
@@ -47,7 +50,7 @@ async function fetchPageText(url: string): Promise<string> {
 async function extractDates(
   name: string,
   pageText: string
-): Promise<{ start_date: string; end_date: string; city: string; state_country: string } | null> {
+): Promise<Array<{ meeting_name: string; start_date: string; end_date: string; city: string; state_country: string }>> {
   if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not set");
 
   const resp = await fetch("https://api.anthropic.com/v1/messages", {
@@ -59,14 +62,15 @@ async function extractDates(
     },
     body: JSON.stringify({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 256,
+      max_tokens: 1024,
       messages: [
         {
           role: "user",
-          content: `Extract the next upcoming conference/annual meeting dates and location for "${name}" from this webpage text. Return ONLY valid JSON with these exact fields (no markdown, no explanation):
-{"start_date":"YYYY-MM-DD","end_date":"YYYY-MM-DD","city":"CityName","state_country":"XX"}
+          content: `Extract ALL upcoming conferences, annual meetings, and events for "${name}" from this webpage text. Return ONLY valid JSON array (no markdown, no explanation):
+[{"meeting_name":"Full Event Name","start_date":"YYYY-MM-DD","end_date":"YYYY-MM-DD","city":"CityName","state_country":"XX"}]
 
-If you cannot find the dates, return: {"start_date":null,"end_date":null,"city":null,"state_country":null}
+If multiple events exist (e.g. spring conference, annual meeting, leadership summit), include ALL of them.
+If you cannot find any dates, return: []
 
 Use 2-letter US state codes (TX, CA) or 2-letter country codes (DE, NL) for international events.
 
@@ -86,10 +90,10 @@ ${pageText}`,
   const text = data.content?.[0]?.text ?? "";
   try {
     const parsed = JSON.parse(text);
-    if (!parsed.start_date) return null;
-    return parsed;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((entry: Record<string, unknown>) => entry.start_date);
   } catch {
-    return null;
+    return [];
   }
 }
 
@@ -109,21 +113,18 @@ serve(async (req: Request) => {
       try {
         const text = await fetchPageText(m.source_url);
         const extracted = await extractDates(m.name, text);
-        if (extracted) {
+        if (extracted.length > 0) {
           results.push({
             id: m.id,
             name: m.name,
-            ...extracted,
+            meetings: extracted,
             status: "found",
           });
         } else {
           results.push({
             id: m.id,
             name: m.name,
-            start_date: null,
-            end_date: null,
-            city: null,
-            state_country: null,
+            meetings: [],
             status: "not_found",
           });
         }
@@ -131,10 +132,7 @@ serve(async (req: Request) => {
         results.push({
           id: m.id,
           name: m.name,
-          start_date: null,
-          end_date: null,
-          city: null,
-          state_country: null,
+          meetings: [],
           status: "error",
           error: (e as Error).message,
         });

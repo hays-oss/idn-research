@@ -24,12 +24,14 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
   const [scraping, setScraping] = useState(false);
   const [scrapeResults, setScrapeResults] = useState<Array<{
     id: string;
-    name: string;
+    org_name: string;
+    meeting_name: string;
     start_date: string | null;
     end_date: string | null;
     city: string | null;
     state_country: string | null;
     status: string;
+    is_new: boolean;
     approved: boolean;
   }> | null>(null);
 
@@ -152,9 +154,44 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
         }
       );
       const data = await resp.json();
-      setScrapeResults(
-        data.results.map((r: Record<string, unknown>) => ({ ...r, approved: r.status === "found" }))
-      );
+
+      // Flatten multi-meeting results into individual review rows
+      const rows: NonNullable<typeof scrapeResults> = [];
+      for (const r of data.results as Array<Record<string, unknown>>) {
+        const meetingsArr = r.meetings as Array<Record<string, unknown>> | undefined;
+        if (r.status === "found" && meetingsArr?.length) {
+          let first = true;
+          for (const m of meetingsArr) {
+            rows.push({
+              id: r.id as string,
+              org_name: r.name as string,
+              meeting_name: (m.meeting_name as string) || (r.name as string),
+              start_date: m.start_date as string | null,
+              end_date: m.end_date as string | null,
+              city: m.city as string | null,
+              state_country: m.state_country as string | null,
+              status: "found",
+              is_new: !first,
+              approved: true,
+            });
+            first = false;
+          }
+        } else {
+          rows.push({
+            id: r.id as string,
+            org_name: r.name as string,
+            meeting_name: r.name as string,
+            start_date: null,
+            end_date: null,
+            city: null,
+            state_country: null,
+            status: r.status as string,
+            is_new: false,
+            approved: false,
+          });
+        }
+      }
+      setScrapeResults(rows);
     } catch (e) {
       alert("Scraper failed: " + (e as Error).message);
     }
@@ -165,16 +202,34 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
     const approved = scrapeResults?.filter((r) => r.approved && r.start_date);
     if (!approved?.length) return;
     for (const r of approved) {
-      await supabase
-        .from("meeting_dates")
-        .update({
+      if (r.is_new) {
+        // New meeting discovered — insert with metadata from the source org
+        const source = meetings.find((m) => m.id === r.id);
+        await supabase.from("meeting_dates").insert({
+          name: r.meeting_name,
+          org_short: source?.org_short ?? null,
+          category: source?.category ?? null,
+          tags: source?.tags ?? [],
+          website_url: source?.website_url ?? null,
+          source_url: source?.source_url ?? null,
           start_date: r.start_date,
           end_date: r.end_date,
           city: r.city,
           state_country: r.state_country,
           last_verified: new Date().toISOString(),
-        })
-        .eq("id", r.id);
+        });
+      } else {
+        await supabase
+          .from("meeting_dates")
+          .update({
+            start_date: r.start_date,
+            end_date: r.end_date,
+            city: r.city,
+            state_country: r.state_country,
+            last_verified: new Date().toISOString(),
+          })
+          .eq("id", r.id);
+      }
     }
     setScrapeResults(null);
     onRefresh();
@@ -245,6 +300,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
             <thead>
               <tr className="text-left">
                 <th className="px-2 py-1">Approve</th>
+                <th className="px-2 py-1">Organization</th>
                 <th className="px-2 py-1">Meeting</th>
                 <th className="px-2 py-1">Scraped Dates</th>
                 <th className="px-2 py-1">Location</th>
@@ -254,7 +310,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
             <tbody>
               {scrapeResults.map((r, i) => (
                 <tr
-                  key={r.id}
+                  key={`${r.id}-${i}`}
                   className={
                     r.status === "found"
                       ? "bg-green-50"
@@ -274,7 +330,15 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
                       }}
                     />
                   </td>
-                  <td className="px-2 py-1.5 font-medium">{r.name}</td>
+                  <td className="px-2 py-1.5 text-[var(--muted)]">{r.org_name}</td>
+                  <td className="px-2 py-1.5 font-medium">
+                    {r.meeting_name}
+                    {r.is_new && (
+                      <span className="ml-1 text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
+                        New
+                      </span>
+                    )}
+                  </td>
                   <td className="px-2 py-1.5">
                     {r.start_date
                       ? `${r.start_date} → ${r.end_date}`
