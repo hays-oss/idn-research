@@ -3,15 +3,12 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { MeetingDate } from "@/lib/types";
+import EditModal, { FormField, inputClass, selectClass } from "./EditModal";
 
 const CATEGORIES = [
   "pharmacy", "supply-chain", "c-suite", "technology",
   "clinical", "revenue-cycle", "facilities", "nursing", "workforce",
 ];
-
-const inputClass =
-  "w-full rounded-md border border-[var(--border)] bg-white px-3 py-2 text-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]";
-const selectClass = inputClass;
 
 interface Props {
   meetings: MeetingDate[];
@@ -232,182 +229,109 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
         </table>
       </div>
 
-      {/* Edit/Add Modal */}
-      {editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-semibold mb-4">
-              {isNew ? "Add Meeting" : "Edit Meeting"}
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs font-medium text-[var(--muted)] mb-1 block">
-                  Meeting Name *
-                </label>
-                <input
-                  className={inputClass}
-                  value={form.name}
-                  onChange={(e) =>
-                    setForm({ ...form, name: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <label className="text-xs font-medium text-[var(--muted)] mb-1 block">
-                  Org Abbreviation
-                </label>
-                <input
-                  className={inputClass}
-                  value={form.org_short}
-                  onChange={(e) =>
-                    setForm({ ...form, org_short: e.target.value })
-                  }
-                  placeholder="e.g. ACHE"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-medium text-[var(--muted)] mb-1 block">
-                    Start Date
-                  </label>
-                  <input
-                    type="date"
-                    className={inputClass}
-                    value={form.start_date}
-                    onChange={(e) =>
-                      setForm({ ...form, start_date: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-[var(--muted)] mb-1 block">
-                    End Date
-                  </label>
-                  <input
-                    type="date"
-                    className={inputClass}
-                    value={form.end_date}
-                    onChange={(e) =>
-                      setForm({ ...form, end_date: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-medium text-[var(--muted)] mb-1 block">
-                    City
-                  </label>
-                  <input
-                    className={inputClass}
-                    value={form.city}
-                    onChange={(e) =>
-                      setForm({ ...form, city: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-[var(--muted)] mb-1 block">
-                    State / Country
-                  </label>
-                  <input
-                    className={inputClass}
-                    value={form.state_country}
-                    onChange={(e) =>
-                      setForm({ ...form, state_country: e.target.value })
-                    }
-                    placeholder="e.g. TX or DE"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="text-xs font-medium text-[var(--muted)] mb-1 block">
-                  Category
-                </label>
-                <select
-                  className={selectClass}
-                  value={form.category}
-                  onChange={(e) =>
-                    setForm({ ...form, category: e.target.value })
-                  }
-                >
-                  <option value="">Select...</option>
-                  {CATEGORIES.map((c) => (
-                    <option key={c} value={c}>
-                      {c.replace("-", " ")}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="text-xs font-medium text-[var(--muted)] mb-1 block">
-                  Tags (comma-separated)
-                </label>
-                <input
-                  className={inputClass}
-                  value={form.tags}
-                  onChange={(e) =>
-                    setForm({ ...form, tags: e.target.value })
-                  }
-                  placeholder="SUPPLY CHAIN, C-SUITE"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-medium text-[var(--muted)] mb-1 block">
-                  Website URL
-                </label>
-                <input
-                  className={inputClass}
-                  value={form.website_url}
-                  onChange={(e) =>
-                    setForm({ ...form, website_url: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <label className="text-xs font-medium text-[var(--muted)] mb-1 block">
-                  Source URL (for scraper)
-                </label>
-                <input
-                  className={inputClass}
-                  value={form.source_url}
-                  onChange={(e) =>
-                    setForm({ ...form, source_url: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <label className="text-xs font-medium text-[var(--muted)] mb-1 block">
-                  Notes
-                </label>
-                <textarea
-                  className={inputClass}
-                  rows={2}
-                  value={form.notes}
-                  onChange={(e) =>
-                    setForm({ ...form, notes: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                onClick={() => setEditing(null)}
-                className="px-4 py-2 text-sm text-[var(--muted)] hover:text-[var(--foreground)]"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={saving || !form.name}
-                className="px-4 py-2 text-sm font-medium bg-[var(--primary)] text-white rounded-md hover:opacity-90 disabled:opacity-50"
-              >
-                {saving ? "Saving..." : "Save"}
-              </button>
-            </div>
-          </div>
+      <EditModal
+        title={isNew ? "Add Meeting" : "Edit Meeting"}
+        isOpen={!!editing}
+        onClose={() => setEditing(null)}
+        onSubmit={(e) => { e.preventDefault(); handleSave(); }}
+        isSubmitting={saving}
+      >
+        <FormField label="Meeting Name" required>
+          <input
+            className={inputClass}
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+          />
+        </FormField>
+        <FormField label="Org Abbreviation">
+          <input
+            className={inputClass}
+            value={form.org_short}
+            onChange={(e) => setForm({ ...form, org_short: e.target.value })}
+            placeholder="e.g. ACHE"
+          />
+        </FormField>
+        <div className="grid grid-cols-2 gap-3">
+          <FormField label="Start Date">
+            <input
+              type="date"
+              className={inputClass}
+              value={form.start_date}
+              onChange={(e) => setForm({ ...form, start_date: e.target.value })}
+            />
+          </FormField>
+          <FormField label="End Date">
+            <input
+              type="date"
+              className={inputClass}
+              value={form.end_date}
+              onChange={(e) => setForm({ ...form, end_date: e.target.value })}
+            />
+          </FormField>
         </div>
-      )}
+        <div className="grid grid-cols-2 gap-3">
+          <FormField label="City">
+            <input
+              className={inputClass}
+              value={form.city}
+              onChange={(e) => setForm({ ...form, city: e.target.value })}
+            />
+          </FormField>
+          <FormField label="State / Country">
+            <input
+              className={inputClass}
+              value={form.state_country}
+              onChange={(e) => setForm({ ...form, state_country: e.target.value })}
+              placeholder="e.g. TX or DE"
+            />
+          </FormField>
+        </div>
+        <FormField label="Category">
+          <select
+            className={selectClass}
+            value={form.category}
+            onChange={(e) => setForm({ ...form, category: e.target.value })}
+          >
+            <option value="">Select...</option>
+            {CATEGORIES.map((c) => (
+              <option key={c} value={c}>
+                {c.replace("-", " ")}
+              </option>
+            ))}
+          </select>
+        </FormField>
+        <FormField label="Tags (comma-separated)">
+          <input
+            className={inputClass}
+            value={form.tags}
+            onChange={(e) => setForm({ ...form, tags: e.target.value })}
+            placeholder="SUPPLY CHAIN, C-SUITE"
+          />
+        </FormField>
+        <FormField label="Website URL">
+          <input
+            className={inputClass}
+            value={form.website_url}
+            onChange={(e) => setForm({ ...form, website_url: e.target.value })}
+          />
+        </FormField>
+        <FormField label="Source URL (for scraper)">
+          <input
+            className={inputClass}
+            value={form.source_url}
+            onChange={(e) => setForm({ ...form, source_url: e.target.value })}
+          />
+        </FormField>
+        <FormField label="Notes">
+          <textarea
+            className={inputClass}
+            rows={2}
+            value={form.notes}
+            onChange={(e) => setForm({ ...form, notes: e.target.value })}
+          />
+        </FormField>
+      </EditModal>
     </div>
   );
 }
