@@ -88,7 +88,7 @@ async function gatherEventText(sourceUrl: string): Promise<GatherResult> {
   const homepage = await fetchPage(sourceUrl);
   if (!homepage) return { text: "", debug: { homepage_chars: 0, event_links: [], subpaths_tried: [], pages_fetched: 0, total_chars: 0 } };
 
-  const texts: string[] = [homepage.text.slice(0, 4000)];
+  const texts: string[] = [homepage.text.slice(0, 2000)];
 
   // Step 2: Find event-related links from homepage HTML
   const eventLinks = extractEventLinks(homepage.html, sourceUrl);
@@ -111,12 +111,12 @@ async function gatherEventText(sourceUrl: string): Promise<GatherResult> {
   let pagesFetched = 0;
   for (const result of fetches) {
     if (result.status === "fulfilled" && result.value) {
-      texts.push(result.value.text.slice(0, 3000));
+      texts.push(result.value.text.slice(0, 6000));
       pagesFetched++;
     }
   }
 
-  const combined = texts.join("\n\n---\n\n").slice(0, 12000);
+  const combined = texts.join("\n\n---\n\n").slice(0, 20000);
   return {
     text: combined,
     debug: {
@@ -132,7 +132,7 @@ async function gatherEventText(sourceUrl: string): Promise<GatherResult> {
 async function extractDates(
   name: string,
   pageText: string
-): Promise<Array<{ meeting_name: string; start_date: string; end_date: string; city: string; state_country: string }>> {
+): Promise<{ extracted: Array<{ meeting_name: string; start_date: string; end_date: string; city: string; state_country: string }>; claudeRaw: string }> {
   if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not set");
 
   const resp = await fetch("https://api.anthropic.com/v1/messages", {
@@ -170,12 +170,16 @@ ${pageText}`,
 
   const data = await resp.json();
   const text = data.content?.[0]?.text ?? "";
+  console.log("Claude raw response:", text.slice(0, 500));
   try {
-    const parsed = JSON.parse(text);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter((entry: Record<string, unknown>) => entry.start_date);
-  } catch {
-    return [];
+    // Strip markdown code fences if present
+    const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+    const parsed = JSON.parse(cleaned);
+    if (!Array.isArray(parsed)) return { extracted: [], claudeRaw: text };
+    return { extracted: parsed.filter((entry: Record<string, unknown>) => entry.start_date), claudeRaw: text };
+  } catch (e) {
+    console.log("JSON parse failed:", (e as Error).message, "Raw:", text.slice(0, 200));
+    return { extracted: [], claudeRaw: text };
   }
 }
 
@@ -198,11 +202,11 @@ serve(async (req: Request) => {
           results.push({ id: m.id, name: m.name, meetings: [], status: "not_found", error: `No text gathered. Debug: ${JSON.stringify(gathered.debug)}` });
           continue;
         }
-        const extracted = await extractDates(m.name, gathered.text);
+        const { extracted, claudeRaw } = await extractDates(m.name, gathered.text);
         if (extracted.length > 0) {
           results.push({ id: m.id, name: m.name, meetings: extracted, status: "found" });
         } else {
-          results.push({ id: m.id, name: m.name, meetings: [], status: "not_found", error: `Claude found no dates. Debug: ${JSON.stringify(gathered.debug)}. First 200 chars: ${gathered.text.slice(0, 200)}` });
+          results.push({ id: m.id, name: m.name, meetings: [], status: "not_found", error: `Claude returned: ${claudeRaw.slice(0, 300)}. Debug: ${JSON.stringify(gathered.debug)}` });
         }
       } catch (e) {
         results.push({
