@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { MeetingDate } from "@/lib/types";
+
+const CalendarMap = dynamic(() => import("./CalendarMap"), { ssr: false });
 
 const CATEGORIES = [
   { key: "all", label: "All Meetings", color: "bg-ink" },
@@ -62,7 +65,7 @@ export default function CalendarView({
 }) {
   const [activeFilter, setActiveFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [view, setView] = useState<"timeline" | "grid">("timeline");
+  const [view, setView] = useState<"timeline" | "grid" | "map">("timeline");
 
   const filtered = useMemo(() => {
     return meetings.filter((m) => {
@@ -140,7 +143,7 @@ export default function CalendarView({
       <div className="sticky top-0 z-40 bg-cream border-b border-rule px-4 sm:px-8 lg:px-12 py-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex gap-1 bg-cream-2 rounded-md p-0.5">
-            {(["timeline", "grid"] as const).map((v) => (
+            {(["timeline", "grid", "map"] as const).map((v) => (
               <button
                 key={v}
                 onClick={() => setView(v)}
@@ -150,7 +153,15 @@ export default function CalendarView({
                     : "text-ink-2 hover:text-ink"
                 }`}
               >
-                {v}
+                {v === "map" ? (
+                  <span className="flex items-center gap-1">
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                      <circle cx="12" cy="9" r="2.5" />
+                    </svg>
+                    Map
+                  </span>
+                ) : v}
               </button>
             ))}
           </div>
@@ -187,7 +198,15 @@ export default function CalendarView({
         <div className="flex gap-8">
           {/* Main */}
           <div className="flex-1 min-w-0">
-            {view === "timeline" ? (
+            {view === "map" ? (
+              <div className="mt-8">
+                <CalendarMap meetings={filtered} />
+                <p className="text-xs text-ink-muted mt-3 text-center">
+                  Showing {filtered.filter((m) => m.city && m.state_country).length} of{" "}
+                  {filtered.length} meetings with known locations
+                </p>
+              </div>
+            ) : view === "timeline" ? (
               <div>
                 {grouped.map(([key, items]) => {
                   const [yr, mo] = key.split("-");
