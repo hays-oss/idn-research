@@ -10,6 +10,15 @@ const CATEGORIES = [
   "clinical", "revenue-cycle", "facilities", "nursing", "workforce",
 ];
 
+const SLUG_TO_CATEGORY: Record<string, string> = {
+  "industry-meetings": "c-suite",
+  "industry-meetings-pharmacy": "pharmacy",
+  "industry-meetings-facilities": "facilities",
+  "industry-meetings-supply-chain": "supply-chain",
+  "industry-meetings-technology": "technology",
+  "industry-meetings-revenue-cycle": "revenue-cycle",
+};
+
 interface Props {
   meetings: MeetingDate[];
   onRefresh: () => void;
@@ -23,6 +32,7 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
   const [saving, setSaving] = useState(false);
   const [scraping, setScraping] = useState(false);
   const [scrapeProgress, setScrapeProgress] = useState("");
+  const [syncing, setSyncing] = useState(false);
   const [scrapeResults, setScrapeResults] = useState<Array<{
     id: string;
     org_name: string;
@@ -280,6 +290,80 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
     onRefresh();
   }
 
+  async function handleSyncFromDirectory() {
+    setSyncing(true);
+    try {
+      // Get all resources in meeting categories
+      const { data: resources } = await supabase
+        .from("resources")
+        .select("id, name, url, category_id, tags")
+        .eq("is_active", true);
+
+      // Get category slugs
+      const { data: cats } = await supabase
+        .from("resource_categories")
+        .select("id, slug")
+        .like("slug", "industry-meetings%");
+
+      if (!resources || !cats) {
+        alert("Failed to fetch directory data");
+        setSyncing(false);
+        return;
+      }
+
+      const catMap = new Map(cats.map((c: { id: string; slug: string }) => [c.id, c.slug]));
+
+      // Filter to only meeting-category resources
+      const meetingResources = resources.filter(
+        (r: { category_id: string }) => catMap.has(r.category_id)
+      );
+
+      // Get existing meeting_dates resource_ids to avoid duplicates
+      const existingIds = new Set(
+        meetings.filter((m) => m.resource_id).map((m) => m.resource_id)
+      );
+
+      // Also check by name to catch manually-added entries
+      const existingNames = new Set(
+        meetings.map((m) => m.name.toLowerCase())
+      );
+
+      const toInsert = meetingResources.filter(
+        (r: { id: string; name: string }) =>
+          !existingIds.has(r.id) && !existingNames.has(r.name.toLowerCase())
+      );
+
+      if (toInsert.length === 0) {
+        alert("All directory meetings are already in the calendar. Nothing to sync.");
+        setSyncing(false);
+        return;
+      }
+
+      // Insert new meeting_dates entries
+      let added = 0;
+      for (const r of toInsert) {
+        const slug = catMap.get(r.category_id) ?? "";
+        const category = SLUG_TO_CATEGORY[slug] ?? null;
+        await supabase.from("meeting_dates").insert({
+          resource_id: r.id,
+          name: r.name,
+          category: category,
+          categories: category ? [category] : [],
+          tags: r.tags ?? [],
+          website_url: r.url ?? null,
+          source_url: r.url ?? null,
+        });
+        added++;
+      }
+
+      alert(`Synced ${added} new meetings from the directory. You can now edit them to add dates and run the scraper.`);
+      onRefresh();
+    } catch (e) {
+      alert("Sync failed: " + (e as Error).message);
+    }
+    setSyncing(false);
+  }
+
   return (
     <div>
       {/* Toolbar */}
@@ -304,6 +388,13 @@ export default function MeetingDatesAdmin({ meetings, onRefresh }: Props) {
           ))}
         </select>
         <div className="flex-1" />
+        <button
+          onClick={handleSyncFromDirectory}
+          disabled={syncing}
+          className="rounded-md border border-amber-500 px-4 py-2 text-sm font-medium text-amber-600 hover:bg-amber-500 hover:text-white disabled:opacity-50 transition-colors"
+        >
+          {syncing ? "Syncing..." : "Sync from Directory"}
+        </button>
         <button
           onClick={handleScrape}
           disabled={scraping}
